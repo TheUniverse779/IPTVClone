@@ -16,6 +16,8 @@
         <TextView android:id="@+id/pTitle" style="@style/Text.Cond.Dialog" android:layout_width="match_parent" android:layout_height="wrap_content" tools:text="Syncing" />
         <TextView android:id="@+id/pHost" style="@style/Text.Body.Secondary" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:layout_marginBottom="14dp" android:gravity="center" tools:text="line.example.tv" />
         <LinearLayout android:id="@+id/steps" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+        <com.google.android.material.progressindicator.LinearProgressIndicator android:id="@+id/saveBar" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="32dp" android:layout_marginTop="2dp" android:indeterminate="true" android:visibility="gone" app:indicatorColor="@color/accent" app:trackColor="@color/surface_3" app:trackCornerRadius="3dp" app:trackThickness="5dp" />
+        <TextView android:id="@+id/saveHint" style="@style/Text.Hint" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="32dp" android:layout_marginTop="8dp" android:text="@string/save_hint" android:visibility="gone" />
         <com.google.android.material.button.MaterialButton android:id="@+id/btnCancel" style="@style/Btn.Tonal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/cancel" />
     </LinearLayout>
 

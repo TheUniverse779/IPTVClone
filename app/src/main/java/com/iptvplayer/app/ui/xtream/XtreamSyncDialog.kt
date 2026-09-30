@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.fragment.app.viewModels
 import com.iptvplayer.app.R
 import com.iptvplayer.app.base.BaseDialog
@@ -34,19 +33,75 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Singleton
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CancellationException
+import com.iptvplayer.app.util.UrlUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.StateFlow
+import com.iptvplayer.app.util.toast
 
-/** Holds the sync job so it survives rotation while the dialog is shown. */
-@HiltViewModel
-class SyncViewModel @Inject constructor(private val repo: XtreamRepository) : ViewModel() {
-    val progress = MutableStateFlow<SyncProgress?>(null)
-    private var job: Job? = null
+/**
+ * Runs syncs outside any screen so "Run in background" can close the dialog while the (long) local save
+ * finishes; one sync per key (profile id, or server+user for a new profile).
+ */
+@Singleton
+class SyncRunner @Inject constructor(private val repo: XtreamRepository, @ApplicationContext private val app: Context) {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private val runs = HashMap<String, Pair<Job, MutableStateFlow<SyncProgress?>>>()
 
-    fun start(existingId: String?, input: NewProfileInput?) {
-        if (job != null) return
-        job = viewModelScope.launch { repo.sync(existingId, input).collect { progress.value = it } }
+    fun start(key: String, existingId: String?, input: NewProfileInput?): StateFlow<SyncProgress?> {
+        runs[key]?.let { (job, flow) -> if (job.isActive || flow.value != null) { detached.remove(key); return flow } }
+        val flow = MutableStateFlow<SyncProgress?>(null)
+        val host = UrlUtils.host(input?.server.orEmpty())
+        val job = scope.launch {
+            try {
+                repo.sync(existingId, input).collect { flow.value = it }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) { // e.g. disk full while saving: show an error instead of crashing
+                flow.value = SyncProgress.Failed(SyncError.NETWORK, host)
+            }
+        }
+        job.invokeOnCompletion { if (!detached.remove(key)) return@invokeOnCompletion; notifyDetached(flow.value); runs.remove(key) }
+        runs[key] = job to flow
+        return flow
     }
 
-    fun cancel() { job?.cancel() }
+    /** User pressed Cancel before the save started: stop downloading. */
+    fun cancel(key: String) { runs.remove(key)?.first?.cancel() }
+
+    /** Dialog closed for good (result seen). */
+    fun forget(key: String) { runs[key]?.let { (job, _) -> if (!job.isActive) runs.remove(key) } }
+
+    private val detached = HashSet<String>()
+
+    /** "Run in background": keep saving, tell the user with a toast when it's done. */
+    fun detach(key: String) { if (runs[key]?.first?.isActive == true) detached += key else forget(key) }
+
+    private fun notifyDetached(last: SyncProgress?) {
+        when (last) {
+            is SyncProgress.Done -> app.toast(app.getString(R.string.sync_bg_done, last.profile.name))
+            is SyncProgress.Failed -> app.toast(R.string.err_network_title)
+            else -> Unit
+        }
+    }
+}
+
+/** Survives rotation; the actual work lives in [SyncRunner]. */
+@HiltViewModel
+class SyncViewModel @Inject constructor(val runner: SyncRunner) : ViewModel() {
+    var key: String = ""; private set
+    var progress: StateFlow<SyncProgress?> = MutableStateFlow(null); private set
+
+    fun start(key: String, existingId: String?, input: NewProfileInput?) {
+        if (this.key == key) return
+        this.key = key
+        progress = runner.start(key, existingId, input)
+    }
 }
 
 @AndroidEntryPoint
@@ -57,9 +112,15 @@ class XtreamSyncDialog : BaseDialog<DialogSyncBinding>(DialogSyncBinding::inflat
     override fun setup(savedInstanceState: Bundle?) {
         isCancelable = false
         val a = requireArguments()
-        vm.start(a.getString(ARG_ID), if (isNew) NewProfileInput(a.getString("name").orEmpty(), a.getString("srv")!!, a.getString("user")!!, a.getString("pass")!!, a.getBoolean("lock"), a.getInt("color").takeIf { a.containsKey("color") }) else null)
+        val key = a.getString(ARG_ID) ?: "new:${a.getString("srv")}|${a.getString("user")}"
+        vm.start(key, a.getString(ARG_ID), if (isNew) NewProfileInput(a.getString("name").orEmpty(), a.getString("srv")!!, a.getString("user")!!, a.getString("pass")!!, a.getBoolean("lock"), a.getInt("color").takeIf { a.containsKey("color") }) else null)
         binding.pTitle.setText(if (isNew) R.string.adding_profile else R.string.syncing)
-        binding.btnCancel.setOnClickListener { vm.cancel(); dismiss() }
+        binding.btnCancel.setOnClickListener {
+            if (saving) vm.runner.detach(vm.key) else vm.runner.cancel(vm.key)
+            closeResult = false
+            dismiss()
+            if (saving && isNew) activity?.takeIf { it !is MainActivity }?.let { MainActivity.openTab(it, MainActivity.Tab.XTREAM); it.finish() }
+        }
         collect(vm.progress) { p ->
             when (p) {
                 null, is SyncProgress.Step -> renderSteps(p as? SyncProgress.Step)
@@ -69,10 +130,31 @@ class XtreamSyncDialog : BaseDialog<DialogSyncBinding>(DialogSyncBinding::inflat
         }
     }
 
+    /** True while rows are being written locally: Cancel becomes "Run in background" (the save can't be undone half-way). */
+    private var saving = false
+    private var closeResult = true
+
+    override fun onDestroy() {
+        // Leaving with the result on screen (or after a real cancel): drop the finished run.
+        if (closeResult && !requireActivity().isChangingConfigurations) vm.runner.forget(vm.key)
+        super.onDestroy()
+    }
+
     private fun renderSteps(p: SyncProgress.Step?) {
         binding.pHost.text = requireArguments().getString("host")
         binding.steps.removeAllViews()
-        listOf(SyncStep.AUTH to R.string.step_login, SyncStep.LIVE to R.string.step_live, SyncStep.VOD to R.string.step_vod, SyncStep.SERIES to R.string.step_series).forEach { (step, label) ->
+        saving = p?.states?.get(SyncStep.SAVE) == StepState.RUNNING
+        binding.btnCancel.setText(if (saving) R.string.run_in_background else R.string.cancel)
+        binding.saveBar.visible(saving)
+        binding.saveHint.visible(saving)
+        if (saving && p != null && p.total > 0 && p.saved > 0) {
+            // Indeterminate while old rows are cleared (re-sync), then real progress per inserted batch.
+            binding.saveBar.isIndeterminate = false
+            binding.saveBar.max = p.total
+            binding.saveBar.setProgressCompat(p.saved, true)
+        }
+        listOf(SyncStep.AUTH to R.string.step_login, SyncStep.LIVE to R.string.step_live, SyncStep.VOD to R.string.step_vod,
+            SyncStep.SERIES to R.string.step_series, SyncStep.SAVE to R.string.step_save).forEach { (step, label) ->
             val state = p?.states?.get(step) ?: if (step == SyncStep.AUTH) StepState.RUNNING else StepState.WAITING
             val row = LinearLayout(requireContext()).apply { gravity = Gravity.CENTER_VERTICAL; minimumHeight = 32.dp }
             val lead: View = when (state) {
@@ -85,7 +167,13 @@ class XtreamSyncDialog : BaseDialog<DialogSyncBinding>(DialogSyncBinding::inflat
             val count = p?.counts?.get(step)
             row.addView(TextView(requireContext()).apply {
                 when {
-                    state != StepState.DONE -> { setText(if (state == StepState.RUNNING) R.string.loading else R.string.waiting); setTextAppearance(R.style.Text_Hint) }
+                    step == SyncStep.SAVE && state == StepState.RUNNING && p != null && p.total > 0 && p.saved > 0 -> {
+                        text = "${p.saved * 100 / p.total}%"; setTextAppearance(R.style.Text_Cond); textSize = 16f; setTextColor(context.getColor(R.color.accent))
+                    }
+                    state != StepState.DONE -> {
+                        setText(when { state == StepState.WAITING -> R.string.waiting; step == SyncStep.SAVE -> R.string.saving; else -> R.string.loading })
+                        setTextAppearance(R.style.Text_Hint)
+                    }
                     step == SyncStep.AUTH -> { text = "OK"; setTextAppearance(R.style.Text_Hint) }
                     count == 0 -> { setText(R.string.none); setTextAppearance(R.style.Text_Hint) }
                     else -> { text = "%,d".format(count); setTextAppearance(R.style.Text_Cond); textSize = 16f }

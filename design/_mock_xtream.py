@@ -3,7 +3,8 @@
     python design/_mock_xtream.py            # listens on :8766
     adb reverse tcp:8766 tcp:8766            # server URL in the app: http://127.0.0.1:8766
 
-Accounts: demo/demo (active), expired/expired or old/old (exp_date in the past). Anything else → auth 0.
+Accounts: demo/demo (active), expired/expired or old/old (exp_date in the past),
+big/big (active, ~28k live / 158k VOD / 50k series, to test large syncs). Anything else → auth 0.
 Streams redirect to public test media (Mux HLS test stream, test-videos.co.uk MP4s).
 """
 import json, time
@@ -32,7 +33,7 @@ SERIES = [{'series_id': i, 'name': n, 'cover': IMG.format(i), 'category_id': c, 
 
 
 def user(u, p):
-    if (u, p) == ('demo', 'demo'): exp = int(time.time()) + 45 * 86400
+    if (u, p) in (('demo', 'demo'), ('big', 'big')): exp = int(time.time()) + 45 * 86400
     elif (u, p) in (('expired', 'expired'), ('old', 'old')): exp = int(time.time()) - 3 * 86400
     else: return {'user_info': {'auth': 0}}
     return {'user_info': {'auth': 1, 'status': 'Active' if exp > time.time() else 'Expired', 'exp_date': str(exp), 'active_cons': '0',
@@ -40,11 +41,27 @@ def user(u, p):
             'server_info': {'url': '127.0.0.1', 'port': '8766', 'timezone': 'Asia/Ho_Chi_Minh'}}
 
 
+_BIG = {}
+def big(kind):
+    # Built once, served as pre-encoded JSON (real panels send these as one huge array).
+    if kind not in _BIG:
+        if kind == 'live': rows = [{'stream_id': i, 'name': f'Channel {i} HD', 'stream_icon': f'http://logo.example/{i}.png', 'category_id': str(i % 400), 'epg_channel_id': f'ch{i}.tv', 'num': i, 'stream_type': 'live', 'added': '1700000000', 'tv_archive': 0, 'direct_source': '', 'custom_sid': ''} for i in range(1, 28422)]
+        elif kind == 'vod': rows = [{'stream_id': i, 'name': f'Movie Title {i} (20{i % 25:02d})', 'stream_icon': f'http://img.example/p/{i}.jpg', 'category_id': str(i % 300), 'rating': '7.1', 'rating_5based': 3.5, 'container_extension': 'mkv', 'added': str(1600000000 + i), 'num': i, 'stream_type': 'movie', 'custom_sid': '', 'direct_source': ''} for i in range(1, 158120)]
+        else: rows = [{'series_id': i, 'name': f'Series {i}', 'cover': f'http://img.example/s/{i}.jpg', 'category_id': str(i % 200), 'rating_5based': 4.0, 'plot': 'A long plot description ' * 6, 'cast': 'Actor One, Actor Two, Actor Three', 'director': 'Someone', 'genre': 'Drama, Crime', 'releaseDate': '2021-01-01', 'youtube_trailer': '', 'num': i, 'last_modified': '1700000000', 'backdrop_path': []} for i in range(1, 50378)]
+        _BIG[kind] = json.dumps(rows).encode()
+    return _BIG[kind]
+
+
 def api(q):
     u, p, a = q.get('username', [''])[0], q.get('password', [''])[0], q.get('action', [''])[0]
     auth = user(u, p)
     if not a or auth['user_info'].get('auth') != 1: return auth
     cats = lambda l: [{'category_id': i, 'category_name': n} for i, n in l]
+    if u == 'big':
+        n = {'get_live_categories': 400, 'get_vod_categories': 300, 'get_series_categories': 200}.get(a)
+        if n: return [{'category_id': str(i), 'category_name': f'Category {i}'} for i in range(n)]
+        k = {'get_live_streams': 'live', 'get_vod_streams': 'vod', 'get_series': 'series'}.get(a)
+        if k: return big(k)
     if a == 'get_live_categories': return cats(LIVE_CATS)
     if a == 'get_live_streams': return LIVE
     if a == 'get_vod_categories': return cats(VOD_CATS)
@@ -71,7 +88,8 @@ class H(BaseHTTPRequestHandler):
         url = urlparse(self.path)
         parts = url.path.strip('/').split('/')
         if url.path.endswith('player_api.php'):
-            body = json.dumps(api(parse_qs(url.query))).encode()
+            r = api(parse_qs(url.query))
+            body = r if isinstance(r, bytes) else json.dumps(r).encode()
             self.send_response(200); self.send_header('Content-Type', 'application/json'); self.send_header('Content-Length', str(len(body))); self.end_headers()
             self.wfile.write(body); return
         if len(parts) == 4 and parts[0] in ('live', 'movie', 'series'):

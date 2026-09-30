@@ -485,4 +485,9 @@
     <string name="open_form">Mở form</string>
     <string name="language_title">Ngôn ngữ</string>
     <string name="full_screen">Toàn màn hình</string>
+    <string name="step_save">Lưu vào máy</string>
+    <string name="run_in_background">Chạy nền</string>
+    <string name="save_hint">Danh sách lớn nên cần vài giây. Bạn có thể dùng app tiếp, profile sẽ hiện khi lưu xong.</string>
+    <string name="sync_bg_done">Profile "%1$s" đã sẵn sàng</string>
+    <string name="saving">Đang lưu…</string>
 </resources>

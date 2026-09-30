@@ -13,6 +13,7 @@ import com.iptvplayer.app.data.network.dto.VodInfoResponse
 import com.iptvplayer.app.util.UrlUtils
 import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -26,12 +27,13 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
-enum class SyncStep { AUTH, LIVE, VOD, SERIES }
+enum class SyncStep { AUTH, LIVE, VOD, SERIES, SAVE }
 enum class StepState { WAITING, RUNNING, DONE }
 enum class SyncError { HOST, AUTH, EXPIRED, NETWORK, EMPTY }
 
 sealed interface SyncProgress {
-    data class Step(val states: Map<SyncStep, StepState>, val counts: Map<SyncStep, Int>) : SyncProgress
+    /** [saved]/[total]: rows written to the local DB during [SyncStep.SAVE] (big panels: 100k+ rows, several seconds). */
+    data class Step(val states: Map<SyncStep, StepState>, val counts: Map<SyncStep, Int>, val saved: Int = 0, val total: Int = 0) : SyncProgress
     data class Done(val profile: XtreamProfileEntity) : SyncProgress
     data class Failed(val error: SyncError, val host: String) : SyncProgress
 }
@@ -63,9 +65,10 @@ class XtreamRepository @Inject constructor(private val db: AppDatabase, private 
         val pass = existing?.password ?: input!!.password
         val host = UrlUtils.host(server)
         val api = http.xtream(server)
-        val states = linkedMapOf(SyncStep.AUTH to StepState.RUNNING, SyncStep.LIVE to StepState.WAITING, SyncStep.VOD to StepState.WAITING, SyncStep.SERIES to StepState.WAITING)
+        val states = linkedMapOf(SyncStep.AUTH to StepState.RUNNING, SyncStep.LIVE to StepState.WAITING, SyncStep.VOD to StepState.WAITING,
+            SyncStep.SERIES to StepState.WAITING, SyncStep.SAVE to StepState.WAITING)
         val counts = HashMap<SyncStep, Int>()
-        suspend fun push() = send(SyncProgress.Step(HashMap(states), HashMap(counts)))
+        suspend fun push(saved: Int = 0, total: Int = 0) = send(SyncProgress.Step(HashMap(states), HashMap(counts), saved, total))
         push()
 
         val auth = try { api.auth(user, pass) } catch (e: Exception) { send(SyncProgress.Failed(e.toSyncError(), host)); return@channelFlow }
@@ -104,7 +107,22 @@ class XtreamRepository @Inject constructor(private val db: AppDatabase, private 
             liveCount = result.live.size, vodCount = result.vod.size, seriesCount = result.series.size,
             lastSync = System.currentTimeMillis(),
         )
-        withContext(Dispatchers.IO) { store(profile, result) }
+        states[SyncStep.SAVE] = StepState.RUNNING
+        val total = result.live.size + result.vod.size + result.series.size
+        push(0, total)
+        // Saving must finish even if the dialog is closed ("Run in background"): NonCancellable keeps the
+        // transaction from being rolled back half-way, and the profile appears in the list when it commits.
+        withContext(Dispatchers.IO + NonCancellable) {
+            var lastPush = 0L
+            store(profile, result) { saved ->
+                val now = System.currentTimeMillis()
+                if (now - lastPush > 120 || saved == total) { lastPush = now; trySend(SyncProgress.Step(HashMap(states), HashMap(counts), saved, total)) }
+            }
+        }
+        // A screen that (re)subscribed while this long transaction held the DB can miss its invalidation;
+        // a small write afterwards goes through the normal path and refreshes every observer.
+        dao.upsertProfile(profile)
+        states[SyncStep.SAVE] = StepState.DONE
         send(SyncProgress.Done(profile))
     }.flowOn(Dispatchers.IO)
 
@@ -117,12 +135,14 @@ class XtreamRepository @Inject constructor(private val db: AppDatabase, private 
         val series: List<com.iptvplayer.app.data.network.dto.SeriesDto>,
     )
 
-    private suspend fun store(p: XtreamProfileEntity, r: Synced) {
+    private suspend fun store(p: XtreamProfileEntity, r: Synced, onSaved: (Int) -> Unit) {
         val id = p.id
         // Keep favourites / progress across a re-sync: snapshot them before replacing the rows.
         val favLive = dao.allLive(id).filter { it.isFavorite }.map { it.streamId }.toSet()
         val oldVod = dao.allVod(id).associateBy { it.streamId }
         val oldSeries = dao.allSeries(id).associateBy { it.seriesId }
+        var saved = 0
+        fun progress(n: Int) { saved += n; onSaved(saved) }
         db.withTransaction {
             dao.clearCategories(id); dao.clearLive(id); dao.clearVod(id); dao.clearSeries(id)
             fun cats(list: List<com.iptvplayer.app.data.network.dto.CategoryDto>, t: MediaType) =
@@ -130,20 +150,20 @@ class XtreamRepository @Inject constructor(private val db: AppDatabase, private 
             dao.insertCategories(cats(r.liveCats, MediaType.LIVE) + cats(r.vodCats, MediaType.MOVIE) + cats(r.seriesCats, MediaType.SERIES))
             r.live.mapIndexedNotNull { i, s ->
                 s.streamId?.let { XtreamLiveEntity(id, it, s.name.orEmpty(), s.streamIcon.orEmpty(), s.categoryId.orEmpty(), s.epgChannelId, i, it in favLive) }
-            }.chunked(1000).forEach { dao.insertLive(it) }
+            }.chunked(2000).forEach { dao.insertLive(it); progress(it.size) }
             r.vod.mapNotNull { v ->
                 val sid = v.streamId ?: return@mapNotNull null
                 val old = oldVod[sid]
                 XtreamVodEntity(id, sid, v.name.orEmpty(), v.streamIcon.orEmpty(), v.categoryId.orEmpty(), v.rating5 ?: 0.0,
                     v.extension ?: "mp4", v.added?.toLongOrNull() ?: 0, old?.isFavorite ?: false, old?.positionMs ?: 0, old?.durationMs ?: 0, old?.lastPlayed ?: 0)
-            }.chunked(1000).forEach { dao.insertVod(it) }
+            }.chunked(2000).forEach { dao.insertVod(it); progress(it.size) }
             r.series.mapNotNull { s ->
                 val sid = s.seriesId ?: return@mapNotNull null
                 val old = oldSeries[sid]
                 XtreamSeriesEntity(id, sid, s.name.orEmpty(), s.cover.orEmpty(), s.categoryId.orEmpty(), s.rating5 ?: 0.0,
                     s.plot.orEmpty(), s.cast.orEmpty(), s.director.orEmpty(), s.genre.orEmpty(), s.releaseDate.orEmpty(), s.youtubeTrailer.orEmpty(),
                     old?.isFavorite ?: false, old?.lastPlayed ?: 0)
-            }.chunked(1000).forEach { dao.insertSeries(it) }
+            }.chunked(2000).forEach { dao.insertSeries(it); progress(it.size) }
             dao.upsertProfile(p)
         }
     }

@@ -555,4 +555,9 @@
     <string name="open_form">Open form</string>
     <string name="language_title">Language</string>
     <string name="full_screen">Full screen</string>
+    <string name="step_save">Saving to device</string>
+    <string name="run_in_background">Run in background</string>
+    <string name="save_hint">Big list — this takes a few seconds. You can keep using the app; the profile shows up when it\'s done.</string>
+    <string name="sync_bg_done">Profile "%1$s" is ready</string>
+    <string name="saving">Saving…</string>
 </resources>
