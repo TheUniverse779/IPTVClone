@@ -92,6 +92,17 @@ class H(BaseHTTPRequestHandler):
             body = r if isinstance(r, bytes) else json.dumps(r).encode()
             self.send_response(200); self.send_header('Content-Type', 'application/json'); self.send_header('Content-Length', str(len(body))); self.end_headers()
             self.wfile.write(body); return
+        if url.path == '/copy':
+            # Helper page: tap a link to copy it to the phone's clipboard (adb can't set the clipboard).
+            links = [f'http://127.0.0.1:8766/get.php?username={u}&password={u}&type=m3u_plus' for u in ('big', 'demo', 'old')]
+            rows = ''.join(f'<button onclick="c(this)" data-v="{l}">{l.split("username=")[1].split("&")[0]}<small>{l}</small></button>' for l in links)
+            html = f"""<!doctype html><meta name=viewport content="width=device-width,initial-scale=1"><title>Copy test link</title>
+<style>body{{font:16px sans-serif;background:#151419;color:#eee;padding:16px}}button{{display:block;width:100%;margin:10px 0;padding:14px;border:0;border-radius:12px;background:#F56F10;color:#fff;font:600 18px sans-serif;text-align:left}}small{{display:block;font:12px monospace;opacity:.85;word-break:break-all;margin-top:4px}}#t{{color:#7ee787;min-height:20px}}</style>
+<h3>Tap to copy an Xtream test link</h3><div id=t></div>{rows}
+<script>function c(b){{const v=b.dataset.v;(navigator.clipboard?navigator.clipboard.writeText(v):Promise.reject()).catch(()=>{{const t=document.createElement('textarea');t.value=v;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();}}).finally(()=>document.getElementById('t').textContent='Copied: '+v)}}</script>"""
+            body = html.encode()
+            self.send_response(200); self.send_header('Content-Type', 'text/html; charset=utf-8'); self.send_header('Content-Length', str(len(body))); self.end_headers()
+            self.wfile.write(body); return
         if len(parts) == 4 and parts[0] in ('live', 'movie', 'series'):
             sid = int(''.join(ch for ch in parts[3].split('.')[0] if ch.isdigit()) or 0)
             self.send_response(302); self.send_header('Location', HLS if parts[0] == 'live' else MP4[sid % len(MP4)]); self.end_headers(); return
