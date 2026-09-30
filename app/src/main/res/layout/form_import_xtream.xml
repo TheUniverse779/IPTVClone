@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:orientation="vertical">
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="6dp">
+            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/profile_name" />
+        </LinearLayout>
+        <LinearLayout android:id="@+id/etProfileNameBox" android:layout_width="match_parent" android:layout_height="@dimen/h_input" android:background="@drawable/bg_input" android:gravity="center_vertical" android:orientation="horizontal" android:paddingStart="14dp" android:paddingEnd="10dp">
+            
+            <EditText android:id="@+id/etProfileName" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:background="@null" android:fontFamily="@font/barlow" android:hint="" android:importantForAutofill="no" android:inputType="text" android:singleLine="true" android:textColor="@color/text" android:textColorHint="@color/text_3" android:textCursorDrawable="@drawable/cursor" android:textSize="14sp" />
+            
+        </LinearLayout>
+        <TextView android:id="@+id/etProfileNameHelper" style="@style/FieldHelper" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:orientation="vertical">
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="6dp">
+            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/server_url" /><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="3dp" android:text="@string/required_mark" android:textColor="@color/accent" />
+        </LinearLayout>
+        <LinearLayout android:id="@+id/etServerBox" android:layout_width="match_parent" android:layout_height="@dimen/h_input" android:background="@drawable/bg_input" android:gravity="center_vertical" android:orientation="horizontal" android:paddingStart="14dp" android:paddingEnd="10dp">
+            <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_marginEnd="8dp" android:src="@drawable/ic_globe" app:tint="@color/text_2" />
+            <EditText android:id="@+id/etServer" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:background="@null" android:fontFamily="@font/barlow" android:hint="@string/server_hint" android:importantForAutofill="no" android:inputType="textUri|textNoSuggestions" android:singleLine="true" android:textColor="@color/text" android:textColorHint="@color/text_3" android:textCursorDrawable="@drawable/cursor" android:textSize="14sp" />
+            <TextView android:id="@+id/etServerPaste" android:layout_width="wrap_content" android:layout_height="28dp" android:layout_marginStart="8dp" android:background="@drawable/bg_paste_chip" android:fontFamily="@font/barlow_semibold" android:gravity="center" android:paddingStart="10dp" android:paddingEnd="10dp" android:text="@string/paste" android:textColor="@color/text" android:textSize="12sp" />
+        </LinearLayout>
+        <TextView android:id="@+id/etServerHelper" style="@style/FieldHelper" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/server_helper" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:orientation="vertical">
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="6dp">
+            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/username" /><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="3dp" android:text="@string/required_mark" android:textColor="@color/accent" />
+        </LinearLayout>
+        <LinearLayout android:id="@+id/etUserBox" android:layout_width="match_parent" android:layout_height="@dimen/h_input" android:background="@drawable/bg_input" android:gravity="center_vertical" android:orientation="horizontal" android:paddingStart="14dp" android:paddingEnd="10dp">
+            <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_marginEnd="8dp" android:src="@drawable/ic_user" app:tint="@color/text_2" />
+            <EditText android:id="@+id/etUser" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:background="@null" android:fontFamily="@font/barlow" android:hint="" android:importantForAutofill="no" android:inputType="text" android:singleLine="true" android:textColor="@color/text" android:textColorHint="@color/text_3" android:textCursorDrawable="@drawable/cursor" android:textSize="14sp" />
+            
+        </LinearLayout>
+        <TextView android:id="@+id/etUserHelper" style="@style/FieldHelper" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:orientation="vertical">
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="6dp">
+            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/password" /><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="3dp" android:text="@string/required_mark" android:textColor="@color/accent" />
+        </LinearLayout>
+        <LinearLayout android:id="@+id/etPassBox" android:layout_width="match_parent" android:layout_height="@dimen/h_input" android:background="@drawable/bg_input" android:gravity="center_vertical" android:orientation="horizontal" android:paddingStart="14dp" android:paddingEnd="10dp">
+            <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_marginEnd="8dp" android:src="@drawable/ic_lock" app:tint="@color/text_2" />
+            <EditText android:id="@+id/etPass" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:background="@null" android:fontFamily="@font/barlow" android:hint="" android:importantForAutofill="no" android:inputType="textPassword" android:singleLine="true" android:textColor="@color/text" android:textColorHint="@color/text_3" android:textCursorDrawable="@drawable/cursor" android:textSize="14sp" />
+            <ImageButton android:id="@+id/etPassEye" android:layout_width="32dp" android:layout_height="32dp" android:background="?attr/selectableItemBackgroundBorderless" android:src="@drawable/ic_eye" app:tint="@color/text_2" />
+        </LinearLayout>
+        <TextView android:id="@+id/etPassHelper" style="@style/FieldHelper" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:minHeight="52dp">
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView style="@style/Text" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/lock_profile" /><TextView style="@style/Text.Hint" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="@string/lock_profile_sub" />
+        </LinearLayout>
+        <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/swLockProfile" style="@style/Switch" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/accountCard" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:background="@drawable/bg_card_press" android:gravity="center_vertical" android:padding="16dp" android:visibility="gone">
+        <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_info" />
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:orientation="vertical">
+            <TextView style="@style/Text.Semibold" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/account_info" />
+            <TextView android:id="@+id/accountSub" style="@style/Text.Hint" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        </LinearLayout>
+        <TextView android:id="@+id/accountStatus" style="@style/Text.Semibold" android:layout_width="wrap_content" android:layout_height="24dp" android:gravity="center" android:paddingStart="10dp" android:paddingEnd="10dp" android:textSize="12sp" />
+    </LinearLayout><include android:id="@+id/communityPick" layout="@layout/layout_guide_link" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" /><include android:id="@+id/guideXtream" layout="@layout/layout_guide_link" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/btnLogin" style="@style/Btn.Primary" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:text="@string/login_sync" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/btnDelete" style="@style/Btn.Text" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="@string/delete_profile" android:textColor="@color/danger_text" android:visibility="gone" />
+</LinearLayout>

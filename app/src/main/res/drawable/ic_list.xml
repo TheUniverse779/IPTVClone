@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from design/js/icons.js by design/_svg2vd.py -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24"
+    android:tint="#FFFFFFFF">
+    <path
+        android:pathData="M6.0,5.0h12.0a2.5,2.5 0 0,1 2.5,2.5v9.0a2.5,2.5 0 0,1 -2.5,2.5h-12.0a2.5,2.5 0 0,1 -2.5,-2.5v-9.0a2.5,2.5 0 0,1 2.5,-2.5z"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M10 9.5 l4.5 2.5 -4.5 2.5 z"
+        android:fillColor="#FFFFFFFF"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

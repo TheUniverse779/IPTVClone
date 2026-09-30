@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/bg_row" android:gravity="center_vertical" android:minHeight="@dimen/h_row" android:orientation="horizontal" android:paddingStart="16dp" android:paddingEnd="4dp">
+    <FrameLayout android:layout_width="@dimen/logo" android:layout_height="@dimen/logo" android:background="@drawable/bg_logo">
+        <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_gravity="center" android:src="@drawable/ic_link" app:tint="@color/accent" />
+    </FrameLayout>
+    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:orientation="vertical">
+        <TextView android:id="@+id/name" style="@style/Text.RowTitle" android:layout_width="match_parent" android:layout_height="wrap_content" tools:text="Concert live" />
+        <TextView android:id="@+id/url" style="@style/Text.Caption" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="middle" tools:text="https://example.org/live.m3u8" />
+    </LinearLayout>
+    <ImageButton android:id="@+id/btnMore" style="@style/IconBtn" android:src="@drawable/ic_more" />
+</LinearLayout>

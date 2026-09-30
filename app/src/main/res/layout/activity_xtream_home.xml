@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:orientation="vertical">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="@dimen/h_toolbar" android:gravity="center_vertical" android:paddingStart="8dp" android:paddingEnd="8dp">
+        <ImageButton android:id="@+id/btnBack" style="@style/IconBtn" android:contentDescription="@string/back" android:src="@drawable/ic_back" />
+        <LinearLayout android:id="@+id/titleBtn" android:layout_width="0dp" android:layout_height="44dp" android:layout_weight="1" android:background="@drawable/bg_row" android:gravity="center_vertical" android:paddingStart="8dp" android:paddingEnd="8dp">
+            <TextView android:id="@+id/avatar" android:layout_width="32dp" android:layout_height="32dp" android:fontFamily="@font/barlow_condensed_bold" android:gravity="center" android:textColor="@color/white" android:textSize="15sp" />
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="10dp" android:layout_weight="1" android:orientation="vertical">
+                <TextView android:id="@+id/name" style="@style/Text.Cond" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="end" android:textSize="19sp" />
+                <TextView android:id="@+id/sub" style="@style/Text.Caption" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="11sp" />
+            </LinearLayout>
+            <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_chevron_down" app:tint="@color/text_2" />
+        </LinearLayout>
+        <ImageButton android:id="@+id/btnMore" style="@style/IconBtn" android:contentDescription="@string/more" android:src="@drawable/ic_more" />
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/warnBar" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:layout_marginBottom="10dp" android:background="@drawable/bg_warn_bar" android:gravity="center_vertical" android:paddingStart="12dp" android:paddingTop="6dp" android:paddingEnd="4dp" android:paddingBottom="6dp" android:visibility="gone">
+        <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_alert" app:tint="#FFB3B3" />
+        <TextView style="@style/Text" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="10dp" android:layout_weight="1" android:text="@string/expired_bar" android:textColor="#FFB3B3" android:textSize="12sp" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnWarnEdit" style="@style/Btn.Text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/edit" android:textColor="@color/white" />
+    </LinearLayout>
+
+    <FrameLayout android:id="@+id/fragmentContainer" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bnav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface"
+        app:itemActiveIndicatorStyle="@null"
+        app:itemIconTint="@color/tab_tint"
+        app:itemTextAppearanceActive="@style/Text.Semibold"
+        app:itemTextAppearanceInactive="@style/Text.Semibold"
+        app:itemTextColor="@color/tab_tint"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/xtream_bnav" />
+</LinearLayout>

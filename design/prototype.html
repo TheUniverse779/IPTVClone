@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IPTV Player – prototype duyệt luồng</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<link rel="stylesheet" href="screens.css">
+<style>
+  /* ---- review page chrome (not part of the app) ---- */
+  body { margin: 0; min-height: 100vh; background: #24232a; color: #e9e9ee; font-family: var(--font); font-size: 14px; }
+  .page { display: grid; grid-template-columns: 290px 1fr 320px; min-height: 100vh; }
+  .side { background: #1b1a20; padding: 20px 16px; overflow-y: auto; max-height: 100vh; position: sticky; top: 0; }
+  .side h1 { font-family: var(--font-cond); font-size: 24px; font-weight: 700; line-height: 1.1; }
+  .side .sub { color: #9a9aa3; font-size: 13px; margin: 4px 0 18px; }
+  .side h2 { font-family: var(--font-cond); font-size: 17px; font-weight: 600; margin: 18px 0 8px; color: #fff; }
+  .side h2 small { font-family: var(--font); font-weight: 500; font-size: 12px; color: #8b8b94; margin-left: 6px; }
+  .scen { display: flex; flex-direction: column; gap: 6px; }
+  .scen button { text-align: left; padding: 9px 12px; border-radius: 10px; background: #26252c; color: #e9e9ee; font-weight: 500; }
+  .scen button:hover { background: #302f37; }
+  .scen button.on { background: rgba(245,111,16,.16); color: #ffb27a; box-shadow: inset 0 0 0 1px rgba(245,111,16,.5); }
+  .scr-group { margin-bottom: 6px; }
+  .scr-group summary { cursor: pointer; padding: 6px 4px; font-weight: 600; color: #cfcfd6; list-style: none; }
+  .scr-group summary::before { content: "▸"; display: inline-block; width: 14px; color: #6f6f78; }
+  .scr-group[open] summary::before { content: "▾"; }
+  .scr-group a { display: block; padding: 5px 8px 5px 18px; color: #a9a9b2; text-decoration: none; border-radius: 8px; font-size: 13px; }
+  .scr-group a:hover { background: #26252c; color: #fff; }
+  .scr-group a code { font-size: 11px; color: #6f6f78; margin-left: 4px; }
+  .toggle-row { display: flex; gap: 6px; }
+  .toggle-row button { flex: 1; padding: 8px; border-radius: 10px; background: #26252c; color: #bdbdc5; font-weight: 600; font-size: 13px; }
+  .toggle-row button.on { background: #f56f10; color: #fff; }
+
+  .stage { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 16px; gap: 22px; }
+  .stage-ctl { display: flex; gap: 8px; }
+  .stage-ctl button { height: 38px; padding: 0 14px; border-radius: 10px; background: #1b1a20; color: #e9e9ee; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+  .stage-ctl button:hover { background: #302f37; }
+  .stage-ctl kbd { font-family: var(--font); font-size: 11px; color: #8b8b94; border: 1px solid #3a3940; border-radius: 4px; padding: 0 4px; }
+
+  .info { background: #1b1a20; padding: 20px 18px; overflow-y: auto; max-height: 100vh; position: sticky; top: 0; }
+  .info h2 { font-family: var(--font-cond); font-size: 17px; font-weight: 600; margin: 0 0 10px; }
+  .info .blk { background: #24232a; border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; }
+  .info .kind { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px; margin-bottom: 6px; }
+  .kind.Activity { background: #1f3b64; color: #9cc4ff; }
+  .kind.Fragment { background: #1d4a37; color: #8fe0b6; }
+  .kind.Dialog, .kind.BottomSheet, .kind.Popup { background: #4a3217; color: #ffc48a; }
+  .kind.Mock { background: #3a3a42; color: #d0d0d8; }
+  .info .cls { font-family: var(--font-cond); font-size: 20px; font-weight: 600; color: #fff; }
+  .info code { font-size: 12px; color: #a9a9b2; }
+  .info p { color: #bdbdc5; line-height: 1.5; margin-top: 8px; font-size: 13px; }
+  .info ol { margin: 0; padding-left: 20px; color: #bdbdc5; font-size: 13px; line-height: 1.6; }
+  .info ol li.done { color: #6f6f78; text-decoration: line-through; }
+  .stack-list { display: flex; flex-direction: column-reverse; gap: 4px; }
+  .stack-list div { font-size: 12px; padding: 5px 8px; background: #2c2b32; border-radius: 6px; color: #cfcfd6; }
+  .stack-list div:first-child { background: rgba(245,111,16,.16); color: #ffb27a; }
+  body.bare .side, body.bare .info, body.bare .stage-ctl { display: none; }
+  body.bare .page { display: block; }
+  body.bare .stage { padding: 20px; align-items: flex-start; justify-content: flex-start; }
+  @media (max-width: 1100px) { .page { grid-template-columns: 1fr; } .side, .info { position: static; max-height: none; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <aside class="side" id="side"></aside>
+  <main class="stage">
+    <div class="phone" id="phone">
+      <div class="statusbar"><span>9:30</span><span class="sb-ic" id="sbic"></span></div>
+      <div class="viewport" id="vp"></div>
+      <div class="toast-layer" id="toasts"></div>
+      <div class="navbar"></div>
+    </div>
+    <div class="stage-ctl">
+      <button onclick="back()">◀ Back <kbd>Esc</kbd></button>
+      <button onclick="toMain()">Màn chính</button>
+      <button onclick="restart()">Chạy lại từ Splash</button>
+    </div>
+  </main>
+  <aside class="info" id="info"></aside>
+</div>
+
+<script src="js/icons.js"></script>
+<script src="js/data.js"></script>
+<script src="js/core.js"></script>
+<script src="js/s-main.js"></script>
+<script src="js/s-import.js"></script>
+<script src="js/s-playlist.js"></script>
+<script src="js/s-player.js"></script>
+<script src="js/s-xtream.js"></script>
+<script src="js/s-guide.js"></script>
+<script src="js/s-sport.js"></script>
+<script src="js/s-community.js"></script>
+<script src="js/flows.js"></script>
+</body>
+</html>

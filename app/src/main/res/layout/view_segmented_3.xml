@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pill segmented control (mirrors .seg). Items are selected via View.isSelected. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_seg"
+    android:orientation="horizontal"
+    android:padding="4dp">
+
+    <TextView android:id="@+id/s1" style="@style/SegItem" />
+    <TextView android:id="@+id/s2" style="@style/SegItem" android:layout_marginStart="4dp" />
+    <TextView android:id="@+id/s3" style="@style/SegItem" android:layout_marginStart="4dp" />
+</LinearLayout>

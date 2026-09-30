@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="110dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- header -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="4dp">
+
+                <TextView
+                    android:id="@+id/brand"
+                    style="@style/Text.Cond.Hero"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="24sp"
+                    tools:text="IPTV Player" />
+
+                <ImageButton android:id="@+id/btnSearch" style="@style/IconBtn.Boxed" android:layout_marginEnd="8dp" android:contentDescription="@string/search" android:src="@drawable/ic_search" />
+                <ImageButton android:id="@+id/btnHelp" style="@style/IconBtn.Boxed" android:layout_marginEnd="8dp" android:contentDescription="@string/help" android:src="@drawable/ic_help" />
+                <ImageButton android:id="@+id/btnSettings" style="@style/IconBtn.Boxed" android:contentDescription="@string/settings" android:src="@drawable/ic_settings" />
+            </LinearLayout>
+
+            <!-- empty state (no sources) -->
+            <LinearLayout
+                android:id="@+id/emptyBlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    style="@style/Text.Cond.Hero"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/home_empty_title" />
+
+                <TextView
+                    style="@style/Text.Body.Secondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:lineSpacingMultiplier="1.2"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/home_empty_body" />
+
+                <LinearLayout
+                    android:id="@+id/btnImportHero"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/bg_brandmark"
+                    android:backgroundTint="@color/accent"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:padding="18dp">
+
+                    <FrameLayout android:layout_width="48dp" android:layout_height="48dp" android:background="@drawable/bg_ic_wrap" android:backgroundTint="#2EFFFFFF">
+                        <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center" android:src="@drawable/ic_link" />
+                    </FrameLayout>
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:layout_weight="1" android:orientation="vertical">
+                        <TextView style="@style/Text.Semibold" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="@font/barlow_bold" android:text="@string/import_url_title" android:textSize="18sp" />
+                        <TextView style="@style/Text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha="0.85" android:text="@string/import_url_sub" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <include android:id="@+id/cardXtream" layout="@layout/item_action_card" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:layout_marginTop="10dp" android:layout_marginEnd="16dp" />
+                <include android:id="@+id/cardSingle" layout="@layout/item_action_card" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:layout_marginTop="10dp" android:layout_marginEnd="16dp" />
+                <include android:id="@+id/guide" layout="@layout/layout_guide_link" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:layout_marginTop="14dp" android:layout_marginEnd="16dp" />
+            </LinearLayout>
+
+            <!-- content -->
+            <LinearLayout
+                android:id="@+id/contentBlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- continue watching (on-air card) -->
+                <LinearLayout
+                    android:id="@+id/onAir"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/bg_card"
+                    android:orientation="vertical"
+                    android:outlineProvider="background"
+                    android:clipToOutline="true">
+
+                    <FrameLayout
+                        android:id="@+id/onAirScreen"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp">
+
+                        <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/bg_player_shade" />
+
+                        <TextView android:id="@+id/liveBadge" style="@style/LiveBadge" android:layout_margin="12dp" android:text="@string/live_badge" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center_vertical"
+                            android:padding="14dp">
+
+                            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                                <TextView android:id="@+id/onAirName" style="@style/Text.Cond" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="end" android:textSize="22sp" tools:text="HTV Sports" />
+                                <TextView android:id="@+id/onAirSub" style="@style/Text.Caption" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#BFFFFFFF" tools:text="Watched last" />
+                            </LinearLayout>
+
+                            <FrameLayout android:id="@+id/onAirPlay" android:layout_width="48dp" android:layout_height="48dp" android:background="@drawable/bg_brandmark" android:backgroundTint="@color/accent" android:foreground="?attr/selectableItemBackgroundBorderless" android:outlineProvider="background">
+                                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center" android:src="@drawable/ic_play" />
+                            </FrameLayout>
+                        </LinearLayout>
+                    </FrameLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvStrip"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:orientation="horizontal"
+                        android:paddingStart="12dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="12dp"
+                        android:paddingBottom="12dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                </LinearLayout>
+
+                <include android:id="@+id/secPlaylists" layout="@layout/layout_section_header" />
+                <LinearLayout android:id="@+id/playlistContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingStart="16dp" android:paddingEnd="16dp" />
+
+                <include android:id="@+id/secXtream" layout="@layout/layout_section_header" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvXtream"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                <include android:id="@+id/secChannels" layout="@layout/layout_section_header" />
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chips"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    app:selectionRequired="true"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.chip.Chip android:id="@+id/chipRecent" style="@style/Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" android:text="@string/recent" app:chipIcon="@drawable/ic_history" app:chipIconVisible="true" />
+                    <com.google.android.material.chip.Chip android:id="@+id/chipFav" style="@style/Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/favourite" app:chipIcon="@drawable/ic_heart" app:chipIconVisible="true" />
+                </com.google.android.material.chip.ChipGroup>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvChannels"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:nestedScrollingEnabled="false"
+                    android:paddingStart="11dp"
+                    android:paddingEnd="11dp" />
+
+                <TextView
+                    android:id="@+id/tvChannelsEmpty"
+                    style="@style/Text.Hint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="16dp"
+                    android:visibility="gone"
+                    tools:text="@string/no_favourites" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/botFab"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="14dp"
+        android:layout_marginBottom="112dp"
+        android:background="@drawable/bg_card_2_press"
+        android:contentDescription="@string/assistant_title"
+        android:elevation="8dp">
+
+        <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center" android:src="@drawable/ic_chat" app:tint="@color/accent" />
+    </FrameLayout>
+</FrameLayout>

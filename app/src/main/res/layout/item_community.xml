@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" android:background="@drawable/bg_card" android:orientation="vertical" android:padding="12dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+        <FrameLayout android:layout_width="@dimen/logo" android:layout_height="@dimen/logo" android:background="@drawable/bg_logo">
+            <ImageView android:id="@+id/icon" android:layout_width="20dp" android:layout_height="20dp" android:layout_gravity="center" app:tint="@color/accent" tools:src="@drawable/ic_list" />
+        </FrameLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:id="@+id/title" style="@style/Text.RowTitle" android:layout_width="match_parent" android:layout_height="wrap_content" tools:text="Asia news" />
+            <TextView android:id="@+id/sub" style="@style/Text.Hint" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="middle" tools:text="https://…" />
+        </LinearLayout>
+        <ImageButton android:id="@+id/btnSave" style="@style/IconBtn" android:src="@drawable/ic_bookmark" app:tint="@color/fav_tint" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp">
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnUse" style="@style/Btn.Small.Primary" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/use_link" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnCopy" style="@style/Btn.Small.Tonal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" app:icon="@drawable/ic_copy" app:iconPadding="0dp" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnReport" style="@style/Btn.Small.Tonal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" app:icon="@drawable/ic_flag" app:iconPadding="0dp" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/bg_card_press"
+    android:gravity="center_vertical" android:orientation="horizontal" android:paddingStart="14dp" android:paddingTop="14dp" android:paddingEnd="12dp" android:paddingBottom="14dp">
+    <FrameLayout android:id="@+id/icWrap" android:layout_width="44dp" android:layout_height="44dp" android:background="@drawable/bg_ic_wrap">
+        <ImageView android:id="@+id/icon" android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center" app:tint="@color/accent" tools:src="@drawable/ic_link" />
+    </FrameLayout>
+    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:layout_weight="1" android:orientation="vertical">
+        <TextView android:id="@+id/title" style="@style/Text.RowTitle" android:layout_width="match_parent" android:layout_height="wrap_content" tools:text="Playlist URL" />
+        <TextView android:id="@+id/sub" style="@style/Text.Caption" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" tools:text="Paste a .m3u link" />
+    </LinearLayout>
+    <ImageView android:id="@+id/trail" android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_chevron" app:tint="@color/text_3" />
+</LinearLayout>

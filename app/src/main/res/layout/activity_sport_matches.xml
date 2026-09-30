@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/bg" android:orientation="vertical">
+    <include android:id="@+id/toolbar" layout="@layout/layout_toolbar" />
+    <androidx.recyclerview.widget.RecyclerView android:id="@+id/dates" android:layout_width="match_parent" android:layout_height="wrap_content" android:clipToPadding="false" android:orientation="horizontal" android:paddingStart="16dp" android:paddingEnd="16dp" app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:scrollbars="none">
+        <com.google.android.material.chip.ChipGroup android:id="@+id/leagues" android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingStart="16dp" android:paddingEnd="16dp" app:selectionRequired="true" app:singleLine="true" app:singleSelection="true" />
+    </HorizontalScrollView>
+    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_marginTop="12dp" android:layout_weight="1">
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/rv" android:layout_width="match_parent" android:layout_height="match_parent" android:clipToPadding="false" android:paddingStart="16dp" android:paddingEnd="16dp" android:paddingBottom="16dp" app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        <ProgressBar android:id="@+id/loading" style="?android:attr/progressBarStyleSmall" android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center_horizontal" android:layout_marginTop="24dp" android:indeterminateTint="@color/accent" />
+        <include android:id="@+id/empty" layout="@layout/layout_empty_state" android:visibility="gone" />
+    </FrameLayout>
+</LinearLayout>

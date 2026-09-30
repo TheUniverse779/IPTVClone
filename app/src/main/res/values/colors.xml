@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mirrors design/tokens.css -->
+<resources>
+    <color name="bg">#151419</color>
+    <color name="surface">#1E1D23</color>
+    <color name="surface_2">#262529</color>
+    <color name="surface_3">#313036</color>
+    <color name="line">#3A3940</color>
+    <color name="text">#FBFBFB</color>
+    <color name="text_2">#A3A4AA</color>
+    <color name="text_3">#6F7076</color>
+    <color name="accent">#F56F10</color>
+    <color name="accent_press">#D95E08</color>
+    <color name="accent_soft">#24F56F10</color>
+    <color name="gold">#FFC446</color>
+    <color name="live">#FF3B3B</color>
+    <color name="ok">#3CCF7A</color>
+    <color name="ok_soft">#243CCF7A</color>
+    <color name="danger_bg">#3A1D1D</color>
+    <color name="danger_text">#FF7A7A</color>
+    <color name="scrim">#B808080A</color>
+    <color name="snack_bg">#EFEFF2</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="player_shade">#99000000</color>
+</resources>

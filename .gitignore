@@ -1,0 +1,32 @@
+*.iml
+.gradle/
+.kotlin/
+/local.properties
+/.idea/
+.DS_Store
+/build
+/app/build
+/captures
+.externalNativeBuild
+.cxx
+__pycache__/
+.claude/settings.local.json
+
+# reverse-engineering inputs (original app): never commit
+/apk/
+/decompiled/
+*.xapk
+decompiled_*.log
+/screenshots/
+
+# build outputs / device-test captures (regenerable)
+/dist/
+*.apk
+*.aab
+/design/device/
+
+# secrets (add when publishing)
+google-services.json
+*.jks
+*.keystore
+keystore.properties

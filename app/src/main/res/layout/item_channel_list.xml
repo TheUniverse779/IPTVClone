@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/bg_row"
+    android:gravity="center_vertical" android:minHeight="@dimen/h_row" android:orientation="horizontal"
+    android:paddingStart="12dp" android:paddingTop="8dp" android:paddingEnd="4dp" android:paddingBottom="8dp">
+    <TextView android:id="@+id/num" style="@style/Text.Cond" android:layout_width="30dp" android:layout_height="wrap_content" android:gravity="end" android:textColor="@color/text_3" android:textSize="16sp" tools:text="1" />
+    <include android:id="@+id/logo" layout="@layout/view_logo" android:layout_width="@dimen/logo" android:layout_height="@dimen/logo" android:layout_marginStart="12dp" />
+    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:orientation="vertical">
+        <TextView android:id="@+id/name" style="@style/Text.RowTitle" android:layout_width="match_parent" android:layout_height="wrap_content" tools:text="HTV Sports" />
+        <TextView android:id="@+id/sub" style="@style/Text.Caption" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:maxLines="1" android:ellipsize="end" tools:text="Sports · 1080p" />
+    </LinearLayout>
+    <ImageView android:id="@+id/lockIcon" android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_lock" android:visibility="gone" app:tint="@color/text_3" />
+    <ImageButton android:id="@+id/btnFav" style="@style/IconBtn" android:contentDescription="@string/favourite" android:src="@drawable/ic_heart" app:tint="@color/fav_tint" />
+    <ImageButton android:id="@+id/btnMore" style="@style/IconBtn" android:contentDescription="@string/more" android:src="@drawable/ic_more" app:tint="@color/text_2" />
+</LinearLayout>

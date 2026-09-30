@@ -1,0 +1,13 @@
+{
+  "iptv": [
+    { "title": "iptv-org – public playlists", "url": "https://github.com/iptv-org/iptv", "mode": "webview" },
+    { "title": "Free-TV/IPTV – free channels", "url": "https://github.com/Free-TV/IPTV", "mode": "webview" }
+  ],
+  "xtream": [
+    { "title": "What is Xtream Codes?", "url": "https://github.com/iptv-org/awesome-iptv", "mode": "webview" }
+  ],
+  "single": [
+    { "title": "iptv-org – stream index", "url": "https://iptv-org.github.io/", "mode": "webview" }
+  ],
+  "search_query": "free iptv m3u playlist"
+}

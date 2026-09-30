@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.IPTV" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/accent</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/accent_soft</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/text</item>
+        <item name="colorSurfaceContainer">@color/surface_2</item>
+        <item name="colorOutline">@color/line</item>
+        <item name="colorError">@color/danger_text</item>
+        <item name="android:colorBackground">@color/bg</item>
+        <item name="android:windowBackground">@color/bg</item>
+        <item name="android:statusBarColor">@color/bg</item>
+        <item name="android:navigationBarColor">@color/bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:fontFamily">@font/barlow</item>
+        <item name="android:textColorPrimary">@color/text</item>
+        <item name="android:textColorSecondary">@color/text_2</item>
+        <item name="android:textColorHint">@color/text_3</item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.IPTV.BottomSheet</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.IPTV.Dialog</item>
+        <item name="popupMenuStyle">@style/Widget.IPTV.PopupMenu</item>
+    </style>
+
+    <style name="Theme.IPTV.Splash" parent="Theme.IPTV">
+        <item name="android:windowBackground">@drawable/bg_splash</item>
+    </style>
+
+    <style name="Theme.IPTV.Player" parent="Theme.IPTV">
+        <item name="android:windowBackground">@color/black</item>
+        <item name="android:statusBarColor">@color/black</item>
+        <item name="android:navigationBarColor">@color/black</item>
+    </style>
+
+    <style name="ThemeOverlay.IPTV.BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.IPTV.BottomSheet</item>
+        <item name="android:navigationBarColor">@color/surface</item>
+    </style>
+    <style name="Widget.IPTV.BottomSheet" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="backgroundTint">@color/surface</item>
+        <item name="shapeAppearance">@style/Shape.IPTV.Sheet</item>
+    </style>
+    <style name="Shape.IPTV.Sheet" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">@dimen/r_sheet</item>
+        <item name="cornerSizeTopRight">@dimen/r_sheet</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <style name="ThemeOverlay.IPTV.Dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorSurface">@color/surface</item>
+    </style>
+
+    <!-- Plain dialog window used by BaseDialog (custom layout inside) -->
+    <style name="Theme.IPTV.DialogWindow" parent="Theme.Material3.Dark.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+        <item name="android:backgroundDimAmount">0.72</item>
+        <item name="android:fontFamily">@font/barlow</item>
+        <item name="colorPrimary">@color/accent</item>
+    </style>
+    <style name="Theme.IPTV.FullDialog" parent="Theme.IPTV">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@color/bg</item>
+    </style>
+
+    <style name="Widget.IPTV.PopupMenu" parent="Widget.Material3.PopupMenu">
+        <item name="android:popupBackground">@drawable/bg_popup</item>
+    </style>
+</resources>

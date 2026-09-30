@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="bottom" android:orientation="horizontal"
+    android:paddingStart="16dp" android:paddingTop="20dp" android:paddingEnd="16dp" android:paddingBottom="10dp">
+    <TextView android:id="@+id/secTitle" style="@style/Text.Cond.Section" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" tools:text="Section" />
+    <TextView android:id="@+id/secAction" style="@style/Text.Link" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="?attr/selectableItemBackground" android:padding="2dp" android:visibility="gone" tools:text="See all" tools:visibility="visible" />
+</LinearLayout>

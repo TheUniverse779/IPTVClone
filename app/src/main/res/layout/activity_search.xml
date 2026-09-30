@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:orientation="vertical">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="@dimen/h_toolbar" android:gravity="center_vertical" android:paddingStart="8dp" android:paddingEnd="16dp">
+        <ImageButton android:id="@+id/btnBack" style="@style/IconBtn" android:contentDescription="@string/back" android:src="@drawable/ic_back" />
+        <include android:id="@+id/search" layout="@layout/view_search_box" android:layout_width="0dp" android:layout_height="44dp" android:layout_marginStart="4dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/historyBlock" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+        <include android:id="@+id/secHistory" layout="@layout/layout_section_header" />
+        <LinearLayout android:id="@+id/history" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:background="@drawable/bg_list_card" android:clipToOutline="true" android:orientation="vertical" />
+    </LinearLayout>
+
+    <TextView android:id="@+id/tvCount" style="@style/Text.Hint" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="16dp" android:paddingEnd="16dp" android:paddingBottom="8dp" android:visibility="gone" />
+
+    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/rv" android:layout_width="match_parent" android:layout_height="match_parent" android:clipToPadding="false" android:paddingStart="8dp" android:paddingEnd="8dp" android:paddingBottom="24dp" app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        <include android:id="@+id/empty" layout="@layout/layout_empty_state" android:visibility="gone" />
+    </FrameLayout>
+</LinearLayout>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:id="@+id/refresh" android:layout_width="match_parent" android:layout_height="match_parent">
+<androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:clipToPadding="false" android:paddingBottom="110dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+        <include android:id="@+id/toolbar" layout="@layout/layout_toolbar" />
+        <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:scrollbars="none">
+            <com.google.android.material.chip.ChipGroup android:id="@+id/sports" android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingStart="16dp" android:paddingEnd="16dp" android:paddingBottom="4dp" app:selectionRequired="true" app:singleLine="true" app:singleSelection="true" />
+        </HorizontalScrollView>
+        <ProgressBar android:id="@+id/loading" style="?android:attr/progressBarStyleSmall" android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center_horizontal" android:layout_marginTop="24dp" android:indeterminateTint="@color/accent" />
+        <include android:id="@+id/secLive" layout="@layout/layout_section_header" />
+        <LinearLayout android:id="@+id/live" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingStart="16dp" android:paddingEnd="16dp" />
+        <include android:id="@+id/secMine" layout="@layout/layout_section_header" />
+        <LinearLayout android:id="@+id/mine" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingStart="16dp" android:paddingEnd="16dp" />
+        <TextView android:id="@+id/mineHint" style="@style/Text.Hint" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="16dp" android:paddingEnd="16dp" android:text="@string/follow_hint" />
+        <include android:id="@+id/secUpcoming" layout="@layout/layout_section_header" />
+        <LinearLayout android:id="@+id/upcoming" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingStart="16dp" android:paddingEnd="16dp" />
+        <include android:id="@+id/empty" layout="@layout/layout_empty_state" android:visibility="gone" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

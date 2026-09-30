@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+    <View android:layout_width="36dp" android:layout_height="4dp" android:layout_gravity="center_horizontal" android:layout_marginTop="10dp" android:layout_marginBottom="2dp" android:background="@drawable/bg_grab" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="52dp" android:gravity="center_vertical" android:paddingStart="8dp" android:paddingEnd="8dp">
+        <TextView android:id="@+id/sheetStart" style="@style/Btn.Text.Muted" android:layout_width="wrap_content" android:layout_height="40dp" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:textSize="14sp" />
+        <TextView android:id="@+id/sheetTitle" style="@style/Text.Cond" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:maxLines="1" android:ellipsize="end" tools:text="Title" />
+        <ImageButton android:id="@+id/sheetEnd" style="@style/IconBtn" android:src="@drawable/ic_close" />
+    </LinearLayout>
+</LinearLayout>

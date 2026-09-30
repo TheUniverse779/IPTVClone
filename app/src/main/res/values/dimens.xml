@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mirrors design/tokens.css (1px = 1dp) -->
+<resources>
+    <dimen name="sp_4">4dp</dimen>
+    <dimen name="sp_8">8dp</dimen>
+    <dimen name="sp_12">12dp</dimen>
+    <dimen name="sp_16">16dp</dimen>
+    <dimen name="sp_20">20dp</dimen>
+    <dimen name="sp_24">24dp</dimen>
+    <dimen name="sp_32">32dp</dimen>
+
+    <dimen name="r_sheet">24dp</dimen>
+    <dimen name="r_card">16dp</dimen>
+    <dimen name="r_ctl">12dp</dimen>
+
+    <dimen name="h_toolbar">56dp</dimen>
+    <dimen name="h_bottombar">72dp</dimen>
+    <dimen name="h_button">48dp</dimen>
+    <dimen name="h_input">48dp</dimen>
+    <dimen name="h_row">64dp</dimen>
+    <dimen name="logo">44dp</dimen>
+    <dimen name="icon_btn">40dp</dimen>
+    <dimen name="fab">60dp</dimen>
+
+    <dimen name="t_11">11sp</dimen>
+    <dimen name="t_12">12sp</dimen>
+    <dimen name="t_14">14sp</dimen>
+    <dimen name="t_16">16sp</dimen>
+    <dimen name="t_20">20sp</dimen>
+    <dimen name="t_24">24sp</dimen>
+    <dimen name="t_32">32sp</dimen>
+</resources>

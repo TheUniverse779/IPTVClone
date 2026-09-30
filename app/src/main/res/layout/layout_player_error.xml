@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#DB0A0A0C"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_wifi_off" app:tint="@color/white" />
+    <TextView style="@style/Text.Cond" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="@string/player_error_title" android:textColor="@color/white" />
+    <TextView style="@style/Text.Body.Secondary" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:gravity="center" android:text="@string/player_error_body" android:textSize="13sp" />
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp">
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnRetry" style="@style/Btn.Small.Tonal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/retry" app:icon="@drawable/ic_refresh" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnNextCh" style="@style/Btn.Small.Primary" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="@string/next_channel" app:icon="@drawable/ic_next" app:iconGravity="textEnd" />
+    </LinearLayout>
+</LinearLayout>

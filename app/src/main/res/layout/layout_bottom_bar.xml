@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bottom bar with a raised centre + button (mirrors .bottombar in components.css) -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="96dp"
+    android:clipChildren="false">
+
+    <LinearLayout
+        android:id="@+id/bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/h_bottombar"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_bottombar"
+        android:elevation="8dp"
+        android:orientation="horizontal">
+
+        <LinearLayout android:id="@+id/tabHome" style="@style/BottomTab">
+            <ImageView android:id="@+id/icHome" style="@style/BottomTabIcon" android:src="@drawable/ic_home" />
+            <TextView android:id="@+id/tvHome" style="@style/BottomTabText" android:text="@string/tab_home" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/tabChannels" style="@style/BottomTab">
+            <ImageView android:id="@+id/icChannels" style="@style/BottomTabIcon" android:src="@drawable/ic_list" />
+            <TextView android:id="@+id/tvChannels" style="@style/BottomTabText" android:text="@string/tab_channels" />
+        </LinearLayout>
+
+        <Space android:layout_width="72dp" android:layout_height="match_parent" />
+
+        <LinearLayout android:id="@+id/tabXtream" style="@style/BottomTab">
+            <ImageView android:id="@+id/icXtream" style="@style/BottomTabIcon" android:src="@drawable/ic_xtream" />
+            <TextView android:id="@+id/tvXtream" style="@style/BottomTabText" android:text="@string/tab_xtream" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/tabSport" style="@style/BottomTab">
+            <ImageView android:id="@+id/icSport" style="@style/BottomTabIcon" android:src="@drawable/ic_sport" />
+            <TextView android:id="@+id/tvSport" style="@style/BottomTabText" android:text="@string/tab_sport" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fab"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/bg_fab"
+        android:contentDescription="@string/add_source"
+        android:elevation="12dp">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_plus"
+            app:tint="@color/white" />
+    </FrameLayout>
+</FrameLayout>

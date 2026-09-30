@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <include android:id="@+id/header" layout="@layout/layout_sheet_header" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:paddingStart="8dp" android:paddingEnd="8dp" android:paddingBottom="8dp">
+        <ImageButton android:id="@+id/btnWebBack" style="@style/IconBtn" android:layout_width="36dp" android:layout_height="36dp" android:padding="8dp" android:src="@drawable/ic_back" />
+        <LinearLayout android:layout_width="0dp" android:layout_height="36dp" android:layout_marginStart="6dp" android:layout_marginEnd="6dp" android:layout_weight="1" android:background="@drawable/bg_ic_wrap" android:gravity="center_vertical" android:paddingStart="10dp" android:paddingEnd="10dp">
+            <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_lock" app:tint="@color/text_2" />
+            <TextView android:id="@+id/addr" style="@style/Text.Caption" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="6dp" android:ellipsize="middle" android:singleLine="true" />
+        </LinearLayout>
+        <ImageButton android:id="@+id/btnReload" style="@style/IconBtn" android:layout_width="36dp" android:layout_height="36dp" android:padding="8dp" android:src="@drawable/ic_refresh" />
+    </LinearLayout>
+    <com.google.android.material.progressindicator.LinearProgressIndicator android:id="@+id/progress" android:layout_width="match_parent" android:layout_height="wrap_content" app:indicatorColor="@color/accent" app:trackColor="@android:color/transparent" app:trackThickness="2dp" />
+    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <WebView android:id="@+id/web" android:layout_width="match_parent" android:layout_height="match_parent" />
+        <LinearLayout android:id="@+id/snack" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="bottom" android:layout_margin="12dp" android:background="@drawable/bg_snack" android:elevation="6dp" android:gravity="center_vertical" android:paddingStart="16dp" android:paddingEnd="4dp" android:visibility="gone">
+            <TextView android:id="@+id/snackText" style="@style/Text.Semibold" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:maxLines="2" android:ellipsize="middle" android:textColor="@color/bg" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/snackAction" style="@style/Btn.Text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/use_this_link" android:textColor="@color/accent_press" />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>
