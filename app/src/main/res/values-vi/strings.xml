@@ -490,4 +490,9 @@
     <string name="save_hint">Danh sách lớn nên cần vài giây. Bạn có thể dùng app tiếp, profile sẽ hiện khi lưu xong.</string>
     <string name="sync_bg_done">Profile "%1$s" đã sẵn sàng</string>
     <string name="saving">Đang lưu…</string>
+    <string name="search_intro_title">Tìm trong mọi playlist</string>
+    <string name="search_intro_body">Nhập tên kênh hoặc tên nhóm. Playlist đang khóa không được tìm.</string>
+    <string name="import_is_stream_title">Đây là link 1 kênh</string>
+    <string name="import_is_stream">Link này phát trực tiếp 1 kênh chứ không phải danh sách kênh, nên không thêm làm playlist được. Bạn có thể phát ngay (hoặc thêm ở + › Single stream).</string>
+    <string name="play_as_stream">Phát ngay</string>
 </resources>

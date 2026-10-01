@@ -36,7 +36,8 @@ sealed interface ImportProgress {
     data class Failed(val reason: ImportError, val detail: String? = null) : ImportProgress
 }
 
-enum class ImportError { NETWORK, HTTP, EMPTY, INVALID }
+/** STREAM: the link is one HLS stream (has #EXT-X- tags), not a channel list — play it as a single stream. */
+enum class ImportError { NETWORK, HTTP, EMPTY, INVALID, STREAM }
 
 class ImportException(val reason: ImportError, message: String? = null) : IOException(message)
 
@@ -98,9 +99,13 @@ class PlaylistRepository @Inject constructor(
                 batch += c.toEntity(playlistId, count++)
             }
             counting.use { stream ->
-                stream.mark(64)
-                val first = generateSequence { stream.read().takeIf { it >= 0 } }.map { it.toChar() }.firstOrNull { !it.isWhitespace() }
+                stream.mark(4096)
+                val head = ByteArray(4096).let { b -> String(b, 0, stream.read(b).coerceAtLeast(0), Charsets.UTF_8) }
                 stream.reset()
+                val first = head.firstOrNull { !it.isWhitespace() }
+                // An HLS media/master playlist describes ONE stream (variants/segments), not channels.
+                if (Regex("""^#EXT-X-(STREAM-INF|TARGETDURATION|MEDIA-SEQUENCE|VERSION)""", RegexOption.MULTILINE).containsMatchIn(head) &&
+                    !head.contains("#EXTINF:-1") && !head.contains("tvg-")) throw ImportException(ImportError.STREAM)
                 val reader = BufferedReader(InputStreamReader(stream, Charsets.UTF_8))
                 if (JsonPlaylistParser.looksLikeJson(first)) {
                     JsonPlaylistParser.parse(reader, onChannel)

@@ -1,5 +1,6 @@
 package com.iptvplayer.app.ui.playlist
 
+import com.iptvplayer.app.ui.passcode.PasscodeDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
@@ -141,6 +142,8 @@ class PlaylistDetailActivity : BaseActivity<ActivityPlaylistDetailBinding>(Activ
         collect(vm.total) { total -> groupsTotal = total; refreshGroups() }
         collect(vm.groups) { list -> lastGroups = list.map { it.groupName to it.count }; refreshGroups() }
         collect(vm.channels) { channelAdapter.submitData(it) }
+        // Channels list: back to top when the filter (search / group / sort) changes.
+        collect(combine(vm.query, vm.group, vm.sort) { q, g, so -> Triple(q, g, so) }) { binding.rvChannels.scrollToPosition(0) }
         collect(combine(vm.group, vm.sort) { g, s -> g to s }) { (g, s) ->
             binding.chipGroup.visible(g != null); binding.chipGroup.text = g
             updateMeta()
@@ -150,6 +153,9 @@ class PlaylistDetailActivity : BaseActivity<ActivityPlaylistDetailBinding>(Activ
 
         supportFragmentManager.setFragmentResultListener(KEY_PLAY_LOCKED, this) { _, r ->
             if (r.getBoolean(com.iptvplayer.app.ui.passcode.PasscodeDialog.KEY_OK)) play(r.getBundle(com.iptvplayer.app.ui.passcode.PasscodeDialog.KEY_PAYLOAD)!!.getLong("id"))
+        }
+        supportFragmentManager.setFragmentResultListener(KEY_TOGGLE_LOCK, this) { _, r ->
+            if (r.getBoolean(PasscodeDialog.KEY_OK)) vm.toggleLock(r.getBundle(PasscodeDialog.KEY_PAYLOAD)!!.getLong("id"))
         }
         supportFragmentManager.setFragmentResultListener(KEY_DELETE_CH, this) { _, r ->
             if (r.getInt(ConfirmDialog.KEY_WHICH) == 0) vm.deleteChannel(r.getBundle(ConfirmDialog.KEY_PAYLOAD)!!.getLong("id"))
@@ -161,9 +167,16 @@ class PlaylistDetailActivity : BaseActivity<ActivityPlaylistDetailBinding>(Activ
 
     private var groupsTotal = 0
     private var lastGroups: List<Pair<String?, Int>> = emptyList()
+    private var lastGroupsKey: Any? = null
+
     private fun refreshGroups() {
         val q = vm.query.value
-        groupAdapter.submitList(if (q.isEmpty()) listOf<Pair<String?, Int>>(null to groupsTotal) + lastGroups else lastGroups)
+        // New query or sort: show the list from the top (otherwise clearing a search leaves it scrolled).
+        val key = q to vm.groupsByCount.value
+        val reset = key != lastGroupsKey; lastGroupsKey = key
+        groupAdapter.submitList(if (q.isEmpty()) listOf<Pair<String?, Int>>(null to groupsTotal) + lastGroups else lastGroups) {
+            if (reset) binding.rvGroups.scrollToPosition(0)
+        }
         if (!vm.showChannels.value) showEmpty(lastGroups.isEmpty() && q.isNotEmpty(), q)
     }
 
@@ -223,7 +236,9 @@ class PlaylistDetailActivity : BaseActivity<ActivityPlaylistDetailBinding>(Activ
         setOnMenuItemClickListener {
             when (it.itemId) {
                 1 -> renameDialog(c)
-                2 -> vm.toggleLock(c.id)
+                // Same rule as playlists/profiles: locking needs a passcode (created if missing), unlocking asks for it.
+                2 -> PasscodeDialog.show(supportFragmentManager, KEY_TOGGLE_LOCK,
+                    if (c.isLocked) PasscodeDialog.MODE_ENTER else PasscodeDialog.MODE_ENSURE, c.name, bundleOf("id" to c.id))
                 3 -> { copyText(c.url); toast(R.string.copied) }
                 4 -> ConfirmDialog.show(supportFragmentManager, KEY_DELETE_CH, getString(R.string.remove_from_playlist) + "?", c.name, ok = getString(R.string.delete), danger = true, payload = bundleOf("id" to c.id))
             }
@@ -243,5 +258,8 @@ class PlaylistDetailActivity : BaseActivity<ActivityPlaylistDetailBinding>(Activ
     private suspend fun collectOnce() = vm.playlist.firstOrNull()
 
 
-    companion object { private const val KEY_PLAY_LOCKED = "pd_play_locked"; private const val KEY_DELETE_CH = "pd_delete_ch" }
+    companion object {
+        private const val KEY_PLAY_LOCKED = "pd_play_locked"; private const val KEY_DELETE_CH = "pd_delete_ch"
+        private const val KEY_TOGGLE_LOCK = "pd_toggle_lock"
+    }
 }

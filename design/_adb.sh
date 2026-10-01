@@ -30,3 +30,6 @@ for m in re.finditer(r'<node [^>]*>', x):
 crash() { "$ADB" logcat -d -b crash | tail -40; }
 # tapid <resource-id or text> [index]: tap the n-th node whose id or text matches exactly.
 tapid() { local p; p=$(ui | awk -v q="$1" -v n="${2:-1}" '{ t=$0; sub(/^[^ ]+ /, "", t); id=t; sub(/ .*/, "", id); txt=t; sub(/^[^ ]* /, "", txt); gsub(/^'\''|'\''$/, "", txt); if (id==q || txt==q) { c++; if (c==n) { print $1; exit } } }'); [ -z "$p" ] && { echo "not found: $1"; return 1; }; tap ${p%,*} ${p#*,}; }
+# portrait: lock the phone upright (user may rotate it while tests run)
+portrait() { "$ADB" shell settings put system accelerometer_rotation 0; "$ADB" shell settings put system user_rotation 0; sleep 1; }
+top() { "$ADB" shell dumpsys activity activities | grep -m1 topResumedActivity | grep -oE '[a-z.]+/[A-Za-z.]+' | sed 's#com.iptvplayer.app/##'; }

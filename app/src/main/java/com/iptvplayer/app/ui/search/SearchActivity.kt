@@ -100,9 +100,14 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>(ActivitySearchBinding
         binding.tvCount.visible(!blank && r.isNotEmpty())
         binding.tvCount.text = getString(R.string.n_results_in, r.size)
         binding.rv.visible(!blank)
-        binding.empty.root.visible(!blank && r.isEmpty())
-        if (!blank && r.isEmpty()) {
-            binding.empty.emptyIcon.setImageResource(R.drawable.ic_search)
+        // Blank query and no history: a hint instead of an empty page.
+        val intro = blank && binding.history.childCount == 0
+        binding.empty.root.visible((!blank && r.isEmpty()) || intro)
+        binding.empty.emptyIcon.setImageResource(R.drawable.ic_search)
+        if (intro) {
+            binding.empty.emptyTitle.setText(R.string.search_intro_title)
+            binding.empty.emptyBody.setText(R.string.search_intro_body)
+        } else if (!blank && r.isEmpty()) {
             binding.empty.emptyTitle.text = getString(R.string.not_found_q, q)
             binding.empty.emptyBody.setText(R.string.not_found_body)
         }

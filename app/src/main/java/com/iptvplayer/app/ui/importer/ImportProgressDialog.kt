@@ -153,6 +153,19 @@ class ImportProgressDialog : BaseDialog<DialogImportProgressBinding>(DialogImpor
             ImportError.HTTP -> getString(R.string.import_failed_http, f.detail ?: "HTTP")
             ImportError.NETWORK -> getString(R.string.import_failed_network)
             ImportError.EMPTY, ImportError.INVALID -> getString(R.string.import_failed_empty)
+            ImportError.STREAM -> getString(R.string.import_is_stream)
+        }
+        if (f.reason == ImportError.STREAM) {
+            val url = requireArguments().getString("url").orEmpty()
+            binding.rTitle.setText(R.string.import_is_stream_title)
+            binding.buttons.btn1.setText(R.string.cancel)
+            binding.buttons.btn2.setText(R.string.play_as_stream)
+            binding.buttons.btn1.setOnClickListener { dismiss() }
+            binding.buttons.btn2.setOnClickListener {
+                val ctx = requireContext(); dismiss()
+                Nav.play(ctx, com.iptvplayer.app.ui.player.PlayRequest.Url(url, url.substringAfterLast('/').substringBefore('?')))
+            }
+            return
         }
         binding.buttons.btn1.setText(R.string.fix_link)
         binding.buttons.btn2.setText(R.string.view_guide)

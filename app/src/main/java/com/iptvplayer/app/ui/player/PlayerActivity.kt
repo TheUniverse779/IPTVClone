@@ -357,7 +357,8 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         chip(R.drawable.ic_aspect, R.string.aspect) { PlayerSheets.aspect(supportFragmentManager, aspect) }
         chip(R.drawable.ic_pip, R.string.pip) { enterPip() }
         chip(R.drawable.ic_cast, R.string.cast) { PlayerSheets.cast(supportFragmentManager) }
-        chip(R.drawable.ic_lock, R.string.lock) { setLocked(true) }
+        // No Lock here: in portrait the chips and channel list stay tappable, so it would lock nothing.
+        // Lock lives in the fullscreen tools row, where it covers the whole screen.
     }
 
     private fun zapAdapter() = SimpleAdapter<ZapItem, ItemChannelListBinding>(ItemChannelListBinding::inflate, { a, b -> a.key == b.key }) { b, z, i ->
