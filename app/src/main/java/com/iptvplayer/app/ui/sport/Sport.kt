@@ -48,6 +48,7 @@ import com.iptvplayer.app.work.MatchReminderWorker
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlin.coroutines.coroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
@@ -66,6 +67,9 @@ import javax.inject.Inject
 class SportViewModel @Inject constructor(val repo: SportRepository, private val settings: SettingsStore) : ViewModel() {
     val matches = MutableStateFlow<List<Match>>(emptyList())
     val loading = MutableStateFlow(true)
+    /** Pull-to-refresh spinner. Separate from [loading]: that one stays false when matches are already shown,
+     *  so it never changes and could not be used to stop the spinner. */
+    val refreshing = MutableStateFlow(false)
     val error = MutableStateFlow(false)
     val followed = repo.observeFavourites().map { list -> list.map { it.eventId }.toSet() }
     private var poll: Job? = null
@@ -73,18 +77,30 @@ class SportViewModel @Inject constructor(val repo: SportRepository, private val 
     init { load() }
 
     /** Today → +14 days for the followed leagues (covers international breaks); re-polls every 30 s while any match is live. */
-    fun load() {
+    /** [userRefresh]: pulled down — show the spinner and skip the cache for this first fetch. */
+    fun load(userRefresh: Boolean = false) {
         poll?.cancel()
+        refreshing.value = userRefresh
         poll = viewModelScope.launch {
-            while (isActive) {
-                loading.value = matches.value.isEmpty()
-                val slugs = settings.current().selectedLeagues
-                val from = SportRepository.startOfDay(); val to = SportRepository.startOfDay(days = 14)
-                val list = repo.matches(slugs, from, to, maxAgeMs = if (matches.value.any { it.state == MatchState.LIVE }) 20_000 else 60_000)
-                error.value = list.isEmpty() && matches.value.isEmpty()
-                if (list.isNotEmpty() || matches.value.isEmpty()) matches.value = list
-                loading.value = false
-                delay(if (list.any { it.state == MatchState.LIVE }) 30_000 else 5 * 60_000)
+            var force = userRefresh
+            try {
+                while (isActive) {
+                    loading.value = matches.value.isEmpty()
+                    val slugs = settings.current().selectedLeagues
+                    val from = SportRepository.startOfDay(); val to = SportRepository.startOfDay(days = 14)
+                    val maxAge = when { force -> 0L; matches.value.any { it.state == MatchState.LIVE } -> 20_000L; else -> 60_000L }
+                    val list = repo.matches(slugs, from, to, maxAgeMs = maxAge)
+                    error.value = list.isEmpty() && matches.value.isEmpty()
+                    if (list.isNotEmpty() || matches.value.isEmpty()) matches.value = list
+                    loading.value = false
+                    refreshing.value = false
+                    force = false
+                    delay(if (list.any { it.state == MatchState.LIVE }) 30_000 else 5 * 60_000)
+                }
+            } finally {
+                // Cancelled mid-fetch (screen gone): never leave a spinner running. Skip if a newer load()
+                // already took over, or this late cleanup would hide the newer spinner.
+                if (poll === coroutineContext[Job]) { loading.value = false; refreshing.value = false }
             }
         }
     }
@@ -168,14 +184,15 @@ class SportFragment : BaseFragment<FragmentSportBinding>(FragmentSportBinding::i
         }
         binding.refresh.setColorSchemeColors(requireContext().getColor(R.color.accent))
         binding.refresh.setProgressBackgroundColorSchemeColor(requireContext().getColor(R.color.surface_2))
-        binding.refresh.setOnRefreshListener { vm.load() }
+        binding.refresh.setOnRefreshListener { vm.load(userRefresh = true) }
         header(binding.secLive, R.string.live_now, null)
         header(binding.secMine, R.string.my_matches) { Nav.myMatches(requireContext()) }
         header(binding.secUpcoming, R.string.upcoming) { Nav.sportMatches(requireContext()) }
 
         collect(vm.followed) { followed = it; render() }
         collect(vm.matches) { render() }
-        collect(vm.loading) { binding.loading.visible(it); if (!it) binding.refresh.isRefreshing = false; render() }
+        collect(vm.loading) { binding.loading.visible(it); render() }
+        collect(vm.refreshing) { binding.refresh.isRefreshing = it }
     }
 
     override fun onSaveInstanceState(outState: Bundle) { super.onSaveInstanceState(outState); outState.putString("sport", sport) }
@@ -271,7 +288,15 @@ class SportMatchesActivity : BaseActivity<ActivitySportMatchesBinding>(ActivityS
         }
     }
 
-    private fun load() = lifecycleScope.launch {
+    private var loadJob: Job? = null
+
+    /** Tapping dates quickly: only the last one's result is shown. */
+    private fun load() {
+        loadJob?.cancel()
+        loadJob = loadDay()
+    }
+
+    private fun loadDay() = lifecycleScope.launch {
         binding.loading.visible(true); binding.empty.root.visible(false)
         val from = SportRepository.startOfDay(days = dayOffset)
         list = repo.matches(settings.current().selectedLeagues, from, from + SportRepository.DAY).filter { it.startTime >= from }
