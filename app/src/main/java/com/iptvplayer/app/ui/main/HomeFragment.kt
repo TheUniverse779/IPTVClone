@@ -1,5 +1,7 @@
 package com.iptvplayer.app.ui.main
 
+import com.iptvplayer.app.util.dp
+import androidx.core.view.updateLayoutParams
 import android.os.Bundle
 import android.text.Html
 import android.text.SpannableString
@@ -55,6 +57,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         binding.btnHelp.setOnClickListener { Nav.howTo(requireContext()) }
         binding.btnSettings.setOnClickListener { Nav.settings(requireContext()) }
         binding.botFab.setOnClickListener { Nav.chatbot(requireContext()) }
+        // Content scrolls fully past both the bottom bar and the chatbot button.
+        padForMainTabs(binding.scroll, aboveFab = true)
+        (activity as? MainActivity)?.let { host ->
+            collect(host.bottomCover) { cover ->
+                if (cover > 0) binding.botFab.updateLayoutParams<android.view.ViewGroup.MarginLayoutParams> { bottomMargin = cover + 12.dp }
+            }
+        }
 
         // empty state
         binding.btnImportHero.setOnClickListener { Nav.import(requireContext(), "url") }

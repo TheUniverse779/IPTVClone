@@ -28,6 +28,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     override val applyInsets = false
     private var current = Tab.HOME
+
+    /** Pixels hidden behind the bottom bar (incl. gesture-nav inset). Tab fragments pad their lists by this. */
+    val bottomCover = kotlinx.coroutines.flow.MutableStateFlow(0)
     private var lastBack = 0L
 
     private val notifPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
@@ -42,6 +45,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             binding.bottomBar.bar.layoutParams.height = barH
             binding.bottomBar.root.layoutParams.height = barH + (24 * resources.displayMetrics.density).toInt()
             binding.bottomBar.root.requestLayout()
+            bottomCover.value = barH
             insets
         }
 

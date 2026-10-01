@@ -35,6 +35,7 @@ class XtreamProfilesFragment : BaseFragment<FragmentXtreamProfilesBinding>(Fragm
         actions = SourceActions(this) { vm.deletePlaylist(it) }.register()
         actions.profileLookup = { id -> vm.state.value.profiles.firstOrNull { it.id == id } }
         binding.toolbar.btnBack.visible(false)
+        padForMainTabs(binding.root)
         addToolbarButton(binding.toolbar.actions, R.drawable.ic_help, boxed = true, desc = R.string.help) { Nav.howTo(requireContext(), "xtream") }
         binding.rvProfiles.adapter = adapter
 

@@ -30,6 +30,7 @@ class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding>(FragmentPlaylis
         actions = SourceActions(this) { vm.deletePlaylist(it) }.register()
         binding.toolbar.btnBack.visible(false)
         binding.toolbar.tvTitle.setText(R.string.your_sources)
+        padForMainTabs(binding.root)
         addToolbarButton(binding.toolbar.actions, R.drawable.ic_search, boxed = true) { Nav.search(requireContext()) }
         binding.secSingles.secTitle.setText(R.string.single_streams)
         binding.addSource.glIcon.setImageResource(R.drawable.ic_plus)

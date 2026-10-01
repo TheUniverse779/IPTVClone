@@ -29,6 +29,15 @@ val Int.dp: Int get() = (this * android.content.res.Resources.getSystem().displa
 fun View.visible(v: Boolean) { visibility = if (v) View.VISIBLE else View.GONE }
 
 /**
+ * Bottom padding for a tab's scrolling list so its last item can scroll clear of the bottom bar
+ * (and of the floating chatbot button when [aboveFab] is true). [cover] is the bar height in px.
+ */
+fun View.padForBottomBar(cover: Int, aboveFab: Boolean = false) {
+    val extra = if (aboveFab) 52.dp + 12.dp + 12.dp else 16.dp // FAB height + its gap above the bar + breathing room
+    setPadding(paddingLeft, paddingTop, paddingRight, cover + extra)
+}
+
+/**
  * Label + switch rows: tapping anywhere on the row toggles its switch (not just the thumb).
  * Rows that already have a click listener (e.g. Settings) are left alone.
  */

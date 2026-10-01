@@ -1,5 +1,6 @@
 package com.iptvplayer.app.ui.sport
 
+import com.iptvplayer.app.ui.main.padForMainTabs
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Gravity
@@ -171,6 +172,7 @@ class SportFragment : BaseFragment<FragmentSportBinding>(FragmentSportBinding::i
     override fun setup(savedInstanceState: Bundle?) {
         binding.toolbar.btnBack.visible(false)
         binding.toolbar.tvTitle.setText(R.string.sport_title)
+        padForMainTabs(binding.refresh.getChildAt(0))
         addToolbarButton(binding.toolbar.actions, R.drawable.ic_trophy, boxed = true, desc = R.string.leagues_followed) { LeaguePickerSheet.show(childFragmentManager) }
         childFragmentManager.setFragmentResultListener(LeaguePickerSheet.RESULT, viewLifecycleOwner) { _, _ -> vm.load() }
         sport = savedInstanceState?.getString("sport") ?: sport

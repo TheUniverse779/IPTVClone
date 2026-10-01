@@ -1,5 +1,6 @@
 package com.iptvplayer.app.ui.settings
 
+import com.iptvplayer.app.ui.main.padForMainTabs
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -61,7 +62,8 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
         binding.toolbar.tvTitle.setText(R.string.settings)
         binding.toolbar.btnBack.visible(standalone)
         binding.toolbar.btnBack.setOnClickListener { requireActivity().finish() }
-        binding.root.setPadding(0, 0, 0, if (standalone) 24.dp else 110.dp)
+        binding.root.setPadding(0, 0, 0, if (standalone) 24.dp else 0)
+        if (!standalone) padForMainTabs(binding.root.parent as android.view.View)
         binding.version.text = getString(R.string.version_x, BuildConfig.VERSION_NAME)
         childFragmentManager.setFragmentResultListener(KEY_PASS, viewLifecycleOwner) { _, _ -> }
         collect(store.settings) { render(it) }
