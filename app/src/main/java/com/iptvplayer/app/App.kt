@@ -10,6 +10,8 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class App : Application(), Configuration.Provider {
+    companion object { const val DEFAULT_LANGUAGE = "en" }
+
     @Inject lateinit var workerFactory: HiltWorkerFactory
 
     override val workManagerConfiguration: Configuration

@@ -1,5 +1,8 @@
 package com.iptvplayer.app.ui.splash
 
+import com.iptvplayer.app.App
+import androidx.core.os.LocaleListCompat
+import androidx.appcompat.app.AppCompatDelegate
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -21,6 +24,16 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
     @Inject lateinit var settings: SettingsStore
 
     override fun setup(savedInstanceState: Bundle?) {
+        // First launch: English by default (not the phone's language). Done once; after that the user's
+        // choice in Settings › Language or Android's per-app language screen always wins.
+        lifecycleScope.launch {
+            if (!settings.languageDefaulted()) {
+                settings.setLanguageDefaulted()
+                if (AppCompatDelegate.getApplicationLocales().isEmpty) {
+                    AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(App.DEFAULT_LANGUAGE))
+                }
+            }
+        }
         ValueAnimator.ofInt(0, 100).apply {
             duration = MIN_SPLASH_MS
             addUpdateListener { binding.progress.progress = it.animatedValue as Int }

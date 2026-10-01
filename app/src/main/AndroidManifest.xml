@@ -89,5 +89,14 @@
                 android:value="androidx.startup"
                 tools:node="remove" />
         </provider>
+        <!-- Persists the per-app language on Android 12 and below (AppCompatDelegate.setApplicationLocales). -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
     </application>
 </manifest>

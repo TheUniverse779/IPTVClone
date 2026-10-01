@@ -151,7 +151,8 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
      * wire it in [pickLanguage].
      */
     private fun pickLanguage() {
-        val tags = listOf("" to getString(R.string.auto), "en" to "English", "vi" to "Tiếng Việt")
+        // No "Auto" entry: the app defaults to English (App.DEFAULT_LANGUAGE), not the phone language.
+        val tags = listOf("en" to "English", "vi" to "Tiếng Việt")
         val cur = AppCompatDelegate.getApplicationLocales().toLanguageTags()
         MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.language_title)
             .setSingleChoiceItems(tags.map { it.second }.toTypedArray(), tags.indexOfFirst { it.first == cur }.coerceAtLeast(0)) { d, i ->
@@ -161,7 +162,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
 
     private fun currentLanguageName(): String {
         val tag = AppCompatDelegate.getApplicationLocales().toLanguageTags()
-        return when { tag.startsWith("vi") -> "Tiếng Việt"; tag.startsWith("en") -> "English"; else -> getString(R.string.auto) }
+        return if (tag.startsWith("vi")) "Tiếng Việt" else "English"
     }
 
     // ---- backup / restore (URL playlists + Xtream profiles + single streams) ----

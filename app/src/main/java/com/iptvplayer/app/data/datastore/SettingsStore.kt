@@ -47,6 +47,7 @@ class SettingsStore @Inject constructor(@ApplicationContext private val context:
         val UA = stringPreferencesKey("user_agent_mode")
         val SW_DECODER = booleanPreferencesKey("software_decoder")
         val LEAGUES = stringPreferencesKey("selected_leagues")
+        val LANG_DEFAULTED = booleanPreferencesKey("language_defaulted")
     }
 
     val settings: Flow<Settings> = context.dataStore.data.map { it.toSettings() }
@@ -65,6 +66,10 @@ class SettingsStore @Inject constructor(@ApplicationContext private val context:
     )
 
     suspend fun setFirstRunDone() = context.dataStore.edit { it[K.FIRST_RUN] = true }
+
+    /** True once the default app language has been applied (so a later user choice is never overridden). */
+    suspend fun languageDefaulted() = context.dataStore.data.first()[K.LANG_DEFAULTED] ?: false
+    suspend fun setLanguageDefaulted() = context.dataStore.edit { it[K.LANG_DEFAULTED] = true }
     suspend fun setDisclaimerAccepted() = context.dataStore.edit { it[K.DISCLAIMER] = true }
     suspend fun setAutoPip(v: Boolean) = context.dataStore.edit { it[K.AUTO_PIP] = v }
     suspend fun setBackgroundAudio(v: Boolean) = context.dataStore.edit { it[K.BG_AUDIO] = v }
