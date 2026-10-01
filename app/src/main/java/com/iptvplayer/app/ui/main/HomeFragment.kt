@@ -1,5 +1,6 @@
 package com.iptvplayer.app.ui.main
 
+import com.iptvplayer.app.Features
 import com.iptvplayer.app.util.dp
 import androidx.core.view.updateLayoutParams
 import android.os.Bundle
@@ -55,7 +56,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
         binding.btnSearch.setOnClickListener { Nav.search(requireContext()) }
         binding.btnHelp.setOnClickListener { Nav.howTo(requireContext()) }
-        binding.btnSettings.setOnClickListener { Nav.settings(requireContext()) }
+        // With Sport off, Settings is the 4th tab: the gear switches to it instead of opening a second Settings screen.
+        binding.btnSettings.setOnClickListener {
+            if (Features.SPORT) Nav.settings(requireContext()) else (activity as? MainActivity)?.selectTab(MainActivity.Tab.SPORT)
+        }
         binding.botFab.setOnClickListener { Nav.chatbot(requireContext()) }
         // Content scrolls fully past both the bottom bar and the chatbot button.
         padForMainTabs(binding.scroll, aboveFab = true)

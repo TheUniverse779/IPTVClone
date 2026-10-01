@@ -12,6 +12,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commitNow
+import com.iptvplayer.app.Features
+import com.iptvplayer.app.R
 import com.iptvplayer.app.base.BaseActivity
 import com.iptvplayer.app.databinding.ActivityMainBinding
 import com.iptvplayer.app.ui.sport.SportFragment
@@ -24,6 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
+    /** The 4th tab is Sport or Settings depending on [Features.SPORT]. */
     enum class Tab { HOME, CHANNELS, XTREAM, SPORT }
 
     override val applyInsets = false
@@ -56,6 +59,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             tabChannels.setOnClickListener { selectTab(Tab.CHANNELS) }
             tabXtream.setOnClickListener { selectTab(Tab.XTREAM) }
             tabSport.setOnClickListener { selectTab(Tab.SPORT) }
+            if (!Features.SPORT) { icSport.setImageResource(R.drawable.ic_settings); tvSport.setText(R.string.tab_settings) }
             fab.setOnClickListener { openAddSource() }
         }
         selectTab(current)
@@ -106,7 +110,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         Tab.HOME -> HomeFragment()
         Tab.CHANNELS -> PlaylistsFragment()
         Tab.XTREAM -> XtreamProfilesFragment()
-        Tab.SPORT -> SportFragment()
+        Tab.SPORT -> if (Features.SPORT) SportFragment() else com.iptvplayer.app.ui.settings.SettingsFragment()
     }
 
     fun openAddSource() = AddSourceSheet().show(supportFragmentManager, "add_source")

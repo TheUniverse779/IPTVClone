@@ -7,4 +7,10 @@ package com.iptvplayer.app
 object Features {
     /** Community link sharing (needs Firebase Realtime Database; hidden until decided). */
     const val COMMUNITY = false
+
+    /**
+     * Sport tab (ESPN schedule). When false the 4th bottom tab shows Settings instead,
+     * like the original app's Remote Config `show_sport` = false.
+     */
+    const val SPORT = false
 }

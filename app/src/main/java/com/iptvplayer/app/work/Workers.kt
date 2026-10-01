@@ -76,6 +76,7 @@ class MatchReminderWorker(ctx: Context, params: WorkerParameters) : CoroutineWor
     companion object {
         private const val CHANNEL = "match_reminder"
         const val KEY_ID = "id"; const val KEY_TITLE = "title"; const val KEY_LEAGUE = "league"
+        const val TAG = "match_reminder"
 
         fun schedule(ctx: Context, id: String, title: String, league: String, startTime: Long) {
             val delay = startTime - 15 * 60_000 - System.currentTimeMillis()
@@ -83,6 +84,7 @@ class MatchReminderWorker(ctx: Context, params: WorkerParameters) : CoroutineWor
             val req = OneTimeWorkRequestBuilder<MatchReminderWorker>()
                 .setInitialDelay(delay, TimeUnit.MILLISECONDS)
                 .setInputData(workDataOf(KEY_ID to id, KEY_TITLE to title, KEY_LEAGUE to league))
+                .addTag(TAG)
                 .build()
             WorkManager.getInstance(ctx).enqueueUniqueWork("match_$id", ExistingWorkPolicy.REPLACE, req)
         }
