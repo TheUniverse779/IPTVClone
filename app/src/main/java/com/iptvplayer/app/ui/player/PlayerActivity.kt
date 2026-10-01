@@ -100,7 +100,8 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
     override fun setup(savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         binding.playerView.player = vm.manager.player
-        lifecycleScope.launch { settings.current().let { autoPip = it.autoPip; backgroundAudio = it.backgroundAudio } }
+        // Read synchronously: onStart/onStop decide on these, and an async load could arrive after them.
+        kotlinx.coroutines.runBlocking { settings.current() }.let { autoPip = it.autoPip; backgroundAudio = it.backgroundAudio }
 
         intent.request()?.let { vm.open(it) }
         setupControls()
@@ -470,13 +471,20 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
     // ---------------- lifecycle ----------------
     override fun onStart() {
         super.onStart()
-        if (backgroundAudio) runCatching { startService(Intent(this, PlaybackService::class.java)) }
+        if (backgroundAudio) startPlaybackService()
     }
 
     override fun onStop() {
         super.onStop()
         vm.saveProgress()
-        if (!isInPip() && !backgroundAudio) vm.manager.player.pause()
+        if (isInPip()) return
+        if (backgroundAudio) startPlaybackService() // keeps the process + audio alive with a media notification
+        else vm.manager.player.pause()
+    }
+
+    private fun startPlaybackService() {
+        // MediaSessionService promotes itself to foreground (media notification) once playback is active.
+        runCatching { startService(Intent(this, PlaybackService::class.java)) }
     }
 
     override fun onDestroy() {

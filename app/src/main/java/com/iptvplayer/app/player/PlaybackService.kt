@@ -21,6 +21,9 @@ class PlaybackService : MediaSessionService() {
         super.onCreate()
         val open = PendingIntent.getActivity(this, 0, Intent(this, PlayerActivity::class.java), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         session = MediaSession.Builder(this, manager.player).setSessionActivity(open).build()
+            // Register now (not only when a controller connects) so the media notification / foreground
+            // state kicks in as soon as playback continues with the screen off.
+            .also { addSession(it) }
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo) = session
