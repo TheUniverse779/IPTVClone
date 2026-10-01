@@ -225,6 +225,9 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding>(ActivityFeedbackB
                 setTextAppearance(R.style.Text_Label); setText(t); isCheckable = true; isCheckedIconVisible = false; id = android.view.View.generateViewId()
                 chipBackgroundColor = getColorStateList(R.color.chip_bg); chipStrokeColor = getColorStateList(R.color.chip_stroke); chipStrokeWidth = 1.5f * resources.displayMetrics.density
                 setTextColor(getColorStateList(R.color.chip_text)); isChecked = i == 0
+                // Chip(ctx, null, 0) skips the default style, which is what makes a chip clickable;
+                // without a click listener taps were ignored, so the type could never change.
+                isClickable = true; isFocusable = true
             })
         }
         binding.btnSend.setOnClickListener {
@@ -232,9 +235,12 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding>(ActivityFeedbackB
             if (msg.isEmpty()) { binding.etMsg.setBackgroundResource(R.drawable.bg_input_error); return@setOnClickListener }
             val type = binding.types.findViewById<Chip>(binding.types.checkedChipId)?.text ?: ""
             val body = "$msg\n\n— ${binding.etEmail.text}\nApp ${BuildConfig.VERSION_NAME}, Android ${android.os.Build.VERSION.RELEASE}, ${android.os.Build.MODEL}"
+            val subject = "[IPTV Player] $type"
+            // Subject/body go in the mailto: URI too: Gmail ignores the extras on ACTION_SENDTO.
+            val mailto = "mailto:$SUPPORT_EMAIL?subject=${Uri.encode(subject)}&body=${Uri.encode(body)}"
             runCatching {
-                startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:$SUPPORT_EMAIL"))
-                    .putExtra(Intent.EXTRA_SUBJECT, "[IPTV Player] $type").putExtra(Intent.EXTRA_TEXT, body))
+                startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse(mailto))
+                    .putExtra(Intent.EXTRA_EMAIL, arrayOf(SUPPORT_EMAIL)).putExtra(Intent.EXTRA_SUBJECT, subject).putExtra(Intent.EXTRA_TEXT, body))
                 finish()
             }.onFailure { shareText(body) }
         }
