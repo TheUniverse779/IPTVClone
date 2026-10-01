@@ -215,6 +215,8 @@ interface XtreamDao {
     suspend fun allSeries(id: String): List<XtreamSeriesEntity>
     @Query("SELECT * FROM xtream_vod WHERE profileId = :id AND categoryId = :cat AND streamId != :exclude LIMIT 12")
     fun similarVod(id: String, cat: String, exclude: Int): Flow<List<XtreamVodEntity>>
+    @Query("SELECT * FROM xtream_vod WHERE profileId = :id AND categoryId = :cat ORDER BY added DESC LIMIT :limit")
+    suspend fun vodInCategory(id: String, cat: String, limit: Int): List<XtreamVodEntity>
     @Query("SELECT * FROM xtream_vod WHERE profileId = :id AND name LIKE '%' || :q || '%' LIMIT 60")
     fun searchVod(id: String, q: String): Flow<List<XtreamVodEntity>>
     @Query("SELECT * FROM xtream_vod WHERE profileId = :id AND isFavorite = 1")
@@ -229,6 +231,8 @@ interface XtreamDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insertSeries(list: List<XtreamSeriesEntity>)
     @Query("SELECT * FROM xtream_series WHERE profileId = :id ORDER BY rowid DESC LIMIT :limit")
     fun latestSeries(id: String, limit: Int): Flow<List<XtreamSeriesEntity>>
+    @Query("SELECT * FROM xtream_series WHERE profileId = :id AND categoryId = :cat ORDER BY rowid DESC LIMIT :limit")
+    suspend fun seriesInCategory(id: String, cat: String, limit: Int): List<XtreamSeriesEntity>
     @Query(
         """SELECT * FROM xtream_series WHERE profileId = :id AND (:cat IS NULL OR categoryId = :cat)
            AND name LIKE '%' || :q || '%' ORDER BY name"""

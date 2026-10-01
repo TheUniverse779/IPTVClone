@@ -56,7 +56,13 @@ class XtreamHomeViewModel @Inject constructor(val repo: XtreamRepository, handle
     val latestSeries = repo.latestSeries(profileId)
     val continueWatching = repo.continueWatching(profileId, 12)
     val vodCats = repo.categories(profileId, MediaType.MOVIE)
+    val seriesCats = repo.categories(profileId, MediaType.SERIES)
     val hero = MutableStateFlow<com.iptvplayer.app.data.database.XtreamVodEntity?>(null)
+
+    /** Newest titles of one genre, for its poster row. */
+    suspend fun genreRow(c: com.iptvplayer.app.data.database.XtreamCategoryEntity, limit: Int = 15): List<Poster> =
+        if (c.type == MediaType.SERIES) repo.seriesInCategory(profileId, c.categoryId, limit).map { it.toPoster() }
+        else repo.vodInCategory(profileId, c.categoryId, limit).map { it.toPoster() }
 
     // Live tab
     val liveCats = repo.categories(profileId, MediaType.LIVE)

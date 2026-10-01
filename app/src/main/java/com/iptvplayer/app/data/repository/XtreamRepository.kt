@@ -175,6 +175,8 @@ class XtreamRepository @Inject constructor(private val db: AppDatabase, private 
     fun seriesPaged(id: String, cat: String?, q: String) = dao.seriesPaged(id, cat, q)
     fun latestVod(id: String, limit: Int = 20) = dao.latestVod(id, limit)
     fun latestSeries(id: String, limit: Int = 20) = dao.latestSeries(id, limit)
+    suspend fun vodInCategory(id: String, cat: String, limit: Int) = dao.vodInCategory(id, cat, limit)
+    suspend fun seriesInCategory(id: String, cat: String, limit: Int) = dao.seriesInCategory(id, cat, limit)
     suspend fun randomVod(id: String) = dao.randomVod(id)
     fun observeVod(id: String, streamId: Int) = dao.observeVod(id, streamId)
     fun observeSeries(id: String, seriesId: Int) = dao.observeSeries(id, seriesId)

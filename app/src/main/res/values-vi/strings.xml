@@ -289,7 +289,6 @@
     <string name="expired_bar">Tài khoản đã hết hạn. Kênh và phim có thể không phát được.</string>
     <string name="details">Chi tiết</string>
     <string name="recently_added">Phim mới thêm</string>
-    <string name="by_genre">Theo thể loại</string>
     <string name="no_movies_title">Tài khoản này không có phim</string>
     <string name="no_movies_body">Nhà cung cấp chỉ cấp kênh Live cho \"%1$s\". Đồng bộ lại nếu bạn vừa được thêm gói phim.</string>
     <string name="watch_live">Xem kênh Live</string>

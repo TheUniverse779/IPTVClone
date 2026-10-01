@@ -27,8 +27,8 @@
         <androidx.recyclerview.widget.RecyclerView android:id="@+id/rvMovies" android:layout_width="match_parent" android:layout_height="wrap_content" android:clipToPadding="false" android:orientation="horizontal" android:paddingStart="16dp" android:paddingEnd="16dp" app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
         <include android:id="@+id/secSeries" layout="@layout/layout_section_header" />
         <androidx.recyclerview.widget.RecyclerView android:id="@+id/rvSeries" android:layout_width="match_parent" android:layout_height="wrap_content" android:clipToPadding="false" android:orientation="horizontal" android:paddingStart="16dp" android:paddingEnd="16dp" app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-        <include android:id="@+id/secGenres" layout="@layout/layout_section_header" />
-        <com.google.android.material.chip.ChipGroup android:id="@+id/genres" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="16dp" android:paddingEnd="16dp" />
+        <!-- One poster row per genre, appended in batches while scrolling (XtreamMovieFragment.loadMoreGenres). -->
+        <LinearLayout android:id="@+id/genres" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
 <include android:id="@+id/empty" layout="@layout/layout_empty_state" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="center" android:visibility="gone" />

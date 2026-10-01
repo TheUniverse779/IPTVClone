@@ -1,8 +1,13 @@
 package com.iptvplayer.app.ui.xtream
 
 import android.os.Bundle
+import android.text.TextUtils
+import androidx.core.view.doOnPreDraw
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.iptvplayer.app.R
@@ -10,12 +15,16 @@ import com.iptvplayer.app.base.BaseFragment
 import com.iptvplayer.app.base.collect
 import com.iptvplayer.app.data.database.AppDatabase
 import com.iptvplayer.app.data.database.ContinueItem
+import com.iptvplayer.app.data.database.MediaType
 import com.iptvplayer.app.data.database.SearchHistoryEntity
+import com.iptvplayer.app.data.database.XtreamCategoryEntity
 import com.iptvplayer.app.databinding.FragmentXtreamFavoriteBinding
 import com.iptvplayer.app.databinding.FragmentXtreamLiveBinding
 import com.iptvplayer.app.databinding.FragmentXtreamMovieBinding
 import com.iptvplayer.app.databinding.FragmentXtreamSearchBinding
 import com.iptvplayer.app.databinding.ItemLiveCatBinding
+import com.iptvplayer.app.databinding.LayoutPosterRowBinding
+import com.iptvplayer.app.databinding.LayoutSectionHeaderBinding
 import com.iptvplayer.app.ui.Nav
 import com.iptvplayer.app.ui.common.SimpleAdapter
 import com.iptvplayer.app.ui.common.hasVod
@@ -26,6 +35,7 @@ import com.iptvplayer.app.util.darken
 import com.iptvplayer.app.util.gradient
 import com.iptvplayer.app.util.visible
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
@@ -39,36 +49,37 @@ private fun BaseFragment<*>.resume(vm: XtreamHomeViewModel, c: ContinueItem) =
     if (c.kind == "EPISODE") Nav.play(requireContext(), PlayRequest.XtreamEpisode(vm.profileId, c.refId, c.episodeId))
     else Nav.play(requireContext(), PlayRequest.XtreamMovie(vm.profileId, c.refId))
 
-/** Movies (+series) tab: hero, continue watching, latest rows, genres. */
+/** Movies (+series) tab: hero, continue watching, latest rows, then one poster row per genre. */
 @AndroidEntryPoint
 class XtreamMovieFragment : BaseFragment<FragmentXtreamMovieBinding>(FragmentXtreamMovieBinding::inflate) {
     private val vm: XtreamHomeViewModel by activityViewModels()
 
+    // Genre rows: providers can have hundreds of categories, so rows are queried and inflated a batch at a time.
+    private var posterPool = RecyclerView.RecycledViewPool()
+    private var vodCats = emptyList<XtreamCategoryEntity>()
+    private var seriesCats = emptyList<XtreamCategoryEntity>()
+    private var lastSync = 0L
+    private var genreKey: Any? = null
+    private var genreCats = emptyList<XtreamCategoryEntity>()
+    private var genreNext = 0
+    private var genreJob: Job? = null
+
     override fun setup(savedInstanceState: Bundle?) {
+        posterPool = RecyclerView.RecycledViewPool(); genreKey = null
         val cont = ContinueAdapter { resume(vm, it) }
         val movies = PosterAdapter { openPoster(vm, it) }
         val series = PosterAdapter { openPoster(vm, it) }
         binding.rvContinue.adapter = cont; binding.rvMovies.adapter = movies; binding.rvSeries.adapter = series
-        header(binding.secContinue, R.string.continue_watching) { Nav.xtreamRecent(requireContext(), vm.profileId) }
-        header(binding.secMovies, R.string.recently_added) { Nav.xtreamCategory(requireContext(), vm.profileId, "movie", null) }
-        header(binding.secSeries, R.string.series) { Nav.xtreamCategory(requireContext(), vm.profileId, "series", null) }
-        binding.secGenres.secTitle.setText(R.string.by_genre)
-        binding.filter.setOnCheckedStateChangeListener { _, _ -> applyFilter() }
+        header(binding.secContinue, getString(R.string.continue_watching)) { Nav.xtreamRecent(requireContext(), vm.profileId) }
+        header(binding.secMovies, getString(R.string.recently_added)) { Nav.xtreamCategory(requireContext(), vm.profileId, "movie", null) }
+        header(binding.secSeries, getString(R.string.series)) { Nav.xtreamCategory(requireContext(), vm.profileId, "series", null) }
+        binding.filter.setOnCheckedStateChangeListener { _, _ -> applyFilter(); refreshGenres() }
+        binding.scroll.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, _, _, _ -> if (nearBottom()) loadMoreGenres() })
 
         collect(vm.continueWatching) { cont.submitList(it); binding.secContinue.root.visible(it.isNotEmpty()); binding.rvContinue.visible(it.isNotEmpty()) }
         collect(vm.latestVod) { movies.submitList(it.map { v -> v.toPoster() }); applyFilter() }
         collect(vm.latestSeries) { series.submitList(it.map { s -> s.toPoster() }); applyFilter() }
-        collect(vm.vodCats) { cats ->
-            binding.genres.removeAllViews()
-            cats.take(24).forEach { c ->
-                binding.genres.addView(Chip(requireContext(), null, 0).apply {
-                    setTextAppearance(R.style.Text_Label); text = c.name
-                    chipBackgroundColor = requireContext().getColorStateList(R.color.surface_2); setTextColor(requireContext().getColor(R.color.text_2))
-                    setOnClickListener { Nav.xtreamCategory(requireContext(), vm.profileId, "movie", c.categoryId) }
-                })
-            }
-            binding.secGenres.root.visible(cats.isNotEmpty())
-        }
+        collect(combine(vm.vodCats, vm.seriesCats) { v, s -> v to s }) { (v, s) -> vodCats = v; seriesCats = s; refreshGenres() }
         collect(vm.hero) { h ->
             binding.hero.visible(h != null)
             h ?: return@collect
@@ -82,6 +93,7 @@ class XtreamMovieFragment : BaseFragment<FragmentXtreamMovieBinding>(FragmentXtr
         }
         collect(vm.profile) { p ->
             p ?: return@collect
+            lastSync = p.lastSync; refreshGenres()
             val none = !hasVod(p)
             binding.scroll.visible(!none)
             binding.empty.root.visible(none)
@@ -105,9 +117,60 @@ class XtreamMovieFragment : BaseFragment<FragmentXtreamMovieBinding>(FragmentXtr
         binding.hero.visible(showMovies && vm.hero.value != null)
     }
 
-    private fun header(h: com.iptvplayer.app.databinding.LayoutSectionHeaderBinding, title: Int, onAll: () -> Unit) {
-        h.secTitle.setText(title); h.secAction.visible(true); h.secAction.setText(R.string.see_all); h.secAction.setOnClickListener { onAll() }
+    /** Series filter → series genres, otherwise movie genres. Rebuilds the rows only when that set (or the data, after a resync) changed. */
+    private fun refreshGenres() {
+        val isSeries = binding.filter.checkedChipId == R.id.fSeries
+        val cats = if (isSeries) seriesCats else vodCats
+        val key = Triple(isSeries, cats.map { it.categoryId }, lastSync)
+        if (key == genreKey) return
+        genreKey = key
+        genreJob?.cancel(); genreJob = null
+        binding.genres.removeAllViews()
+        genreCats = cats; genreNext = 0
+        loadMoreGenres()
     }
+
+    /** Appends the next [GENRE_BATCH] non-empty genre rows; keeps going while the end of the list is still on screen. */
+    private fun loadMoreGenres() {
+        if (genreJob?.isActive == true || genreNext >= genreCats.size) return
+        genreJob = viewLifecycleOwner.lifecycleScope.launch {
+            var added = 0
+            while (added < GENRE_BATCH && genreNext < genreCats.size) {
+                val c = genreCats[genreNext++]
+                val items = vm.genreRow(c)
+                if (items.isNotEmpty()) { addGenreRow(c, items); added++ }
+            }
+            genreJob = null
+            if (added > 0) binding.genres.doOnPreDraw { if (view != null && nearBottom()) loadMoreGenres() }
+        }
+    }
+
+    private fun addGenreRow(c: XtreamCategoryEntity, items: List<Poster>) {
+        val row = LayoutPosterRowBinding.inflate(layoutInflater, binding.genres, false)
+        header(row.header, c.name) { Nav.xtreamCategory(requireContext(), vm.profileId, if (c.type == MediaType.SERIES) "series" else "movie", c.categoryId) }
+        row.header.secTitle.maxLines = 1; row.header.secTitle.ellipsize = TextUtils.TruncateAt.END
+        row.rv.setRecycledViewPool(posterPool)
+        (row.rv.layoutManager as LinearLayoutManager).recycleChildrenOnDetach = true
+        row.rv.adapter = PosterAdapter { openPoster(vm, it) }.also { it.submitList(items) }
+        binding.genres.addView(row.root)
+    }
+
+    // Hidden tabs don't lay out, so keep paging until the user is back here.
+    override fun onHiddenChanged(hidden: Boolean) { if (!hidden && view != null && nearBottom()) loadMoreGenres() }
+
+    /** True when less than one screen of content is left below the viewport. */
+    private fun nearBottom(): Boolean {
+        val s = binding.scroll
+        if (!s.isShown) return false
+        val content = s.getChildAt(0) ?: return false
+        return content.bottom - (s.scrollY + s.height) < s.height
+    }
+
+    private fun header(h: LayoutSectionHeaderBinding, title: CharSequence, onAll: () -> Unit) {
+        h.secTitle.text = title; h.secAction.visible(true); h.secAction.setText(R.string.see_all); h.secAction.setOnClickListener { onAll() }
+    }
+
+    private companion object { const val GENRE_BATCH = 6 }
 }
 
 /** Live tab: category rail on the left, paged channel list on the right. */

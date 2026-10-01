@@ -345,7 +345,6 @@
     <string name="details">Details</string>
     <string name="recently_added">Recently added</string>
     <string name="series">Series</string>
-    <string name="by_genre">By genre</string>
     <string name="no_movies_title">This account has no movies</string>
     <string name="no_movies_body">Your provider only gives \"%1$s\" Live channels. Re-sync if you just got a movie package.</string>
     <string name="watch_live">Watch Live</string>
