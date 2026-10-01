@@ -1,5 +1,6 @@
 package com.iptvplayer.app.ui.main
 
+import com.iptvplayer.app.Features
 import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
@@ -40,6 +41,7 @@ class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding>(FragmentPlaylis
         binding.community.glIcon.setImageResource(R.drawable.ic_share)
         binding.community.glText.text = Html.fromHtml(getString(R.string.community_entry), Html.FROM_HTML_MODE_COMPACT)
         binding.community.root.setOnClickListener { Nav.community(requireContext()) }
+        binding.community.root.visible(Features.COMMUNITY)
 
         collect(vm.state) { s ->
             if (!s.loaded) return@collect

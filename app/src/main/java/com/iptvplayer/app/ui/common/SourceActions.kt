@@ -1,5 +1,6 @@
 package com.iptvplayer.app.ui.common
 
+import com.iptvplayer.app.Features
 import android.content.Context
 import android.os.Bundle
 import android.view.View
@@ -72,7 +73,7 @@ class SourceActions private constructor(
             menu.add(0, 1, 0, R.string.edit).setIcon(R.drawable.ic_edit)
             if (p.sourceType == SourceType.URL) menu.add(0, 2, 1, R.string.menu_update_now).setIcon(R.drawable.ic_refresh)
             menu.add(0, 3, 2, R.string.menu_copy_url).setIcon(R.drawable.ic_copy)
-            menu.add(0, 4, 3, R.string.menu_share_community).setIcon(R.drawable.ic_share)
+            if (Features.COMMUNITY) menu.add(0, 4, 3, R.string.menu_share_community).setIcon(R.drawable.ic_share)
             menu.add(0, 5, 4, R.string.delete).setIcon(R.drawable.ic_trash)
             setForceShowIcon(true)
             setOnMenuItemClickListener {

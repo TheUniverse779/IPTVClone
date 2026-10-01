@@ -1,5 +1,6 @@
 package com.iptvplayer.app.ui.importer
 
+import com.iptvplayer.app.Features
 import android.os.Bundle
 import android.text.Html
 import android.text.InputType
@@ -179,7 +180,7 @@ class ImportActivity : BaseActivity<ActivityImportBinding>(ActivityImportBinding
             communityPick.glIcon.setImageResource(R.drawable.ic_share)
             communityPick.glText.text = Html.fromHtml(act.getString(R.string.community_xtream_pick), Html.FROM_HTML_MODE_COMPACT)
             communityPick.root.setOnClickListener { Nav.community(act, "xtream") }
-            communityPick.root.visible(editingId == null)
+            communityPick.root.visible(Features.COMMUNITY && editingId == null)
             guideXtream.glIcon.setImageResource(R.drawable.ic_help)
             guideXtream.glText.text = Html.fromHtml(act.getString(R.string.guide_strip_xtream), Html.FROM_HTML_MODE_COMPACT)
             guideXtream.root.setOnClickListener { WebGuideSheet.show(act, fm, "xtream") }
