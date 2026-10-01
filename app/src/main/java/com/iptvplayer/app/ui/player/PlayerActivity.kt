@@ -113,7 +113,8 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
             override fun onIsPlayingChanged(isPlaying: Boolean) { renderPlayButton(); updatePip() }
         })
         collect(vm.now) { n -> n?.let { renderNow(it) } }
-        collect(vm.list) { l -> listAdapter.submitList(l); sideAdapter.submitList(l) }
+        // Scroll to the playing channel once the list is actually applied (it arrives after currentKey).
+        collect(vm.list) { l -> listAdapter.submitList(l) { scrollToCurrent() }; sideAdapter.submitList(l) }
         collect(vm.currentKey) { listAdapter.notifyDataSetChanged(); sideAdapter.notifyDataSetChanged(); scrollToCurrent() }
         collect(vm.manager.buffering) { binding.buffering.visible(it && vm.manager.error.value == null) }
         collect(vm.manager.error) { e ->
@@ -213,6 +214,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         binding.btnUnlock.setOnClickListener { setLocked(false) }
         binding.sideClose.setOnClickListener { binding.sidePanel.visible(false) }
         binding.err.btnRetry.setOnClickListener { vm.manager.retry() }
+        binding.err.btnErrBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
         binding.err.btnNextCh.setOnClickListener { vm.zap(1) }
         binding.err.btnNextCh.visible(vm.list.value.isNotEmpty())
 

@@ -203,7 +203,10 @@ class PlayerManager @Inject constructor(
     /** Try the next `;` alternative, then retry the same source up to 3 times with backoff, then surface the error. */
     private fun handleError(e: PlaybackException) {
         if (altIndex + 1 < alternatives.size) { altIndex++; prepare(); return }
-        if (retries < MAX_RETRIES && e.errorCode in RETRYABLE) {
+        // 4xx (except 408/429) won't heal by retrying: show the error at once instead of ~15 s of backoff.
+        val http = (e.cause as? androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException)?.responseCode
+        val permanent = http != null && http in 400..499 && http != 408 && http != 429
+        if (!permanent && retries < MAX_RETRIES && e.errorCode in RETRYABLE) {
             retries++
             retryJob = scope.launch { delay(1_000L * retries * retries); prepare(if (current?.isLive == true) 0 else player.currentPosition) }
             return
