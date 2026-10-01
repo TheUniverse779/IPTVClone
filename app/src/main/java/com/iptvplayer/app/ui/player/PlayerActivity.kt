@@ -455,8 +455,19 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         if (Build.VERSION.SDK_INT in 26..30 && autoPip && vm.manager.player.isPlaying) enterPip()
     }
 
+    private var wasInPip = false
+
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        // Closing the PiP window with ×: Android stops the activity first, then reports PiP ended — so we
+        // see "left PiP while already stopped". (Expanding PiP leaves it while started.) The user dismissed
+        // the video: stop playback and the media notification even if background audio is on.
+        if (!isInPictureInPictureMode && wasInPip && !lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) {
+            vm.manager.stop()
+            stopService(Intent(this, PlaybackService::class.java))
+            finish()
+        }
+        wasInPip = isInPictureInPictureMode
         binding.ctl.ctlRoot.visible(!isInPictureInPictureMode)
         binding.below.visible(!isInPictureInPictureMode && !fullscreen)
         binding.sidePanel.visible(false)
