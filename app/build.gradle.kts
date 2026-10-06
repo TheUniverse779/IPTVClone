@@ -21,8 +21,10 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            // R8 off: no shrinking/obfuscation, so reflection (Gson models, Room, Hilt) can't break in release.
+            // To turn it back on: both flags true, then check proguard-rules.pro keeps every Gson-read class.
+            isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }

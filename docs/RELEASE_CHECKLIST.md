@@ -38,7 +38,7 @@
 - [ ] **Claude**: Ẩn cài đặt Decoder (không có FFmpeg nên không có tác dụng).
 - [x] **Claude**: Tạm ẩn "Phát tiếp khi tắt màn hình" (`Features.BACKGROUND_AUDIO = false`). Comment `FOREGROUND_SERVICE*` + `<service PlaybackService>` trong manifest; gỡ luôn `FOREGROUND_SERVICE` + `SystemForegroundService` do thư viện WorkManager tự thêm. Đã kiểm tra manifest đã gộp của bản release: không còn foreground service nào. PiP vẫn chạy. *(06/10/2026)*
 - [ ] **Claude**: Cân nhắc bỏ hỏi quyền thông báo (`POST_NOTIFICATIONS`) lúc mở app: Sport và nghe nền đều đang tắt nên không còn tính năng nào gửi thông báo.
-- [ ] **Claude**: Kiểm tra ProGuard cho bản release: các class Gson nằm ngoài `dto/` (`GuideSites`, `Backup`…) có thể bị R8 làm hỏng khi minify.
+- [x] **Claude**: Tắt R8 / ProGuard cho bản release (`isMinifyEnabled = false`, `isShrinkResources = false`): không thu gọn, không làm rối tên class, nên lỗi Gson/reflection do R8 gây ra không còn xảy ra được. APK release tăng từ 5,2 MB lên 11,7 MB. *(06/10/2026)*
 - [ ] **Bạn**: Tạo keystore ký release (hoặc để Claude tạo). **Cất file và mật khẩu cẩn thận**, mất là không cập nhật app được nữa.
 - [ ] **Claude**: Cấu hình ký release (đọc mật khẩu từ file ngoài git) và build **AAB** (`bundleRelease`).
 
