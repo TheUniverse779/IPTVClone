@@ -167,6 +167,14 @@
     <string name="pass_mismatch">Passcode không khớp. Nhập lại.</string>
     <string name="pass_wrong">Sai passcode. Thử lại.</string>
     <string name="pass_created">Đã tạo passcode</string>
+    <string name="pass_enter_current">Nhập passcode hiện tại</string>
+    <string name="pass_new">Tạo passcode mới</string>
+    <string name="pass_changed">Đã đổi passcode</string>
+    <string name="pass_change">Đổi passcode</string>
+    <string name="pass_turn_off">Tắt passcode</string>
+    <string name="pass_turn_off_q">Tắt passcode?</string>
+    <string name="pass_turn_off_body">Mọi playlist, kênh và profile Xtream đang khóa sẽ được mở khóa. Bạn có thể tạo passcode mới bất cứ lúc nào.</string>
+    <string name="pass_turned_off">Đã tắt passcode</string>
     <string name="biometric_title">Mở khóa</string>
     <string name="biometric_use_passcode">Dùng passcode</string>
 

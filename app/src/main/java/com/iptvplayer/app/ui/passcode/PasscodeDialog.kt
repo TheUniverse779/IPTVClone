@@ -29,6 +29,7 @@ import javax.inject.Inject
  *  - CREATE: create → confirm, then result OK
  *  - ENTER: check (or biometric), then result OK
  *  - ENSURE: ENTER when a passcode exists, otherwise CREATE (used when turning a lock on)
+ *  - CHANGE: ENTER the current passcode (or biometric) → CREATE → confirm, then result OK
  * Listen with `setFragmentResultListener(requestKey)`; result bundle has [KEY_OK] = true.
  */
 @AndroidEntryPoint
@@ -40,6 +41,7 @@ class PasscodeDialog : BaseDialog<DialogPasscodeBinding>(DialogPasscodeBinding::
     private var step = Step.ENTER
     private var entered = ""
     private var first = ""
+    private val changing get() = requireArguments().getString(ARG_MODE) == MODE_CHANGE
 
     override fun setup(savedInstanceState: Bundle?) {
         isCancelable = false
@@ -49,7 +51,7 @@ class PasscodeDialog : BaseDialog<DialogPasscodeBinding>(DialogPasscodeBinding::
             val has = settings.current().hasPasscode
             step = when (requireArguments().getString(ARG_MODE)) {
                 MODE_CREATE -> Step.CREATE
-                MODE_ENSURE -> if (has) Step.ENTER else Step.CREATE
+                MODE_ENSURE, MODE_CHANGE -> if (has) Step.ENTER else Step.CREATE
                 else -> if (has) Step.ENTER else { finishOk(); return@launch }
             }
             render(null)
@@ -59,13 +61,19 @@ class PasscodeDialog : BaseDialog<DialogPasscodeBinding>(DialogPasscodeBinding::
 
     private fun render(error: Int?) {
         val name = requireArguments().getString(ARG_NAME).orEmpty()
-        binding.title.setText(when (step) { Step.CREATE -> R.string.pass_create; Step.CONFIRM -> R.string.pass_confirm; Step.ENTER -> R.string.pass_enter })
+        binding.title.setText(when (step) {
+            Step.CREATE -> if (changing) R.string.pass_new else R.string.pass_create
+            Step.CONFIRM -> R.string.pass_confirm
+            Step.ENTER -> if (changing) R.string.pass_enter_current else R.string.pass_enter
+        })
         binding.sub.text = error?.let { getString(it) } ?: when (step) {
             Step.CREATE -> getString(R.string.pass_create_sub)
             Step.CONFIRM -> getString(R.string.pass_confirm_sub)
             Step.ENTER -> if (name.isNotEmpty()) getString(R.string.pass_enter_sub, name) else ""
         }
         binding.sub.setTextColor(requireContext().getColor(if (error != null) R.color.danger_text else R.color.text_2))
+        // Biometrics only unlock; when creating a code the key would do nothing. maybeBiometric() shows it again for ENTER.
+        if (step != Step.ENTER) binding.keypad.findViewWithTag<View>("bio")?.visibility = View.INVISIBLE
         updateDots()
     }
 
@@ -125,12 +133,19 @@ class PasscodeDialog : BaseDialog<DialogPasscodeBinding>(DialogPasscodeBinding::
         when (step) {
             Step.CREATE -> { first = code; step = Step.CONFIRM; render(null) }
             Step.CONFIRM -> if (code != first) { step = Step.CREATE; render(R.string.pass_mismatch); shake() } else lifecycleScope.launch {
-                settings.setPasscode(code); context?.toast(R.string.pass_created); finishOk()
+                settings.setPasscode(code); context?.toast(if (changing) R.string.pass_changed else R.string.pass_created); finishOk()
             }
             Step.ENTER -> lifecycleScope.launch {
-                if (settings.checkPasscode(code)) finishOk() else { render(R.string.pass_wrong); shake() }
+                if (settings.checkPasscode(code)) unlocked() else { render(R.string.pass_wrong); shake() }
             }
         }
+    }
+
+    /** Current passcode (or biometric) accepted: CHANGE goes on to the new code, other modes are done. */
+    private fun unlocked() {
+        if (!changing) return finishOk()
+        step = Step.CREATE
+        render(null)
     }
 
     private fun shake() = binding.dots.startAnimation(TranslateAnimation(-16f, 16f, 0f, 0f).apply { duration = 60; repeatCount = 4; repeatMode = TranslateAnimation.REVERSE })
@@ -141,7 +156,7 @@ class PasscodeDialog : BaseDialog<DialogPasscodeBinding>(DialogPasscodeBinding::
         binding.keypad.findViewWithTag<View>("bio")?.visibility = if (ok) View.VISIBLE else View.INVISIBLE
         if (!ok) return
         BiometricPrompt(this, ContextCompat.getMainExecutor(requireContext()), object : BiometricPrompt.AuthenticationCallback() {
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) = finishOk()
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) = unlocked()
         }).authenticate(BiometricPrompt.PromptInfo.Builder().setTitle(getString(R.string.biometric_title))
             .setSubtitle(requireArguments().getString(ARG_NAME)).setNegativeButtonText(getString(R.string.biometric_use_passcode)).build())
     }
@@ -158,6 +173,7 @@ class PasscodeDialog : BaseDialog<DialogPasscodeBinding>(DialogPasscodeBinding::
         const val MODE_CREATE = "create"
         const val MODE_ENTER = "enter"
         const val MODE_ENSURE = "ensure"
+        const val MODE_CHANGE = "change"
         private const val ARG_MODE = "mode"; private const val ARG_NAME = "name"; private const val ARG_KEY = "key"; private const val ARG_PAYLOAD = "payload"
         private const val LENGTH = 4
 

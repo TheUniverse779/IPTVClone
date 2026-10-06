@@ -17,6 +17,10 @@ interface PlaylistDao {
     @Query("SELECT * FROM playlist ORDER BY createdAt ASC")
     fun observeAll(): Flow<List<PlaylistEntity>>
 
+    /** Used when the passcode is turned off: nothing can stay locked without it. */
+    @Query("UPDATE playlist SET isLocked = 0 WHERE isLocked = 1")
+    suspend fun unlockAll()
+
     @Query("SELECT * FROM playlist WHERE id = :id")
     fun observe(id: Long): Flow<PlaylistEntity?>
 
@@ -109,6 +113,9 @@ interface ChannelDao {
     @Query("UPDATE channel SET isLocked = NOT isLocked WHERE id = :id")
     suspend fun toggleLock(id: Long)
 
+    @Query("UPDATE channel SET isLocked = 0 WHERE isLocked = 1")
+    suspend fun unlockAll()
+
     @Query("DELETE FROM channel WHERE id = :id")
     suspend fun delete(id: Long)
 
@@ -158,6 +165,9 @@ interface XtreamDao {
 
     @Query("UPDATE xtream_profile SET passcodeLocked = :locked WHERE id = :id")
     suspend fun setLocked(id: String, locked: Boolean)
+
+    @Query("UPDATE xtream_profile SET passcodeLocked = 0 WHERE passcodeLocked = 1")
+    suspend fun unlockAll()
 
     @Transaction
     suspend fun deleteProfile(id: String) {

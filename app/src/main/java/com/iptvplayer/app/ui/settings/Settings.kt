@@ -42,6 +42,7 @@ import com.iptvplayer.app.util.shareText
 import com.iptvplayer.app.util.toast
 import com.iptvplayer.app.util.visible
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -67,6 +68,9 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
         if (!standalone) padForMainTabs(binding.root.parent as android.view.View)
         binding.version.text = getString(R.string.version_x, BuildConfig.VERSION_NAME)
         childFragmentManager.setFragmentResultListener(KEY_PASS, viewLifecycleOwner) { _, _ -> }
+        childFragmentManager.setFragmentResultListener(KEY_PASS_OFF, viewLifecycleOwner) { _, r ->
+            if (r.getBoolean(PasscodeDialog.KEY_OK)) lifecycleScope.launch { turnOffPasscode() }
+        }
         collect(store.settings) { render(it) }
     }
 
@@ -76,7 +80,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
         group(R.string.set_general) {
             row(it, R.drawable.ic_lang, R.string.set_language, value = currentLanguageName()) { pickLanguage() }
             row(it, R.drawable.ic_lock, R.string.set_passcode, value = getString(if (s.hasPasscode) R.string.passcode_on else R.string.passcode_off)) {
-                PasscodeDialog.show(childFragmentManager, KEY_PASS, PasscodeDialog.MODE_CREATE)
+                if (s.hasPasscode) passcodeOptions() else PasscodeDialog.show(childFragmentManager, KEY_PASS, PasscodeDialog.MODE_CREATE)
             }
         }
         group(R.string.set_playback) {
@@ -141,6 +145,27 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
 
     private fun UserAgentMode.label() = when (this) { UserAgentMode.APP -> "App"; UserAgentMode.VLC -> "VLC"; UserAgentMode.CHROME -> "Chrome" }
 
+    /** Passcode already set: change it, or turn it off (asks for the current one first). */
+    private fun passcodeOptions() {
+        MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.set_passcode)
+            .setItems(arrayOf(getString(R.string.pass_change), getString(R.string.pass_turn_off))) { _, i ->
+                if (i == 0) PasscodeDialog.show(childFragmentManager, KEY_PASS, PasscodeDialog.MODE_CHANGE)
+                else MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.pass_turn_off_q).setMessage(R.string.pass_turn_off_body)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.pass_turn_off) { _, _ -> PasscodeDialog.show(childFragmentManager, KEY_PASS_OFF, PasscodeDialog.MODE_ENTER) }
+                    .show()
+            }.show()
+    }
+
+    /** Without a passcode nothing could be unlocked again, so every lock goes too. */
+    private suspend fun turnOffPasscode() {
+        withContext(Dispatchers.IO) {
+            db.withTransaction { db.playlistDao().unlockAll(); db.channelDao().unlockAll(); db.xtreamDao().unlockAll() }
+        }
+        store.clearPasscode()
+        context?.toast(R.string.pass_turned_off)
+    }
+
     private fun pickUserAgent(cur: UserAgentMode) {
         val modes = UserAgentMode.entries
         MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.set_user_agent)
@@ -203,6 +228,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
     companion object {
         const val ARG_STANDALONE = "standalone"
         private const val KEY_PASS = "settings_pass"
+        private const val KEY_PASS_OFF = "settings_pass_off"
         // TODO: replace with your own policy pages before publishing.
         const val PRIVACY_URL = "https://example.com/privacy"
         const val TERMS_URL = "https://example.com/terms"

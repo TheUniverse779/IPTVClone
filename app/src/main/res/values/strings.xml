@@ -201,6 +201,14 @@
     <string name="pass_mismatch">Passcodes don\'t match. Try again.</string>
     <string name="pass_wrong">Wrong passcode. Try again.</string>
     <string name="pass_created">Passcode created</string>
+    <string name="pass_enter_current">Enter current passcode</string>
+    <string name="pass_new">Create new passcode</string>
+    <string name="pass_changed">Passcode changed</string>
+    <string name="pass_change">Change passcode</string>
+    <string name="pass_turn_off">Turn off passcode</string>
+    <string name="pass_turn_off_q">Turn off passcode?</string>
+    <string name="pass_turn_off_body">All locked playlists, channels and Xtream profiles will be unlocked. You can create a new passcode at any time.</string>
+    <string name="pass_turned_off">Passcode turned off</string>
     <string name="biometric_title">Unlock</string>
     <string name="biometric_use_passcode">Use passcode</string>
 

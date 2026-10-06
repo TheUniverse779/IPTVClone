@@ -34,7 +34,8 @@
 - [ ] **Claude + Bạn**: Test lại trên máy **Android 16** (Pixel). API 36 bắt buộc edge-to-edge, có predictive back, và trên màn hình lớn bỏ qua khoá xoay. Hiện mới test trên emulator Android 9.
 - [x] ~~**Claude**: Sửa khôi phục backup: hiện chỉ khôi phục được profile Xtream đầu tiên.~~ **Hoãn**: đã tạm ẩn Sao lưu / Khôi phục (`Features.BACKUP = false`). Sửa lỗi này trước khi bật lại. *(06/10/2026)*
 - [x] **Claude**: Tạm ẩn Cast (`Features.CAST = false`): nút Cast ở player (cả thanh dọc lẫn hàng công cụ toàn màn hình) và câu FAQ "How do I watch on my TV?". *(06/10/2026)*
-- [ ] **Claude**: Passcode: thêm đổi mã / tắt passcode (hiện bấm vào là luôn tạo mã mới).
+- [x] **Claude**: Passcode: Settings › Passcode giờ mở menu "Đổi passcode / Tắt passcode" khi đã có mã. Đổi = nhập mã cũ (hoặc vân tay) → mã mới → nhập lại. Tắt = xác nhận → nhập mã → mở khoá mọi playlist / kênh / profile Xtream rồi xoá mã. *(06/10/2026)*
+- [ ] **Bạn**: Test passcode trên máy: tạo → khoá 1 playlist → đổi mã (mã cũ không mở được, mã mới mở được) → tắt passcode (playlist hết khoá).
 - [x] **Claude**: Ẩn cài đặt Decoder (`Features.DECODER_SETTING = false`); player cũng bỏ qua giá trị Decoder đã lưu từ bản cũ. *(06/10/2026)*
 - [x] **Claude**: Tạm ẩn "Phát tiếp khi tắt màn hình" (`Features.BACKGROUND_AUDIO = false`). Comment `FOREGROUND_SERVICE*` + `<service PlaybackService>` trong manifest; gỡ luôn `FOREGROUND_SERVICE` + `SystemForegroundService` do thư viện WorkManager tự thêm. Đã kiểm tra manifest đã gộp của bản release: không còn foreground service nào. PiP vẫn chạy. *(06/10/2026)*
 - [ ] **Claude**: Cân nhắc bỏ hỏi quyền thông báo (`POST_NOTIFICATIONS`) lúc mở app: Sport và nghe nền đều đang tắt nên không còn tính năng nào gửi thông báo.
