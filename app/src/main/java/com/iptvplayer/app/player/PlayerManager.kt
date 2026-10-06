@@ -92,7 +92,8 @@ class PlayerManager @Inject constructor(
     private var retryJob: Job? = null
 
     private fun build(): ExoPlayer {
-        val sw = runBlocking { settings.current().softwareDecoder }
+        // While the setting is hidden, ignore a value saved by an earlier build.
+        val sw = com.iptvplayer.app.Features.DECODER_SETTING && runBlocking { settings.current().softwareDecoder }
         val renderers = DefaultRenderersFactory(context)
             .setEnableDecoderFallback(true)
             .setExtensionRendererMode(if (sw) DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER else DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON)

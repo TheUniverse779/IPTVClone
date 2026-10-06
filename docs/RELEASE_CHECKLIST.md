@@ -35,7 +35,7 @@
 - [x] ~~**Claude**: Sửa khôi phục backup: hiện chỉ khôi phục được profile Xtream đầu tiên.~~ **Hoãn**: đã tạm ẩn Sao lưu / Khôi phục (`Features.BACKUP = false`). Sửa lỗi này trước khi bật lại. *(06/10/2026)*
 - [x] **Claude**: Tạm ẩn Cast (`Features.CAST = false`): nút Cast ở player (cả thanh dọc lẫn hàng công cụ toàn màn hình) và câu FAQ "How do I watch on my TV?". *(06/10/2026)*
 - [ ] **Claude**: Passcode: thêm đổi mã / tắt passcode (hiện bấm vào là luôn tạo mã mới).
-- [ ] **Claude**: Ẩn cài đặt Decoder (không có FFmpeg nên không có tác dụng).
+- [x] **Claude**: Ẩn cài đặt Decoder (`Features.DECODER_SETTING = false`); player cũng bỏ qua giá trị Decoder đã lưu từ bản cũ. *(06/10/2026)*
 - [x] **Claude**: Tạm ẩn "Phát tiếp khi tắt màn hình" (`Features.BACKGROUND_AUDIO = false`). Comment `FOREGROUND_SERVICE*` + `<service PlaybackService>` trong manifest; gỡ luôn `FOREGROUND_SERVICE` + `SystemForegroundService` do thư viện WorkManager tự thêm. Đã kiểm tra manifest đã gộp của bản release: không còn foreground service nào. PiP vẫn chạy. *(06/10/2026)*
 - [ ] **Claude**: Cân nhắc bỏ hỏi quyền thông báo (`POST_NOTIFICATIONS`) lúc mở app: Sport và nghe nền đều đang tắt nên không còn tính năng nào gửi thông báo.
 - [x] **Claude**: Tắt R8 / ProGuard cho bản release (`isMinifyEnabled = false`, `isShrinkResources = false`): không thu gọn, không làm rối tên class, nên lỗi Gson/reflection do R8 gây ra không còn xảy ra được. APK release tăng từ 5,2 MB lên 11,7 MB. *(06/10/2026)*
@@ -83,4 +83,5 @@
 - Phát tiếp khi tắt màn hình: `Features.BACKGROUND_AUDIO`. Bật lại thì phải: (1) bỏ comment 2 quyền `FOREGROUND_SERVICE*` và `<service PlaybackService>` trong `AndroidManifest.xml`, (2) xoá 2 dòng `tools:node="remove"` (quyền `FOREGROUND_SERVICE` và `SystemForegroundService`), (3) khai báo foreground service `mediaPlayback` + video trong Play Console.
 - Cast lên TV: `Features.CAST` (mở cài đặt cast / màn hình không dây của Android). Bật lại thì test với TV thật.
 - Sao lưu / khôi phục: `Features.BACKUP`. Bật lại thì **phải sửa trước**: khôi phục hiện chỉ lấy profile Xtream đầu tiên.
+- Cài đặt Decoder: `Features.DECODER_SETTING`. Chỉ nên bật lại khi đã thêm decoder phần mềm (ví dụ media3 FFmpeg).
 - Hướng dẫn chỗ lấy nguồn: `Features.GUIDE_SITES`. **Không bật lại bằng Remote Config sau khi đã duyệt**, Google coi đó là lách kiểm duyệt.

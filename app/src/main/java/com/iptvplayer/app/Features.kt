@@ -33,4 +33,10 @@ object Features {
 
     /** Settings › Data: back up playlists to a JSON file and restore from it. */
     const val BACKUP = false
+
+    /**
+     * Settings › Decoder (hardware / software). Only meaningful with a software decoder extension
+     * (e.g. media3 FFmpeg), which the app doesn't bundle, so the switch currently changes nothing.
+     */
+    const val DECODER_SETTING = false
 }

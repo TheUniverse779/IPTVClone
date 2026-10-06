@@ -83,7 +83,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
             switch(it, R.drawable.ic_pip, R.string.set_auto_pip, s.autoPip) { v -> lifecycleScope.launch { store.setAutoPip(v) } }
             if (Features.BACKGROUND_AUDIO) switch(it, R.drawable.ic_audio, R.string.set_bg_audio, s.backgroundAudio) { v -> lifecycleScope.launch { store.setBackgroundAudio(v) } }
             row(it, R.drawable.ic_globe, R.string.set_user_agent, value = s.userAgentMode.label()) { pickUserAgent(s.userAgentMode) }
-            row(it, R.drawable.ic_bolt, R.string.set_decoder, value = getString(if (s.softwareDecoder) R.string.decoder_sw else R.string.decoder_hw)) {
+            if (Features.DECODER_SETTING) row(it, R.drawable.ic_bolt, R.string.set_decoder, value = getString(if (s.softwareDecoder) R.string.decoder_sw else R.string.decoder_hw)) {
                 lifecycleScope.launch { store.setSoftwareDecoder(!s.softwareDecoder) }
             }
         }
