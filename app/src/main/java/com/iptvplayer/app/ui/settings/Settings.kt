@@ -88,8 +88,10 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
             }
         }
         group(R.string.set_data) {
-            row(it, R.drawable.ic_upload, R.string.set_backup) { backup.launch("iptv-playlists.json") }
-            row(it, R.drawable.ic_folder, R.string.set_restore) { restore.launch(arrayOf("application/json", "text/plain", "*/*")) }
+            if (Features.BACKUP) {
+                row(it, R.drawable.ic_upload, R.string.set_backup) { backup.launch("iptv-playlists.json") }
+                row(it, R.drawable.ic_folder, R.string.set_restore) { restore.launch(arrayOf("application/json", "text/plain", "*/*")) }
+            }
             row(it, R.drawable.ic_trash, R.string.set_clear_cache) {
                 lifecycleScope.launch { withContext(Dispatchers.IO) { Glide.get(requireContext()).clearDiskCache() }; Glide.get(requireContext()).clearMemory(); requireContext().toast(R.string.cache_cleared) }
             }

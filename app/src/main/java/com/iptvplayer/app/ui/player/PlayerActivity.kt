@@ -211,6 +211,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         tAspect.setOnClickListener { PlayerSheets.aspect(supportFragmentManager, aspect) }
         tPip.setOnClickListener { enterPip() }
         tCast.setOnClickListener { PlayerSheets.cast(supportFragmentManager) }
+        tCast.visible(Features.CAST)
         tLock.setOnClickListener { setLocked(true) }
         binding.btnUnlock.setOnClickListener { setLocked(false) }
         binding.sideClose.setOnClickListener { binding.sidePanel.visible(false) }
@@ -360,7 +361,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         chip(R.drawable.ic_audio, R.string.audio) { PlayerSheets.audio(supportFragmentManager) }
         chip(R.drawable.ic_aspect, R.string.aspect) { PlayerSheets.aspect(supportFragmentManager, aspect) }
         chip(R.drawable.ic_pip, R.string.pip) { enterPip() }
-        chip(R.drawable.ic_cast, R.string.cast) { PlayerSheets.cast(supportFragmentManager) }
+        if (Features.CAST) chip(R.drawable.ic_cast, R.string.cast) { PlayerSheets.cast(supportFragmentManager) }
         // No Lock here: in portrait the chips and channel list stay tappable, so it would lock nothing.
         // Lock lives in the fullscreen tools row, where it covers the whole screen.
     }

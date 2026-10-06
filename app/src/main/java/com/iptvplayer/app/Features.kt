@@ -27,4 +27,10 @@ object Features {
      * back on, also restore the FOREGROUND_SERVICE permissions and the <service> in AndroidManifest.xml.
      */
     const val BACKGROUND_AUDIO = false
+
+    /** Player "Cast" button (opens Android's cast / wireless display settings) and the FAQ entry about it. */
+    const val CAST = false
+
+    /** Settings › Data: back up playlists to a JSON file and restore from it. */
+    const val BACKUP = false
 }

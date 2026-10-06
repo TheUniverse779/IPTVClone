@@ -210,8 +210,8 @@ class FaqActivity : BaseActivity<ActivityFaqBinding>(ActivityFaqBinding::inflate
         binding.toolbar.tvTitle.setText(R.string.faq_title)
         binding.toolbar.btnBack.setOnClickListener { finish() }
         binding.btnAsk.setOnClickListener { Nav.chatbot(this) }
-        listOf(R.string.faq_q1 to R.string.faq_a1, R.string.faq_q2 to R.string.faq_a2, R.string.faq_q3 to R.string.faq_a3,
-            R.string.faq_q4 to R.string.faq_a4, R.string.faq_q5 to R.string.faq_a5).forEachIndexed { i, (q, a) ->
+        listOfNotNull(R.string.faq_q1 to R.string.faq_a1, R.string.faq_q2 to R.string.faq_a2, R.string.faq_q3 to R.string.faq_a3,
+            R.string.faq_q4 to R.string.faq_a4, (R.string.faq_q5 to R.string.faq_a5).takeIf { Features.CAST }).forEachIndexed { i, (q, a) ->
             val b = ItemFaqBinding.inflate(LayoutInflater.from(this), binding.items, false)
             b.q.setText(q); b.a.setText(a)
             b.root.setOnClickListener {
