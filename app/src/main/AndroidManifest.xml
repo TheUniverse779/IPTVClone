@@ -4,7 +4,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Notifications are off for the first Play release (Features.NOTIFICATION_PERMISSION): nothing
+         sends one while Sport and background audio are hidden. Uncomment together with the flag.
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    -->
     <!-- Background audio (Features.BACKGROUND_AUDIO) is off for the first Play release, so no
          foreground-service declaration/video is needed. Turning it back on: uncomment these two
          permissions and the PlaybackService <service> below, then set the flag to true.

@@ -39,4 +39,10 @@ object Features {
      * (e.g. media3 FFmpeg), which the app doesn't bundle, so the switch currently changes nothing.
      */
     const val DECODER_SETTING = false
+
+    /**
+     * Ask for POST_NOTIFICATIONS on first launch (Android 13+). Off while nothing sends notifications:
+     * match reminders need [SPORT], the media notification needs [BACKGROUND_AUDIO].
+     */
+    const val NOTIFICATION_PERMISSION = false
 }

@@ -38,7 +38,7 @@
 - [ ] **Bạn**: Test passcode trên máy: tạo → khoá 1 playlist → đổi mã (mã cũ không mở được, mã mới mở được) → tắt passcode (playlist hết khoá).
 - [x] **Claude**: Ẩn cài đặt Decoder (`Features.DECODER_SETTING = false`); player cũng bỏ qua giá trị Decoder đã lưu từ bản cũ. *(06/10/2026)*
 - [x] **Claude**: Tạm ẩn "Phát tiếp khi tắt màn hình" (`Features.BACKGROUND_AUDIO = false`). Comment `FOREGROUND_SERVICE*` + `<service PlaybackService>` trong manifest; gỡ luôn `FOREGROUND_SERVICE` + `SystemForegroundService` do thư viện WorkManager tự thêm. Đã kiểm tra manifest đã gộp của bản release: không còn foreground service nào. PiP vẫn chạy. *(06/10/2026)*
-- [ ] **Claude**: Cân nhắc bỏ hỏi quyền thông báo (`POST_NOTIFICATIONS`) lúc mở app: Sport và nghe nền đều đang tắt nên không còn tính năng nào gửi thông báo.
+- [x] **Claude**: Bỏ hỏi quyền thông báo lúc mở app (`Features.NOTIFICATION_PERMISSION = false`) và comment `POST_NOTIFICATIONS` trong manifest. APK release giờ chỉ còn quyền: INTERNET, ACCESS_NETWORK_STATE, WAKE_LOCK, USE_BIOMETRIC / USE_FINGERPRINT, RECEIVE_BOOT_COMPLETED (do WorkManager thêm). *(06/10/2026)*
 - [x] **Claude**: Tắt R8 / ProGuard cho bản release (`isMinifyEnabled = false`, `isShrinkResources = false`): không thu gọn, không làm rối tên class, nên lỗi Gson/reflection do R8 gây ra không còn xảy ra được. APK release tăng từ 5,2 MB lên 11,7 MB. *(06/10/2026)*
 - [ ] **Bạn**: Tạo keystore ký release (hoặc để Claude tạo). **Cất file và mật khẩu cẩn thận**, mất là không cập nhật app được nữa.
 - [ ] **Claude**: Cấu hình ký release (đọc mật khẩu từ file ngoài git) và build **AAB** (`bundleRelease`).
@@ -84,5 +84,6 @@
 - Phát tiếp khi tắt màn hình: `Features.BACKGROUND_AUDIO`. Bật lại thì phải: (1) bỏ comment 2 quyền `FOREGROUND_SERVICE*` và `<service PlaybackService>` trong `AndroidManifest.xml`, (2) xoá 2 dòng `tools:node="remove"` (quyền `FOREGROUND_SERVICE` và `SystemForegroundService`), (3) khai báo foreground service `mediaPlayback` + video trong Play Console.
 - Cast lên TV: `Features.CAST` (mở cài đặt cast / màn hình không dây của Android). Bật lại thì test với TV thật.
 - Sao lưu / khôi phục: `Features.BACKUP`. Bật lại thì **phải sửa trước**: khôi phục hiện chỉ lấy profile Xtream đầu tiên.
+- Quyền thông báo: `Features.NOTIFICATION_PERMISSION`. Bật lại cùng lúc với Sport hoặc nghe nền, và bỏ comment `POST_NOTIFICATIONS` trong manifest.
 - Cài đặt Decoder: `Features.DECODER_SETTING`. Chỉ nên bật lại khi đã thêm decoder phần mềm (ví dụ media3 FFmpeg).
 - Hướng dẫn chỗ lấy nguồn: `Features.GUIDE_SITES`. **Không bật lại bằng Remote Config sau khi đã duyệt**, Google coi đó là lách kiểm duyệt.

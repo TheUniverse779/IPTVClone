@@ -72,7 +72,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             }
         })
 
-        if (Build.VERSION.SDK_INT >= 33 && savedInstanceState == null) notifPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+        if (Features.NOTIFICATION_PERMISSION && Build.VERSION.SDK_INT >= 33 && savedInstanceState == null) notifPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
 
     override fun onNewIntent(intent: Intent) {
