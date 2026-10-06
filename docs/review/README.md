@@ -16,10 +16,13 @@ Last checked 2026-10-06: all 15 played in the app (emulator). Removed: Akamai Li
 
 ## Publish
 
-1. Put `test-playlist.m3u` in a **public** GitHub repo, e.g. a new repo `iptv-player-review`. Don't reuse the old playlist repos.
-2. Open the file on GitHub › **Raw**, then copy the URL. It looks like
-   `https://raw.githubusercontent.com/<user>/<repo>/main/test-playlist.m3u`
-3. Paste that link into the app (+ › Playlist URL) once to confirm it imports **15 channels, 5 groups**.
+Published at **[iptvstore779/iptv_review](https://github.com/iptvstore779/iptv_review)** (public):
+
+`https://raw.githubusercontent.com/iptvstore779/iptv_review/refs/heads/main/test-playlist.m3u`
+
+Verified 2026-10-06: the raw file is identical to `docs/review/test-playlist.m3u`; a fresh install imports it as **15 channels, 5 groups**, and one channel from each group played.
+
+When you edit the playlist, update both copies (this file and the GitHub repo).
 
 ## Text for Play Console › App access
 
@@ -28,7 +31,7 @@ Choose "All or some functionality is restricted", then add instructions:
 > **Name:** Test playlist
 >
 > **Instructions:** The app is a media player and contains no content. To test it, add this sample playlist of public test streams and open movies:
-> `https://raw.githubusercontent.com/<user>/<repo>/main/test-playlist.m3u`
+> `https://raw.githubusercontent.com/iptvstore779/iptv_review/refs/heads/main/test-playlist.m3u`
 > 1. Open the app and tap **+** (bottom centre) › **Playlist URL**.
 > 2. Paste the link above and tap **Add playlist**.
 > 3. Tap **View channels** and pick any channel to play.
