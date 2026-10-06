@@ -101,7 +101,7 @@ class HowToAddActivity : BaseActivity<ActivityHowToAddBinding>(ActivityHowToAddB
                 if (site.mode == "customtab") openCustomTab(site.url) else WebGuideSheet.show(supportFragmentManager, site.url, site.title)
             }
         }
-        card(R.drawable.ic_search, getString(R.string.search_google), "\"${sites.searchQuery}\"", R.drawable.ic_external) {
+        if (sites.searchQuery.isNotBlank()) card(R.drawable.ic_search, getString(R.string.search_google), "\"${sites.searchQuery}\"", R.drawable.ic_external) {
             openCustomTab("https://www.google.com/search?q=" + Uri.encode(sites.searchQuery))
         }
     }
@@ -187,11 +187,11 @@ class WebGuideSheet : BaseBottomSheet<SheetWebGuideBinding>(SheetWebGuideBinding
         const val RESULT_LINK = "web_guide_link"
         const val KEY_URL = "url"
 
-        /** Opens the first suggested site for [type] (iptv / xtream / single). */
+        /** Opens the first suggested site for [type] (iptv / xtream / single); does nothing if there is none. */
         fun show(ctx: android.content.Context, fm: FragmentManager, type: String) {
             val repo = dagger.hilt.android.EntryPointAccessors.fromApplication(ctx.applicationContext, GuideEntryPoint::class.java).guide()
-            val site = repo.sites().forType(type).firstOrNull()
-            show(fm, site?.url ?: "https://github.com/iptv-org/iptv", site?.title)
+            val site = repo.sites().forType(type).firstOrNull() ?: return
+            show(fm, site.url, site.title)
         }
 
         fun show(fm: FragmentManager, url: String, title: String?) =

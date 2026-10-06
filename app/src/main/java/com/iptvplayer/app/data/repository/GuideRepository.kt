@@ -18,7 +18,7 @@ data class GuideSites(
     @SerializedName("iptv") val iptv: List<GuideSite> = emptyList(),
     @SerializedName("xtream") val xtream: List<GuideSite> = emptyList(),
     @SerializedName("single") val single: List<GuideSite> = emptyList(),
-    @SerializedName("search_query") val searchQuery: String = "free iptv m3u playlist",
+    @SerializedName("search_query") val searchQuery: String = "",
 ) {
     fun forType(type: String) = when (type) { "xtream" -> xtream; "single" -> single; else -> iptv }
 }
