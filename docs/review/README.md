@@ -19,7 +19,7 @@ Last checked 2026-10-06: all 15 played in the app (emulator). Removed: Akamai Li
 1. Put `test-playlist.m3u` in a **public** GitHub repo, e.g. a new repo `iptv-player-review`. Don't reuse the old playlist repos.
 2. Open the file on GitHub › **Raw**, then copy the URL. It looks like
    `https://raw.githubusercontent.com/<user>/<repo>/main/test-playlist.m3u`
-3. Paste that link into the app (+ › Playlist URL) once to confirm it imports **16 → 15 channels, 5 groups**.
+3. Paste that link into the app (+ › Playlist URL) once to confirm it imports **15 channels, 5 groups**.
 
 ## Text for Play Console › App access
 
