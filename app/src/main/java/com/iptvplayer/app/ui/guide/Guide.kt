@@ -13,6 +13,7 @@ import android.webkit.WebViewClient
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.chip.Chip
+import com.iptvplayer.app.Features
 import com.iptvplayer.app.R
 import com.iptvplayer.app.base.BaseActivity
 import com.iptvplayer.app.base.BaseBottomSheet
@@ -32,10 +33,12 @@ import com.iptvplayer.app.util.visible
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-/** Steps per source type. Title/body pairs; <b> is rendered. */
+/** Steps per source type. Title/body pairs; <b> is rendered. Without [Features.GUIDE_SITES] the steps start from a link the user already has. */
 private val HOWTO = mapOf(
-    "url" to Pair(R.string.howto_title_url, listOf(R.string.howto_url_1 to R.string.howto_url_1b, R.string.howto_url_2 to R.string.howto_url_2b, R.string.howto_url_3 to R.string.howto_url_3b, R.string.howto_url_4 to R.string.howto_url_4b)),
-    "xtream" to Pair(R.string.howto_title_xtream, listOf(R.string.howto_xt_1 to R.string.howto_xt_1b, R.string.howto_xt_2 to R.string.howto_xt_2b, R.string.howto_xt_3 to R.string.howto_xt_3b, R.string.howto_xt_4 to 0)),
+    "url" to Pair(R.string.howto_title_url,
+        if (Features.GUIDE_SITES) listOf(R.string.howto_url_1 to R.string.howto_url_1b, R.string.howto_url_2 to R.string.howto_url_2b, R.string.howto_url_3 to R.string.howto_url_3b, R.string.howto_url_4 to R.string.howto_url_4b)
+        else listOf(R.string.howto_url_get to R.string.howto_url_get_b, R.string.howto_url_add to R.string.howto_url_3b, R.string.howto_url_4 to R.string.howto_url_4b)),
+    "xtream" to Pair(R.string.howto_title_xtream, listOf(R.string.howto_xt_1 to (if (Features.GUIDE_SITES) R.string.howto_xt_1b else 0), R.string.howto_xt_2 to R.string.howto_xt_2b, R.string.howto_xt_3 to R.string.howto_xt_3b, R.string.howto_xt_4 to 0)),
     "single" to Pair(R.string.howto_title_single, listOf(R.string.howto_single_1 to 0, R.string.howto_single_2 to 0, R.string.howto_single_3 to R.string.howto_single_3b)),
     "upload" to Pair(R.string.howto_title_upload, listOf(R.string.howto_upload_1 to 0, R.string.howto_upload_2 to 0, R.string.howto_upload_3 to R.string.howto_upload_3b)),
 )
@@ -80,9 +83,19 @@ class HowToAddActivity : BaseActivity<ActivityHowToAddBinding>(ActivityHowToAddB
             s.body.visible(b != 0); if (b != 0) s.body.setText(b)
             binding.steps.addView(s.root)
         }
+        binding.sites.removeAllViews()
+        binding.sitesTitle.visible(Features.GUIDE_SITES); binding.sites.visible(Features.GUIDE_SITES)
+        binding.note.setText(if (Features.GUIDE_SITES) R.string.third_party_note else R.string.no_content_note)
+        if (Features.GUIDE_SITES) renderSites()
+        binding.btnForm.setText(if (type == "upload") R.string.choose_m3u_file else R.string.open_import_form)
+        binding.btnForm.setOnClickListener {
+            when (type) { "upload" -> Nav.upload(this); "xtream" -> Nav.addProfile(this); else -> Nav.import(this, type) }
+        }
+    }
+
+    private fun renderSites() {
         val sites = guide.sites()
         val siteType = if (type == "upload") "url" else type
-        binding.sites.removeAllViews()
         sites.forType(if (siteType == "url") "iptv" else siteType).forEach { site ->
             card(R.drawable.ic_globe, site.title, UrlUtils.host(site.url), R.drawable.ic_chevron) {
                 if (site.mode == "customtab") openCustomTab(site.url) else WebGuideSheet.show(supportFragmentManager, site.url, site.title)
@@ -90,10 +103,6 @@ class HowToAddActivity : BaseActivity<ActivityHowToAddBinding>(ActivityHowToAddB
         }
         card(R.drawable.ic_search, getString(R.string.search_google), "\"${sites.searchQuery}\"", R.drawable.ic_external) {
             openCustomTab("https://www.google.com/search?q=" + Uri.encode(sites.searchQuery))
-        }
-        binding.btnForm.setText(if (type == "upload") R.string.choose_m3u_file else R.string.open_import_form)
-        binding.btnForm.setOnClickListener {
-            when (type) { "upload" -> Nav.upload(this); "xtream" -> Nav.addProfile(this); else -> Nav.import(this, type) }
         }
     }
 

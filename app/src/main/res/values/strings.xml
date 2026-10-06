@@ -33,7 +33,7 @@
     <string name="license_title">License agreement</string>
     <string name="license_1">IPTV Player is a media player for M3U, M3U8 playlists and Xtream accounts that you add yourself. The app does not provide any channels or content.</string>
     <string name="license_2">You are responsible for your right to use the playlists and content you add to the app.</string>
-    <string name="license_3">Sites suggested in the guide belong to third parties. We do not control them and do not guarantee their content.</string>
+    <string name="license_3">Playlists, accounts and links you add come from third parties. We do not control them and do not guarantee their content.</string>
     <string name="license_4">We are not affiliated with any content provider.</string>
     <string name="license_5">Do not use the app to play copyrighted content without permission.</string>
     <string name="license_6">By continuing you confirm you have read and agree to the terms above.</string>
@@ -58,7 +58,7 @@
     <string name="import_xtream_sub">Server, username, password</string>
     <string name="play_single_title">Play a stream link</string>
     <string name="play_single_sub">Watch a single channel or event now</string>
-    <string name="home_guide_link">No link yet? <b>See how to find playlists</b> and suggested sites</string>
+    <string name="home_guide_link">Not sure how to add a source? <b>See the step-by-step guide</b></string>
     <string name="continue_live">Watched last · %1$s</string>
     <string name="your_playlists">Your playlists</string>
     <string name="channels_header">Channels</string>
@@ -142,7 +142,7 @@
     <string name="go_home">Back to Home</string>
     <string name="view_channels">View channels</string>
     <string name="import_failed_title">Couldn\'t read the playlist</string>
-    <string name="import_failed_http">The link returned an error (%1$s). Check the link, or find another one on the suggested sites.</string>
+    <string name="import_failed_http">The link returned an error (%1$s). Check the link, or ask your provider for a new one.</string>
     <string name="import_failed_network">Couldn\'t connect. Check your internet connection and the link, then try again.</string>
     <string name="import_failed_empty">The file has no playable channels. Make sure it is an M3U / M3U8 playlist.</string>
     <string name="fix_link">Edit link</string>
@@ -257,7 +257,7 @@
     <string name="profiles_hint">Long-press or tap ⋮ to re-sync, see account info, lock or delete a profile.</string>
     <string name="no_xtream_title">No Xtream account yet</string>
     <string name="no_xtream_body">Add the Server URL, username and password from your provider to watch Live, movies and series.</string>
-    <string name="no_xtream_guide">No account yet? <b>See the Xtream guide</b></string>
+    <string name="no_xtream_guide">Got login details from your provider? <b>See how to add them</b></string>
     <string name="tag_new">New</string>
     <string name="tag_expired">Expired</string>
     <string name="valid_until">Valid until %1$s</string>
@@ -387,6 +387,7 @@
     <string name="suggested_sites">Suggested sites</string>
     <string name="search_google">Search on Google</string>
     <string name="third_party_note">These sites belong to third parties. The app doesn\'t control their content and doesn\'t guarantee links keep working.</string>
+    <string name="no_content_note">The app doesn\'t provide any channels or content. Use playlists and accounts from your own provider.</string>
     <string name="open_import_form">Open the add-source form</string>
     <string name="choose_m3u_file">Choose M3U file</string>
     <string name="suggested_page">Suggested site</string>
@@ -518,6 +519,9 @@
     <string name="howto_url_3b">Paste the link, name it, turn on the passcode if you like.</string>
     <string name="howto_url_4">Tap <b>Add playlist</b></string>
     <string name="howto_url_4b">The app reads the channels and groups them.</string>
+    <string name="howto_url_get">Get a <b>playlist link</b> from your provider</string>
+    <string name="howto_url_get_b">It usually ends in .m3u or .m3u8. Copy it.</string>
+    <string name="howto_url_add">In the app, tap <b>+</b> › <b>Playlist URL</b></string>
     <string name="howto_xt_1">Get the <b>Server URL, Username, Password</b> from your provider</string>
     <string name="howto_xt_1b">or from the guide page below.</string>
     <string name="howto_xt_2">Tap <b>+</b> › <b>Xtream Codes</b></string>
@@ -533,8 +537,8 @@
     <string name="howto_upload_2">Tap <b>+</b> › <b>M3U file</b> and pick up to 5 files</string>
     <string name="howto_upload_3">Name it and tap <b>Import</b></string>
     <string name="howto_upload_3b">You can delete the original file afterwards.</string>
-    <string name="faq_q1">Where do I find a playlist?</string>
-    <string name="faq_a1">Open Guide › Suggested sites, or search "free iptv m3u playlist" on Google. Copy a link ending in .m3u / .m3u8 and paste it into the app.</string>
+    <string name="faq_q1">Where do I get a playlist?</string>
+    <string name="faq_a1">From your IPTV provider or the TV service you use. They give you a playlist link (.m3u / .m3u8) or Xtream login details (server, username, password). The app doesn\'t provide any channels.</string>
     <string name="faq_q2">A channel doesn\'t play — what can I do?</string>
     <string name="faq_a2">The link may be dead, geo-blocked, or need its own User-Agent. Try another channel, update the playlist, or change the User-Agent in Settings › Playback.</string>
     <string name="faq_q3">How do I edit, delete or lock a playlist?</string>
@@ -546,7 +550,7 @@
     <string name="bot_a_m3u">Add an M3U playlist:</string>
     <string name="bot_a_m3u_s">1. Tap + › Playlist URL\n2. Paste the .m3u / .m3u8 link\n3. Tap Add playlist</string>
     <string name="bot_a_fix">If a channel won\'t play or keeps buffering:</string>
-    <string name="bot_a_fix_s">1. Tap Retry or switch to the next channel — free links often die\n2. Try another User-Agent (Settings › User-Agent: VLC)\n3. Refresh the playlist to get new links\n4. Some channels are geo-blocked in your country</string>
+    <string name="bot_a_fix_s">1. Tap Retry or switch to the next channel — some links stop working\n2. Try another User-Agent (Settings › User-Agent: VLC)\n3. Refresh the playlist to get new links\n4. Some channels are geo-blocked in your country</string>
     <string name="bot_a_single">Play a stream link:</string>
     <string name="bot_a_single_s">1. Tap + › Single stream\n2. Paste the link\n3. Tap Play now</string>
     <string name="bot_a_xtream">Set up Xtream:</string>

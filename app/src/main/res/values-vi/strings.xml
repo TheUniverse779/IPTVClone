@@ -25,7 +25,7 @@
     <string name="license_title">License agreement</string>
     <string name="license_1">IPTV Player là trình phát, hỗ trợ playlist M3U, M3U8 và tài khoản Xtream do bạn tự thêm. App không cung cấp kênh hay nội dung nào.</string>
     <string name="license_2">Bạn chịu trách nhiệm về quyền sử dụng các playlist và nội dung mình thêm vào app.</string>
-    <string name="license_3">Các trang gợi ý trong phần hướng dẫn thuộc bên thứ ba. Chúng tôi không kiểm soát và không bảo đảm nội dung trên đó.</string>
+    <string name="license_3">Playlist, tài khoản và link bạn thêm vào đến từ bên thứ ba. Chúng tôi không kiểm soát và không bảo đảm nội dung của chúng.</string>
     <string name="license_4">Chúng tôi không liên kết với bất kỳ nhà cung cấp nội dung nào.</string>
     <string name="license_5">Không sử dụng app để phát nội dung có bản quyền khi chưa được phép.</string>
     <string name="license_6">Tiếp tục nghĩa là bạn đã đọc và đồng ý với các điều khoản trên.</string>
@@ -48,7 +48,7 @@
     <string name="import_xtream_sub">Server, username, password</string>
     <string name="play_single_title">Phát 1 link stream</string>
     <string name="play_single_sub">Xem ngay sự kiện, kênh lẻ</string>
-    <string name="home_guide_link">Chưa có link? <b>Xem cách tìm playlist</b> và gợi ý trang để lấy link</string>
+    <string name="home_guide_link">Chưa biết cách thêm nguồn? <b>Xem hướng dẫn từng bước</b></string>
     <string name="continue_live">Xem lần cuối · %1$s</string>
     <string name="your_playlists">Playlist của bạn</string>
     <string name="channels_header">Kênh</string>
@@ -113,7 +113,7 @@
     <string name="go_home">Về Home</string>
     <string name="view_channels">Xem kênh</string>
     <string name="import_failed_title">Không đọc được playlist</string>
-    <string name="import_failed_http">Link trả về lỗi (%1$s). Kiểm tra lại link, hoặc tìm link khác ở trang gợi ý.</string>
+    <string name="import_failed_http">Link trả về lỗi (%1$s). Kiểm tra lại link, hoặc xin link mới từ nhà cung cấp.</string>
     <string name="import_failed_network">Không kết nối được. Kiểm tra mạng và link rồi thử lại.</string>
     <string name="import_failed_empty">File không có kênh nào phát được. Kiểm tra đây có phải playlist M3U / M3U8 không.</string>
     <string name="fix_link">Sửa link</string>
@@ -216,7 +216,7 @@
     <string name="profiles_hint">Nhấn giữ hoặc bấm ⋮ để đồng bộ lại, xem thông tin tài khoản, khóa hoặc xóa profile.</string>
     <string name="no_xtream_title">Chưa có tài khoản Xtream</string>
     <string name="no_xtream_body">Thêm Server URL, username và password từ nhà cung cấp để xem Live, phim và series.</string>
-    <string name="no_xtream_guide">Chưa có tài khoản? <b>Xem hướng dẫn Xtream</b></string>
+    <string name="no_xtream_guide">Đã có thông tin đăng nhập từ nhà cung cấp? <b>Xem cách thêm</b></string>
     <string name="tag_new">Mới</string>
     <string name="tag_expired">Hết hạn</string>
     <string name="valid_until">Hạn dùng %1$s</string>
@@ -326,6 +326,7 @@
     <string name="suggested_sites">Trang gợi ý</string>
     <string name="search_google">Tìm trên Google</string>
     <string name="third_party_note">Các trang trên thuộc bên thứ ba. App không kiểm soát nội dung và không bảo đảm link còn hoạt động.</string>
+    <string name="no_content_note">App không cung cấp kênh hay nội dung nào. Hãy dùng playlist và tài khoản từ nhà cung cấp của bạn.</string>
     <string name="open_import_form">Mở form thêm nguồn</string>
     <string name="choose_m3u_file">Chọn file M3U</string>
     <string name="suggested_page">Trang gợi ý</string>
@@ -448,6 +449,9 @@
     <string name="howto_url_3b">Dán link, đặt tên, bật passcode nếu muốn.</string>
     <string name="howto_url_4">Bấm <b>Thêm playlist</b></string>
     <string name="howto_url_4b">App đọc danh sách kênh và chia theo nhóm.</string>
+    <string name="howto_url_get">Lấy <b>link playlist</b> từ nhà cung cấp</string>
+    <string name="howto_url_get_b">Link thường kết thúc bằng .m3u hoặc .m3u8. Copy link đó.</string>
+    <string name="howto_url_add">Trong app, bấm <b>+</b> › <b>Playlist URL</b></string>
     <string name="howto_xt_1">Lấy <b>Server URL, Username, Password</b> từ nhà cung cấp</string>
     <string name="howto_xt_1b">hoặc từ trang hướng dẫn bên dưới.</string>
     <string name="howto_xt_2">Bấm <b>+</b> › <b>Xtream Codes</b></string>
@@ -463,8 +467,8 @@
     <string name="howto_upload_2">Bấm <b>+</b> › <b>File M3U</b>, chọn tối đa 5 file</string>
     <string name="howto_upload_3">Đặt tên, bấm <b>Nhập</b></string>
     <string name="howto_upload_3b">File gốc có thể xóa sau khi nhập.</string>
-    <string name="faq_q1">Tìm playlist ở đâu?</string>
-    <string name="faq_a1">Mở Hướng dẫn › Trang gợi ý, hoặc tìm "free iptv m3u playlist" trên Google. Copy link kết thúc bằng .m3u / .m3u8 rồi dán vào app.</string>
+    <string name="faq_q1">Lấy playlist ở đâu?</string>
+    <string name="faq_a1">Từ nhà cung cấp IPTV hoặc dịch vụ truyền hình bạn đang dùng. Họ sẽ cho bạn link playlist (.m3u / .m3u8) hoặc thông tin đăng nhập Xtream (server, username, password). App không cung cấp kênh nào.</string>
     <string name="faq_q2">Kênh không phát được thì làm gì?</string>
     <string name="faq_a2">Link có thể đã chết, bị chặn theo khu vực, hoặc cần User-Agent riêng. Thử kênh khác, bấm Cập nhật playlist, hoặc đổi User-Agent trong Cài đặt › Phát video.</string>
     <string name="faq_q3">Sửa, xóa, khóa playlist thế nào?</string>
@@ -476,7 +480,7 @@
     <string name="bot_a_m3u">Thêm playlist M3U:</string>
     <string name="bot_a_m3u_s">1. Bấm + › Playlist URL\n2. Dán link .m3u / .m3u8\n3. Bấm Thêm playlist</string>
     <string name="bot_a_fix">Nếu kênh không phát hoặc bị giật:</string>
-    <string name="bot_a_fix_s">1. Bấm Thử lại hoặc chuyển kênh tiếp — link miễn phí hay chết\n2. Đổi User-Agent (Cài đặt › User-Agent: VLC)\n3. Cập nhật lại playlist để lấy link mới\n4. Một số kênh bị chặn theo quốc gia (geo-blocked)</string>
+    <string name="bot_a_fix_s">1. Bấm Thử lại hoặc chuyển kênh tiếp — một số link có thể ngừng hoạt động\n2. Đổi User-Agent (Cài đặt › User-Agent: VLC)\n3. Cập nhật lại playlist để lấy link mới\n4. Một số kênh bị chặn theo quốc gia (geo-blocked)</string>
     <string name="bot_a_single">Phát 1 link stream:</string>
     <string name="bot_a_single_s">1. Bấm + › Single stream\n2. Dán link\n3. Bấm Phát ngay</string>
     <string name="bot_a_xtream">Thiết lập Xtream:</string>

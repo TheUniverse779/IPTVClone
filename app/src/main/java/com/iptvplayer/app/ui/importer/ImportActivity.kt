@@ -91,6 +91,7 @@ class ImportActivity : BaseActivity<ActivityImportBinding>(ActivityImportBinding
         guideUrl.glIcon.setImageResource(R.drawable.ic_globe)
         guideUrl.glText.text = Html.fromHtml(getString(R.string.guide_strip_iptv), Html.FROM_HTML_MODE_COMPACT)
         guideUrl.root.setOnClickListener { WebGuideSheet.show(this@ImportActivity, supportFragmentManager, "iptv") }
+        guideUrl.root.visible(Features.GUIDE_SITES)
         tvLicense.text = Html.fromHtml(getString(R.string.license_note), Html.FROM_HTML_MODE_COMPACT)
         tvLicense.setOnClickListener { com.iptvplayer.app.ui.disclaimer.DisclaimerActivity.start(this@ImportActivity, true) }
         btnAdd.setOnClickListener { submitUrl() }
@@ -121,6 +122,7 @@ class ImportActivity : BaseActivity<ActivityImportBinding>(ActivityImportBinding
         guideSingle.glIcon.setImageResource(R.drawable.ic_globe)
         guideSingle.glText.text = Html.fromHtml(getString(R.string.guide_strip_single), Html.FROM_HTML_MODE_COMPACT)
         guideSingle.root.setOnClickListener { WebGuideSheet.show(this@ImportActivity, supportFragmentManager, "single") }
+        guideSingle.root.visible(Features.GUIDE_SITES)
         btnPlay.setOnClickListener {
             val url = etStream.text.toString().trim()
             if (url.isEmpty()) { setError(etStreamBox, etStreamHelper, R.string.err_url_empty, R.string.stream_link_helper); return@setOnClickListener }
@@ -184,6 +186,7 @@ class ImportActivity : BaseActivity<ActivityImportBinding>(ActivityImportBinding
             guideXtream.glIcon.setImageResource(R.drawable.ic_help)
             guideXtream.glText.text = Html.fromHtml(act.getString(R.string.guide_strip_xtream), Html.FROM_HTML_MODE_COMPACT)
             guideXtream.root.setOnClickListener { WebGuideSheet.show(act, fm, "xtream") }
+            guideXtream.root.visible(Features.GUIDE_SITES)
             btnLogin.setText(if (editingId == null) R.string.login_sync else R.string.save_resync)
         }
 
