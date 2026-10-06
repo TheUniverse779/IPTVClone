@@ -45,4 +45,11 @@ object Features {
      * match reminders need [SPORT], the media notification needs [BACKGROUND_AUDIO].
      */
     const val NOTIFICATION_PERMISSION = false
+
+    /**
+     * Settings › Language (placeholder picker, English / Tiếng Việt). Hidden until there are more languages
+     * or the custom language screen exists; the app starts in English (App.DEFAULT_LANGUAGE). Android 13+
+     * still offers the per-app language in system settings (res/xml/locales_config.xml).
+     */
+    const val LANGUAGE_SETTING = false
 }

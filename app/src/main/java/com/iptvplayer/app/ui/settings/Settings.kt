@@ -78,7 +78,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
         val g = binding.groups
         g.removeAllViews()
         group(R.string.set_general) {
-            row(it, R.drawable.ic_lang, R.string.set_language, value = currentLanguageName()) { pickLanguage() }
+            if (Features.LANGUAGE_SETTING) row(it, R.drawable.ic_lang, R.string.set_language, value = currentLanguageName()) { pickLanguage() }
             row(it, R.drawable.ic_lock, R.string.set_passcode, value = getString(if (s.hasPasscode) R.string.passcode_on else R.string.passcode_off)) {
                 if (s.hasPasscode) passcodeOptions() else PasscodeDialog.show(childFragmentManager, KEY_PASS, PasscodeDialog.MODE_CREATE)
             }

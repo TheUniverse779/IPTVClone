@@ -25,6 +25,7 @@
 - [ ] **Bạn**: Email hỗ trợ (hiện là `support@example.com`).
 - [x] **Bạn**: Chốt target SDK: **36**. *(06/10/2026)*
 - [ ] **Bạn** *(tuỳ chọn)*: Màn chọn ngôn ngữ + onboarding. Bạn tự code; hook đã có sẵn trong `SplashActivity`.
+- [x] **Claude**: Tạm ẩn dòng Language trong Settings (`Features.LANGUAGE_SETTING = false`). App mặc định tiếng Anh; Android 13+ vẫn chọn được ngôn ngữ của app trong cài đặt hệ thống. *(06/10/2026)*
 
 ## Giai đoạn 2: Sửa code trước khi build release
 
@@ -85,5 +86,6 @@
 - Cast lên TV: `Features.CAST` (mở cài đặt cast / màn hình không dây của Android). Bật lại thì test với TV thật.
 - Sao lưu / khôi phục: `Features.BACKUP`. Bật lại thì **phải sửa trước**: khôi phục hiện chỉ lấy profile Xtream đầu tiên.
 - Quyền thông báo: `Features.NOTIFICATION_PERMISSION`. Bật lại cùng lúc với Sport hoặc nghe nền, và bỏ comment `POST_NOTIFICATIONS` trong manifest.
+- Chọn ngôn ngữ trong Settings: `Features.LANGUAGE_SETTING`. Bật lại khi có thêm ngôn ngữ, hoặc thay bằng màn Language bạn tự code.
 - Cài đặt Decoder: `Features.DECODER_SETTING`. Chỉ nên bật lại khi đã thêm decoder phần mềm (ví dụ media3 FFmpeg).
 - Hướng dẫn chỗ lấy nguồn: `Features.GUIDE_SITES`. **Không bật lại bằng Remote Config sau khi đã duyệt**, Google coi đó là lách kiểm duyệt.
