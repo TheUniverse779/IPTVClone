@@ -20,4 +20,11 @@ object Features {
      * explains how to enter a link/account the user already has.
      */
     const val GUIDE_SITES = false
+
+    /**
+     * "Keep playing when the screen is off" (PlaybackService, a mediaPlayback foreground service).
+     * Off for the first Play release so no foreground-service declaration/video is needed. To turn it
+     * back on, also restore the FOREGROUND_SERVICE permissions and the <service> in AndroidManifest.xml.
+     */
+    const val BACKGROUND_AUDIO = false
 }

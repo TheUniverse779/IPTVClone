@@ -35,6 +35,8 @@
 - [ ] **Claude**: Sửa khôi phục backup: hiện chỉ khôi phục được **profile Xtream đầu tiên**.
 - [ ] **Claude**: Passcode: thêm đổi mã / tắt passcode (hiện bấm vào là luôn tạo mã mới).
 - [ ] **Claude**: Ẩn cài đặt Decoder (không có FFmpeg nên không có tác dụng).
+- [x] **Claude**: Tạm ẩn "Phát tiếp khi tắt màn hình" (`Features.BACKGROUND_AUDIO = false`). Comment `FOREGROUND_SERVICE*` + `<service PlaybackService>` trong manifest; gỡ luôn `FOREGROUND_SERVICE` + `SystemForegroundService` do thư viện WorkManager tự thêm. Đã kiểm tra manifest đã gộp của bản release: không còn foreground service nào. PiP vẫn chạy. *(06/10/2026)*
+- [ ] **Claude**: Cân nhắc bỏ hỏi quyền thông báo (`POST_NOTIFICATIONS`) lúc mở app: Sport và nghe nền đều đang tắt nên không còn tính năng nào gửi thông báo.
 - [ ] **Claude**: Kiểm tra ProGuard cho bản release: các class Gson nằm ngoài `dto/` (`GuideSites`, `Backup`…) có thể bị R8 làm hỏng khi minify.
 - [ ] **Bạn**: Tạo keystore ký release (hoặc để Claude tạo). **Cất file và mật khẩu cẩn thận**, mất là không cập nhật app được nữa.
 - [ ] **Claude**: Cấu hình ký release (đọc mật khẩu từ file ngoài git) và build **AAB** (`bundleRelease`).
@@ -61,7 +63,7 @@
 - [ ] **Bạn**: Data safety: app không thu thập hay chia sẻ dữ liệu (không analytics, không tài khoản; dữ liệu chỉ lưu trên máy).
 - [ ] **Bạn**: Content rating (bảng câu hỏi IARC).
 - [ ] **Bạn**: Target audience: 18+ hoặc 13+, **không** chọn trẻ em.
-- [ ] **Bạn**: Khai báo Foreground service `mediaPlayback` + video ngắn quay cảnh nghe nền khi tắt màn hình.
+- [x] ~~**Bạn**: Khai báo Foreground service `mediaPlayback` + video quay màn hình.~~ **Không cần cho bản đầu**: đã tạm ẩn nghe nền, app không còn foreground service. *(06/10/2026)*
 - [ ] **Bạn**: Upload AAB lên Internal testing, cài thử từ Play.
 - [ ] **Bạn**: Closed testing với **ít nhất 12 người trong 14 ngày** (nếu tài khoản cá nhân).
 - [ ] **Bạn**: Nộp bản Production và chờ duyệt.
@@ -77,4 +79,5 @@
 
 - Tab Sport: `Features.SPORT`
 - Community: `Features.COMMUNITY` (cần `google-services.json`)
+- Phát tiếp khi tắt màn hình: `Features.BACKGROUND_AUDIO`. Bật lại thì phải: (1) bỏ comment 2 quyền `FOREGROUND_SERVICE*` và `<service PlaybackService>` trong `AndroidManifest.xml`, (2) xoá 2 dòng `tools:node="remove"` (quyền `FOREGROUND_SERVICE` và `SystemForegroundService`), (3) khai báo foreground service `mediaPlayback` + video trong Play Console.
 - Hướng dẫn chỗ lấy nguồn: `Features.GUIDE_SITES`. **Không bật lại bằng Remote Config sau khi đã duyệt**, Google coi đó là lách kiểm duyệt.

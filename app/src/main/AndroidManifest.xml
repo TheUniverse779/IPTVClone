@@ -5,8 +5,16 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Background audio (Features.BACKGROUND_AUDIO) is off for the first Play release, so no
+         foreground-service declaration/video is needed. Turning it back on: uncomment these two
+         permissions and the PlaybackService <service> below, then set the flag to true.
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    -->
+    <!-- WorkManager's library manifest adds FOREGROUND_SERVICE for setForeground() work, which the
+         app doesn't use; strip it (and its service below) so the merged manifest has no foreground
+         service at all. Delete both tools:node="remove" lines when background audio comes back. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" tools:node="remove" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
 
@@ -70,6 +78,7 @@
             android:supportsPictureInPicture="true"
             android:theme="@style/Theme.IPTV.Player" />
 
+        <!-- Background audio, off for now (see the permissions comment at the top).
         <service
             android:name=".player.PlaybackService"
             android:exported="true"
@@ -78,6 +87,8 @@
                 <action android:name="androidx.media3.session.MediaSessionService" />
             </intent-filter>
         </service>
+        -->
+        <service android:name="androidx.work.impl.foreground.SystemForegroundService" tools:node="remove" />
 
         <!-- WorkManager is initialised by App (Hilt worker factory). -->
         <provider

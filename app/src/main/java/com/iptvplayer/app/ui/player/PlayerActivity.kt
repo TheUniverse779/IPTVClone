@@ -37,6 +37,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.AspectRatioFrameLayout
 import com.google.android.material.chip.Chip
+import com.iptvplayer.app.Features
 import com.iptvplayer.app.R
 import com.iptvplayer.app.base.BaseActivity
 import com.iptvplayer.app.base.collect
@@ -101,7 +102,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         binding.playerView.player = vm.manager.player
         // Read synchronously: onStart/onStop decide on these, and an async load could arrive after them.
-        kotlinx.coroutines.runBlocking { settings.current() }.let { autoPip = it.autoPip; backgroundAudio = it.backgroundAudio }
+        kotlinx.coroutines.runBlocking { settings.current() }.let { autoPip = it.autoPip; backgroundAudio = Features.BACKGROUND_AUDIO && it.backgroundAudio }
 
         intent.request()?.let { vm.open(it) }
         setupControls()
@@ -466,7 +467,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         // the video: stop playback and the media notification even if background audio is on.
         if (!isInPictureInPictureMode && wasInPip && !lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) {
             vm.manager.stop()
-            stopService(Intent(this, PlaybackService::class.java))
+            if (Features.BACKGROUND_AUDIO) stopService(Intent(this, PlaybackService::class.java))
             finish()
         }
         wasInPip = isInPictureInPictureMode

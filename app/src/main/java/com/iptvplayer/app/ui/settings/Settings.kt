@@ -17,6 +17,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.iptvplayer.app.BuildConfig
+import com.iptvplayer.app.Features
 import com.iptvplayer.app.R
 import com.iptvplayer.app.base.BaseActivity
 import com.iptvplayer.app.base.BaseFragment
@@ -80,7 +81,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
         }
         group(R.string.set_playback) {
             switch(it, R.drawable.ic_pip, R.string.set_auto_pip, s.autoPip) { v -> lifecycleScope.launch { store.setAutoPip(v) } }
-            switch(it, R.drawable.ic_audio, R.string.set_bg_audio, s.backgroundAudio) { v -> lifecycleScope.launch { store.setBackgroundAudio(v) } }
+            if (Features.BACKGROUND_AUDIO) switch(it, R.drawable.ic_audio, R.string.set_bg_audio, s.backgroundAudio) { v -> lifecycleScope.launch { store.setBackgroundAudio(v) } }
             row(it, R.drawable.ic_globe, R.string.set_user_agent, value = s.userAgentMode.label()) { pickUserAgent(s.userAgentMode) }
             row(it, R.drawable.ic_bolt, R.string.set_decoder, value = getString(if (s.softwareDecoder) R.string.decoder_sw else R.string.decoder_hw)) {
                 lifecycleScope.launch { store.setSoftwareDecoder(!s.softwareDecoder) }
