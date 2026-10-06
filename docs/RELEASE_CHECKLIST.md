@@ -23,14 +23,15 @@
 - [ ] **Bạn**: Link Privacy policy (bắt buộc, phải là trang web công khai).
 - [ ] **Bạn**: Link Terms of use (có thể chung trang với Privacy).
 - [ ] **Bạn**: Email hỗ trợ (hiện là `support@example.com`).
-- [ ] **Bạn**: Xem trong Play Console target SDK tối thiểu hiện nay là bao nhiêu (app đang target **35**).
+- [x] **Bạn**: Chốt target SDK: **36**. *(06/10/2026)*
 - [ ] **Bạn** *(tuỳ chọn)*: Màn chọn ngôn ngữ + onboarding. Bạn tự code; hook đã có sẵn trong `SplashActivity`.
 
 ## Giai đoạn 2: Sửa code trước khi build release
 
 - [ ] **Claude**: Đổi tên app, applicationId, icon theo Giai đoạn 1.
 - [ ] **Claude**: Thay `PRIVACY_URL`, `TERMS_URL`, `SUPPORT_EMAIL` trong `ui/settings/Settings.kt`.
-- [ ] **Claude**: Nâng `targetSdk` / `compileSdk` nếu Play yêu cầu.
+- [x] **Claude**: Nâng `targetSdk` / `compileSdk` lên **36**, AGP 8.7.2 → 8.11.1. Build debug + release và unit test đều qua; thư viện native đã căn trang 16 KB. *(06/10/2026)*
+- [ ] **Claude + Bạn**: Test lại trên máy **Android 16** (Pixel). API 36 bắt buộc edge-to-edge, có predictive back, và trên màn hình lớn bỏ qua khoá xoay. Hiện mới test trên emulator Android 9.
 - [ ] **Claude**: Sửa khôi phục backup: hiện chỉ khôi phục được **profile Xtream đầu tiên**.
 - [ ] **Claude**: Passcode: thêm đổi mã / tắt passcode (hiện bấm vào là luôn tạo mã mới).
 - [ ] **Claude**: Ẩn cài đặt Decoder (không có FFmpeg nên không có tác dụng).
