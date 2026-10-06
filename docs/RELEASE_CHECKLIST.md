@@ -41,8 +41,8 @@
 
 ## Giai đoạn 3: Test bản release
 
-- [ ] **Claude**: Soạn file M3U test hợp pháp (chỉ stream mẫu: Big Buck Bunny, Mux test…).
-- [ ] **Bạn**: Đưa file M3U test lên GitHub của bạn, gửi link raw cho Claude.
+- [x] **Claude**: Soạn file M3U test hợp pháp: [docs/review/test-playlist.m3u](review/test-playlist.m3u), 15 kênh trong 5 nhóm (live test, open movie HLS/DASH/MP4, test pattern). Đã import và phát thử đủ 15 kênh trên app. Hướng dẫn + văn bản dán vào Play Console: [docs/review/README.md](review/README.md). *(06/10/2026)*
+- [ ] **Bạn**: Đưa `test-playlist.m3u` lên một repo GitHub **public mới** (đừng dùng lại các repo playlist cũ), gửi link Raw cho Claude kiểm tra.
 - [ ] **Claude + Bạn**: Cài bản release (đã minify) lên Pixel, chạy lại toàn bộ luồng: Home, Import URL/Xtream/Single, Player (PiP, nghe nền, hẹn giờ), Xtream (Movies, Live, Search, Favorite), Settings.
 - [ ] **Bạn**: Test chọn file M3U thật trên máy.
 - [ ] **Bạn**: Test sao lưu → xoá app → cài lại → khôi phục.
