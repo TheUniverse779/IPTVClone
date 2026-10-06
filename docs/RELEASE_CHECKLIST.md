@@ -50,7 +50,8 @@
 - [x] **Bạn**: Đưa `test-playlist.m3u` lên repo public [iptvstore779/iptv_review](https://github.com/iptvstore779/iptv_review). Claude đã kiểm tra: file giống hệt bản local; cài mới app, import bằng link Raw ra 15 kênh / 5 nhóm, mỗi nhóm phát thử 1 kênh đều chạy. *(06/10/2026)*
   Link cho reviewer: `https://raw.githubusercontent.com/iptvstore779/iptv_review/refs/heads/main/test-playlist.m3u`
 - [x] **Claude**: Single stream cho reviewer: đoạn App access trong [docs/review/README.md](review/README.md) đã có link Mux Big Buck Bunny (đã test phát được). *(06/10/2026)*
-- [ ] **Bạn**: Quyết định tài khoản **Xtream** cho reviewer: (A) server Xtream demo riêng, chỉ chứa stream test hợp pháp (khuyên dùng), hoặc (B) không cấp, ghi chú trong App access rằng Xtream cần tài khoản của nhà cung cấp. **Tuyệt đối không** dùng tài khoản thật của nhà cung cấp IPTV.
+- [x] **Bạn**: Chọn **phương án B** cho Xtream: không cấp tài khoản cho reviewer, ghi chú trong App access rằng Xtream cần thông tin đăng nhập của nhà cung cấp. Đã thêm đoạn ghi chú tiếng Anh vào [docs/review/README.md](review/README.md). *(06/10/2026)*
+  Rủi ro đã biết: reviewer không test được Xtream, có thể bị hỏi lại hoặc từ chối. Nếu Play hỏi, phương án dự phòng là dựng server Xtream demo.
 - [ ] **Claude + Bạn**: Cài bản release (đã minify) lên Pixel, chạy lại toàn bộ luồng: Home, Import URL/Xtream/Single, Player (PiP, nghe nền, hẹn giờ), Xtream (Movies, Live, Search, Favorite), Settings.
 - [ ] **Bạn**: Test chọn file M3U thật trên máy.
 - [x] ~~**Bạn**: Test sao lưu → xoá app → cài lại → khôi phục.~~ **Không cần cho bản đầu**: đã tạm ẩn. *(06/10/2026)*

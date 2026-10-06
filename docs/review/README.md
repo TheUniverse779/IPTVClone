@@ -38,6 +38,11 @@ Choose "All or some functionality is restricted", then add instructions:
 >
 > No login is needed. To test a single stream, tap **+** › **Single stream** and paste
 > `https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8`.
+>
+> **Xtream Codes** accounts are not included: that feature logs in to the IPTV provider the user
+> already subscribes to, so it can only be tested with provider credentials. The playlist above
+> covers the player, the channel list, categories, favourites, search and continuation. The Xtream
+> screens are the same player and lists, with Movies / Series / Live tabs.
 
 ## Before each release
 
