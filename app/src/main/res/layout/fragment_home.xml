@@ -34,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textSize="24sp"
-                    tools:text="IPTV Player" />
+                    tools:text="IPTV Smart Player" />
 
                 <ImageButton android:id="@+id/btnSearch" style="@style/IconBtn.Boxed" android:layout_marginEnd="8dp" android:contentDescription="@string/search" android:src="@drawable/ic_search" />
                 <ImageButton android:id="@+id/btnHelp" style="@style/IconBtn.Boxed" android:layout_marginEnd="8dp" android:contentDescription="@string/help" android:src="@drawable/ic_help" />

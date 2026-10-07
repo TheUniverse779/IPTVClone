@@ -10,6 +10,8 @@
     <color name="text_2">#A3A4AA</color>
     <color name="text_3">#6F7076</color>
     <color name="accent">#F56F10</color>
+    <!-- Launcher icon background (matches the blue of ic_launcher_foreground / ic_launcher-playstore.png). -->
+    <color name="launcher_bg">#1682D7</color>
     <color name="accent_press">#D95E08</color>
     <color name="accent_soft">#24F56F10</color>
     <color name="gold">#FFC446</color>

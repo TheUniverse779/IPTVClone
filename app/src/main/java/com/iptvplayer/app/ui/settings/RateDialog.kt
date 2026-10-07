@@ -40,7 +40,7 @@ class RateDialog : BaseDialog<DialogConfirmBinding>(DialogConfirmBinding::inflat
             val ctx = requireContext()
             dismiss()
             if (stars >= 4) runCatching { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${ctx.packageName}"))) }
-            else Nav.feedback(ctx)
+            else if (com.iptvplayer.app.Features.FEEDBACK) Nav.feedback(ctx)
         }
         renderStars()
     }

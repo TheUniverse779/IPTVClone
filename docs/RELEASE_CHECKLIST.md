@@ -17,9 +17,9 @@
 
 ## Giai đoạn 1: Thông tin bạn cần gửi
 
-- [ ] **Bạn**: Tên app hiển thị (hiện là `IPTV Player`).
+- [x] **Bạn**: Tên app: **IPTV Smart Player - Live TV**. *(07/10/2026)*
 - [x] **Bạn**: applicationId: **`com.cp.livetv.iptvplayer`**. Lên Play rồi thì không đổi được nữa. *(07/10/2026)*
-- [ ] **Bạn**: Icon app: file PNG 512×512, hoặc để Claude vẽ icon vector.
+- [x] **Bạn**: Icon app (TV trên nền xanh), kèm `ic_launcher-playstore.png` 512×512 để upload lên Play. *(07/10/2026)*
 - [ ] **Bạn**: Link Privacy policy (bắt buộc, phải là trang web công khai).
 - [ ] **Bạn**: Link Terms of use (có thể chung trang với Privacy).
 - [ ] **Bạn**: Email hỗ trợ (hiện là `support@example.com`).
@@ -30,10 +30,11 @@
 ## Giai đoạn 2: Sửa code trước khi build release
 
 - [x] **Claude**: Đổi applicationId thành `com.cp.livetv.iptvplayer` (giữ `namespace = com.iptvplayer.app` cho code, không ảnh hưởng gì tới Play). *(07/10/2026)*
-- [ ] **Claude**: Đổi tên app và icon theo Giai đoạn 1.
+- [x] **Claude**: Rà icon và tên mới khắp app: màn Splash dùng icon mới; nền adaptive icon đổi từ xanh lá mẫu của Android Studio sang xanh `#1682D7` khớp icon; `roundIcon` trỏ sang `ic_launcher_round`; xoá icon vector cũ; đổi chữ "IPTV Player" ở header Home, License, câu chia sẻ, tiêu đề email feedback. *(07/10/2026)*
 - [x] **Claude**: Tích hợp **Firebase Analytics + Crashlytics** (BOM 34.19.0, `app/google-services.json`, file đã nằm trong `.gitignore`). Gỡ quyền Advertising ID do Analytics tự thêm (`AD_ID`, `ACCESS_ADSERVICES_*`) và tắt thu thập ad ID, vì app không có quảng cáo. Đã kiểm tra trên LDPlayer 9: Crashlytics khởi tạo và tải settings từ Firebase; Analytics ghi `first_open`, `session_start`, `screen_view` cho đúng app. *(07/10/2026)*
 - [ ] **Bạn**: Mở Firebase Console › Crashlytics, đợi app báo lần đầu (vài phút sau khi mở app) để xác nhận Crashlytics đã nhận dữ liệu.
-- [ ] **Claude**: Thay `PRIVACY_URL`, `TERMS_URL`, `SUPPORT_EMAIL` trong `ui/settings/Settings.kt`.
+- [x] ~~**Claude**: Thay `PRIVACY_URL`, `TERMS_URL`, `SUPPORT_EMAIL` trong `ui/settings/Settings.kt`.~~ **Hoãn**: đã ẩn cụm Legal (`Features.LEGAL`) và Send feedback (`Features.FEEDBACK`) trong Settings, nên app không còn chỗ nào mở link/email giả. Vẫn cần link Privacy policy **trên Play Console** (bắt buộc). *(07/10/2026)*
+- [x] **Claude**: Ẩn công tắc "Picture-in-picture when leaving the app" (`Features.AUTO_PIP_SETTING`); tự vào PiP vẫn bật theo mặc định. *(07/10/2026)*
 - [x] **Claude**: Nâng `targetSdk` / `compileSdk` lên **36**, AGP 8.7.2 → 8.11.1. Build debug + release và unit test đều qua; thư viện native đã căn trang 16 KB. *(06/10/2026)*
 - [ ] **Claude + Bạn**: Test lại trên máy **Android 16** (Pixel). API 36 bắt buộc edge-to-edge, có predictive back, và trên màn hình lớn bỏ qua khoá xoay. Hiện mới test trên emulator Android 9.
 - [x] ~~**Claude**: Sửa khôi phục backup: hiện chỉ khôi phục được profile Xtream đầu tiên.~~ **Hoãn**: đã tạm ẩn Sao lưu / Khôi phục (`Features.BACKUP = false`). Sửa lỗi này trước khi bật lại. *(06/10/2026)*
@@ -95,6 +96,9 @@
 - Quyền thông báo: `Features.NOTIFICATION_PERMISSION`. Bật lại cùng lúc với Sport hoặc nghe nền, và bỏ comment `POST_NOTIFICATIONS` trong manifest.
 - Chọn ngôn ngữ trong Settings: `Features.LANGUAGE_SETTING`. Bật lại khi có thêm ngôn ngữ, hoặc thay bằng màn Language bạn tự code.
 - Cài đặt Decoder: `Features.DECODER_SETTING`. Chỉ nên bật lại khi đã thêm decoder phần mềm (ví dụ media3 FFmpeg).
+- Cụm Legal trong Settings: `Features.LEGAL`. Bật lại khi có link Privacy / Terms thật, sửa `PRIVACY_URL` / `TERMS_URL`.
+- Send feedback: `Features.FEEDBACK` (cả nút trong chatbot và khi đánh giá 1–3 sao). Bật lại khi có email hỗ trợ thật, sửa `SUPPORT_EMAIL`.
+- Công tắc tự vào PiP: `Features.AUTO_PIP_SETTING`.
 - Hướng dẫn chỗ lấy nguồn: `Features.GUIDE_SITES`. **Không bật lại bằng Remote Config sau khi đã duyệt**, Google coi đó là lách kiểm duyệt.
 
 ### Data safety với Firebase

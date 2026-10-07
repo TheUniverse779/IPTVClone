@@ -23,7 +23,7 @@
     <string name="later">Để sau</string>
 
     <string name="license_title">License agreement</string>
-    <string name="license_1">IPTV Player là trình phát, hỗ trợ playlist M3U, M3U8 và tài khoản Xtream do bạn tự thêm. App không cung cấp kênh hay nội dung nào.</string>
+    <string name="license_1">IPTV Smart Player là trình phát, hỗ trợ playlist M3U, M3U8 và tài khoản Xtream do bạn tự thêm. App không cung cấp kênh hay nội dung nào.</string>
     <string name="license_2">Bạn chịu trách nhiệm về quyền sử dụng các playlist và nội dung mình thêm vào app.</string>
     <string name="license_3">Playlist, tài khoản và link bạn thêm vào đến từ bên thứ ba. Chúng tôi không kiểm soát và không bảo đảm nội dung của chúng.</string>
     <string name="license_4">Chúng tôi không liên kết với bất kỳ nhà cung cấp nội dung nào.</string>
@@ -212,7 +212,7 @@
     <string name="resume_note">Vị trí được lưu mỗi 10 giây và khi thoát.</string>
     <string name="brightness">Độ sáng</string>
     <string name="volume">Âm lượng</string>
-    <string name="share_app_text">Dùng thử IPTV Player: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="share_app_text">Dùng thử IPTV Smart Player: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="pip_play">Phát</string>
     <string name="pip_pause">Tạm dừng</string>
     <string name="pip_prev">Kênh trước</string>

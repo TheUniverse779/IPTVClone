@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">IPTV Player</string>
-    <string name="brand_1">IPTV</string>
+    <string name="app_name">IPTV Smart Player - Live TV</string>
+    <string name="brand_1">IPTV Smart</string>
     <string name="brand_2">Player</string>
     <string name="preparing">Preparing…</string>
 
@@ -31,7 +31,7 @@
 
     <!-- disclaimer -->
     <string name="license_title">License agreement</string>
-    <string name="license_1">IPTV Player is a media player for M3U, M3U8 playlists and Xtream accounts that you add yourself. The app does not provide any channels or content.</string>
+    <string name="license_1">IPTV Smart Player is a media player for M3U, M3U8 playlists and Xtream accounts that you add yourself. The app does not provide any channels or content.</string>
     <string name="license_2">You are responsible for your right to use the playlists and content you add to the app.</string>
     <string name="license_3">Playlists, accounts and links you add come from third parties. We do not control them and do not guarantee their content.</string>
     <string name="license_4">We are not affiliated with any content provider.</string>
@@ -252,7 +252,7 @@
     <string name="resume_note">Position is saved every 10 seconds and on exit.</string>
     <string name="brightness">Brightness</string>
     <string name="volume">Volume</string>
-    <string name="share_app_text">Check out IPTV Player: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="share_app_text">Check out IPTV Smart Player: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="pip_play">Play</string>
     <string name="pip_pause">Pause</string>
     <string name="pip_prev">Previous channel</string>

@@ -84,7 +84,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
             }
         }
         group(R.string.set_playback) {
-            switch(it, R.drawable.ic_pip, R.string.set_auto_pip, s.autoPip) { v -> lifecycleScope.launch { store.setAutoPip(v) } }
+            if (Features.AUTO_PIP_SETTING) switch(it, R.drawable.ic_pip, R.string.set_auto_pip, s.autoPip) { v -> lifecycleScope.launch { store.setAutoPip(v) } }
             if (Features.BACKGROUND_AUDIO) switch(it, R.drawable.ic_audio, R.string.set_bg_audio, s.backgroundAudio) { v -> lifecycleScope.launch { store.setBackgroundAudio(v) } }
             row(it, R.drawable.ic_globe, R.string.set_user_agent, value = s.userAgentMode.label()) { pickUserAgent(s.userAgentMode) }
             if (Features.DECODER_SETTING) row(it, R.drawable.ic_bolt, R.string.set_decoder, value = getString(if (s.softwareDecoder) R.string.decoder_sw else R.string.decoder_hw)) {
@@ -103,11 +103,11 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
         group(R.string.set_support) {
             row(it, R.drawable.ic_help, R.string.set_howto) { Nav.howTo(requireContext()) }
             row(it, R.drawable.ic_chat, R.string.set_faq) { Nav.faq(requireContext()) }
-            row(it, R.drawable.ic_mail, R.string.set_feedback) { Nav.feedback(requireContext()) }
+            if (Features.FEEDBACK) row(it, R.drawable.ic_mail, R.string.set_feedback) { Nav.feedback(requireContext()) }
             row(it, R.drawable.ic_star, R.string.set_rate) { RateDialog().show(childFragmentManager, "rate") }
             row(it, R.drawable.ic_share, R.string.set_share) { requireContext().shareText(getString(R.string.share_app_text, requireContext().packageName)) }
         }
-        group(R.string.set_legal) {
+        if (Features.LEGAL) group(R.string.set_legal) {
             row(it, R.drawable.ic_shield, R.string.set_privacy, trail = R.drawable.ic_external) { requireContext().openCustomTab(PRIVACY_URL) }
             row(it, R.drawable.ic_doc, R.string.set_terms, trail = R.drawable.ic_external) { requireContext().openCustomTab(TERMS_URL) }
             row(it, R.drawable.ic_info, R.string.set_license) { DisclaimerActivity.start(requireContext(), true) }
@@ -265,7 +265,7 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding>(ActivityFeedbackB
             if (msg.isEmpty()) { binding.etMsg.setBackgroundResource(R.drawable.bg_input_error); return@setOnClickListener }
             val type = binding.types.findViewById<Chip>(binding.types.checkedChipId)?.text ?: ""
             val body = "$msg\n\n— ${binding.etEmail.text}\nApp ${BuildConfig.VERSION_NAME}, Android ${android.os.Build.VERSION.RELEASE}, ${android.os.Build.MODEL}"
-            val subject = "[IPTV Player] $type"
+            val subject = "[${getString(R.string.app_name)}] $type"
             // Subject/body go in the mailto: URI too: Gmail ignores the extras on ACTION_SENDTO.
             val mailto = "mailto:$SUPPORT_EMAIL?subject=${Uri.encode(subject)}&body=${Uri.encode(body)}"
             runCatching {

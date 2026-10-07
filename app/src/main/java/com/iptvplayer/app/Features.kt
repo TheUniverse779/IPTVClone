@@ -52,4 +52,13 @@ object Features {
      * still offers the per-app language in system settings (res/xml/locales_config.xml).
      */
     const val LANGUAGE_SETTING = false
+
+    /** Settings › Playback › "Picture-in-picture when leaving the app" switch. Hidden: auto-PiP stays on (its default). */
+    const val AUTO_PIP_SETTING = false
+
+    /** Settings › Support › Send feedback (needs a real support e-mail). */
+    const val FEEDBACK = false
+
+    /** Settings › Legal group: Privacy policy, Terms of use, License agreement (needs real privacy/terms URLs). */
+    const val LEGAL = false
 }

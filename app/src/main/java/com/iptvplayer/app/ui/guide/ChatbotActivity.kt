@@ -115,7 +115,7 @@ class ChatbotActivity : BaseActivity<ActivityChatbotBinding>(ActivityChatbotBind
             "single" -> action(R.string.open_form, true) { Nav.import(this, "single") }
             "xtream" -> { action(R.string.add_xtream, true) { Nav.addProfile(this) }; action(R.string.view_guide, false) { Nav.howTo(this, "xtream") } }
             "fix" -> { action(R.string.set_user_agent, true) { Nav.settings(this) }; action(R.string.view_faq, false) { Nav.faq(this) } }
-            "unknown" -> { action(R.string.view_faq, false) { Nav.faq(this) }; action(R.string.contact_support, false) { Nav.feedback(this) } }
+            "unknown" -> { action(R.string.view_faq, false) { Nav.faq(this) }; if (com.iptvplayer.app.Features.FEEDBACK) action(R.string.contact_support, false) { Nav.feedback(this) } }
         }
         b.actions.visible(b.actions.childCount > 0)
     }
