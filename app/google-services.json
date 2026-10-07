@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "845392955314",
+    "firebase_url": "https://flash-light---team-thanhnd-default-rtdb.firebaseio.com",
+    "project_id": "flash-light---team-thanhnd",
+    "storage_bucket": "flash-light---team-thanhnd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:845392955314:android:beedbed1ae9911a53d86ab",
+        "android_client_info": {
+          "package_name": "com.cat.vddl.downloader"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNlZQenfzGacXUYsn4sq2tIRE37nkFrkA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:845392955314:android:6b02b56d01ac16903d86ab",
+        "android_client_info": {
+          "package_name": "com.cp.livetv.iptvplayer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNlZQenfzGacXUYsn4sq2tIRE37nkFrkA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

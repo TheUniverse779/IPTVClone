@@ -26,7 +26,6 @@ decompiled_*.log
 /design/device/
 
 # secrets (add when publishing)
-google-services.json
 *.jks
 *.keystore
 keystore.properties
