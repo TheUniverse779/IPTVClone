@@ -1,0 +1,8 @@
+{
+  "name": "xtream-review-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "local": "node local.mjs"
+  }
+}

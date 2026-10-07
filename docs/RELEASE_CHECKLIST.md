@@ -54,8 +54,12 @@
 - [x] **Bạn**: Đưa `test-playlist.m3u` lên repo public [iptvstore779/iptv_review](https://github.com/iptvstore779/iptv_review). Claude đã kiểm tra: file giống hệt bản local; cài mới app, import bằng link Raw ra 15 kênh / 5 nhóm, mỗi nhóm phát thử 1 kênh đều chạy. *(06/10/2026)*
   Link cho reviewer: `https://raw.githubusercontent.com/iptvstore779/iptv_review/refs/heads/main/test-playlist.m3u`
 - [x] **Claude**: Single stream cho reviewer: đoạn App access trong [docs/review/README.md](review/README.md) đã có link Mux Big Buck Bunny (đã test phát được). *(06/10/2026)*
-- [x] **Bạn**: Chọn **phương án B** cho Xtream: không cấp tài khoản cho reviewer, ghi chú trong App access rằng Xtream cần thông tin đăng nhập của nhà cung cấp. Đã thêm đoạn ghi chú tiếng Anh vào [docs/review/README.md](review/README.md). *(06/10/2026)*
-  Rủi ro đã biết: reviewer không test được Xtream, có thể bị hỏi lại hoặc từ chối. Nếu Play hỏi, phương án dự phòng là dựng server Xtream demo.
+- [x] ~~**Bạn**: Chọn phương án B cho Xtream (không cấp tài khoản).~~ **Bị Google từ chối** ở bản 1 (1.0.0): thiếu thông tin đăng nhập cho màn Xtream. *(07/10/2026)*
+- [x] **Claude**: Viết server Xtream demo cho reviewer ([docs/review/xtream-demo/](review/xtream-demo/)): Cloudflare Worker, chỉ chứa stream test hợp pháp, login `reviewer` / `review2026`. Đã test trên app (chạy local): đăng nhập + sync, phát phim HLS, DASH, MP4, tập series và kênh live đều chạy. Đã viết lại đoạn App access thành 2 mục (Xtream + playlist). *(07/10/2026)*
+- [ ] **Bạn**: Deploy server lên Cloudflare Workers theo [hướng dẫn](review/xtream-demo/README.md), gửi Claude link Worker.
+- [ ] **Claude**: Test app với link Worker thật, điền link vào đoạn App access.
+- [x] **Claude**: Tăng `versionCode` 1 → 2, `versionName` 1.0.0 → 1.0.1 để nộp lại. *(07/10/2026)*
+- [ ] **Bạn**: Build AAB mới, cập nhật App access trong Play Console (2 mục), nộp lại.
 - [ ] **Claude + Bạn**: Cài bản release lên máy thật, chạy lại toàn bộ luồng: Home, Import URL/Xtream/Single, Player (PiP, hẹn giờ, phụ đề, âm thanh), Xtream (Movies, Live, Search, Favorite), Settings.
 - [ ] **Bạn**: Test chọn file M3U thật trên máy.
 - [x] ~~**Bạn**: Test sao lưu → xoá app → cài lại → khôi phục.~~ **Không cần cho bản đầu**: đã tạm ẩn. *(06/10/2026)*

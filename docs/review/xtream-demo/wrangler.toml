@@ -1,0 +1,4 @@
+# Cloudflare Worker config for the review demo server (only needed for the command-line deploy).
+name = "iptv-review-xtream"
+main = "worker.js"
+compatibility_date = "2026-10-01"

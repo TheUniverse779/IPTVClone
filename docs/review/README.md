@@ -26,23 +26,28 @@ When you edit the playlist, update both copies (this file and the GitHub repo).
 
 ## Text for Play Console › App access
 
-Choose "All or some functionality is restricted", then add instructions:
+Choose "All or some functionality is restricted", then add **two** instructions. The first release was
+rejected because the Xtream login had no credentials; the second entry fixes that (server: [`xtream-demo/`](xtream-demo/)).
 
-> **Name:** Test playlist
+Replace `<WORKER-URL>` with the deployed Cloudflare Worker address (see [`xtream-demo/README.md`](xtream-demo/README.md)).
+
+**Instruction 1**
+> **Name:** Xtream login (demo server)
 >
-> **Instructions:** The app is a media player and contains no content. To test it, add this sample playlist of public test streams and open movies:
-> `https://raw.githubusercontent.com/iptvstore779/iptv_review/refs/heads/main/test-playlist.m3u`
-> 1. Open the app and tap **+** (bottom centre) › **Playlist URL**.
-> 2. Paste the link above and tap **Add playlist**.
-> 3. Tap **View channels** and pick any channel to play.
+> **Username:** `reviewer`  **Password:** `review2026`
 >
-> No login is needed. To test a single stream, tap **+** › **Single stream** and paste
+> **Any other information:** The app is a media player and contains no content. This demo server only serves public test streams and open movies (Blender Foundation, CC BY 3.0).
+> 1. Open the app and tap **+** (bottom centre) › **Xtream Codes**.
+> 2. Server URL: `<WORKER-URL>`  Username: `reviewer`  Password: `review2026`
+> 3. Tap **Log in & sync**, then **Watch now**. Movies, Series and Live tabs all have playable items.
+
+**Instruction 2**
+> **Name:** Playlist URL and single stream
+>
+> **Any other information:** No login is needed. Tap **+** › **Playlist URL**, paste
+> `https://raw.githubusercontent.com/iptvstore779/iptv_review/refs/heads/main/test-playlist.m3u`,
+> tap **Add playlist**, then **View channels**. To test a single stream, tap **+** › **Single stream** and paste
 > `https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8`.
->
-> **Xtream Codes** accounts are not included: that feature logs in to the IPTV provider the user
-> already subscribes to, so it can only be tested with provider credentials. The playlist above
-> covers the player, the channel list, categories, favourites, search and continuation. The Xtream
-> screens are the same player and lists, with Movies / Series / Live tabs.
 
 ## Before each release
 
