@@ -20,9 +20,9 @@
 - [x] **Bạn**: Tên app: **IPTV Smart Player - Live TV**. *(07/10/2026)*
 - [x] **Bạn**: applicationId: **`com.cp.livetv.iptvplayer`**. Lên Play rồi thì không đổi được nữa. *(07/10/2026)*
 - [x] **Bạn**: Icon app (TV trên nền xanh), kèm `ic_launcher-playstore.png` 512×512 để upload lên Play. *(07/10/2026)*
-- [ ] **Bạn**: Link Privacy policy (bắt buộc, phải là trang web công khai).
-- [ ] **Bạn**: Link Terms of use (có thể chung trang với Privacy).
-- [ ] **Bạn**: Email hỗ trợ (hiện là `support@example.com`).
+- [ ] **Bạn**: Link Privacy policy (bắt buộc trên Play Console, phải là trang web công khai, phải nhắc Firebase Analytics + Crashlytics). Claude soạn nội dung được.
+- [x] ~~**Bạn**: Link Terms of use.~~ **Không cần cho bản đầu**: đã ẩn cụm Legal trong app. *(07/10/2026)*
+- [ ] **Bạn**: Email liên hệ cho trang Play (Play Console bắt buộc). Trong app đã ẩn Send feedback nên không cần sửa code.
 - [x] **Bạn**: Chốt target SDK: **36**. *(06/10/2026)*
 - [ ] **Bạn** *(tuỳ chọn)*: Màn chọn ngôn ngữ + onboarding. Bạn tự code; hook đã có sẵn trong `SplashActivity`.
 - [x] **Claude**: Tạm ẩn dòng Language trong Settings (`Features.LANGUAGE_SETTING = false`). App mặc định tiếng Anh; Android 13+ vẫn chọn được ngôn ngữ của app trong cài đặt hệ thống. *(06/10/2026)*
@@ -56,7 +56,7 @@
 - [x] **Claude**: Single stream cho reviewer: đoạn App access trong [docs/review/README.md](review/README.md) đã có link Mux Big Buck Bunny (đã test phát được). *(06/10/2026)*
 - [x] **Bạn**: Chọn **phương án B** cho Xtream: không cấp tài khoản cho reviewer, ghi chú trong App access rằng Xtream cần thông tin đăng nhập của nhà cung cấp. Đã thêm đoạn ghi chú tiếng Anh vào [docs/review/README.md](review/README.md). *(06/10/2026)*
   Rủi ro đã biết: reviewer không test được Xtream, có thể bị hỏi lại hoặc từ chối. Nếu Play hỏi, phương án dự phòng là dựng server Xtream demo.
-- [ ] **Claude + Bạn**: Cài bản release (đã minify) lên Pixel, chạy lại toàn bộ luồng: Home, Import URL/Xtream/Single, Player (PiP, nghe nền, hẹn giờ), Xtream (Movies, Live, Search, Favorite), Settings.
+- [ ] **Claude + Bạn**: Cài bản release lên máy thật, chạy lại toàn bộ luồng: Home, Import URL/Xtream/Single, Player (PiP, hẹn giờ, phụ đề, âm thanh), Xtream (Movies, Live, Search, Favorite), Settings.
 - [ ] **Bạn**: Test chọn file M3U thật trên máy.
 - [x] ~~**Bạn**: Test sao lưu → xoá app → cài lại → khôi phục.~~ **Không cần cho bản đầu**: đã tạm ẩn. *(06/10/2026)*
 - [x] ~~**Bạn**: Test Cast lên TV.~~ **Không cần cho bản đầu**: đã tạm ẩn. *(06/10/2026)*
@@ -65,7 +65,8 @@
 
 - [ ] **Bạn**: Tài khoản developer. Nếu là tài khoản **cá nhân tạo sau 11/2023**, cần chạy closed test (xem bước cuối giai đoạn này).
 - [ ] **Bạn**: Tạo app mới (tên, ngôn ngữ mặc định, App / Free).
-- [ ] **Claude**: Soạn mô tả ngắn + mô tả dài (EN, VI). Tránh các cụm "free TV", "free channels", "watch sports", "movies for free".
+- [x] **Claude**: Soạn mô tả ngắn + mô tả chi tiết (tiếng Anh, không có chữ "Xtream", theo cách app gốc và Smarters Pro làm). Bạn chốt bản 2 đoạn. *(07/10/2026)*
+  - Ngắn: `A fast, simple player for your own M3U/M3U8 playlists and IPTV accounts.`
 - [ ] **Bạn**: Ảnh chụp màn hình (ít nhất 2 ảnh điện thoại) + feature graphic 1024×500. **Không** để lộ poster/logo Netflix, HBO hay kênh có thương hiệu: dùng profile Demo của mock server hoặc file M3U test.
 - [ ] **Bạn**: Điền link Privacy policy.
 - [ ] **Bạn**: App access: "Cần hướng dẫn đặc biệt" → dán link M3U test + cách thêm (bấm + › Playlist URL › dán › Add playlist).
