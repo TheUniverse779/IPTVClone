@@ -81,7 +81,7 @@
 
 ## Giai đoạn 5: Sau khi lên
 
-- [ ] **Claude**: Push code lên `origin` (hiện có 3 commit chưa push).
+- [ ] **Claude**: Push code lên `origin` mỗi khi bạn yêu cầu (lần gần nhất 07/10/2026, kèm `app/google-services.json` vì repo private).
 - [ ] **Bạn + Claude**: Theo dõi crash / ANR trong Play Console (Android vitals) và sửa.
 
 ---
