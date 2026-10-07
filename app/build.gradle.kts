@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     id("kotlin-parcelize")
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
@@ -11,7 +13,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.iptvplayer.app"
+        applicationId = "com.cp.livetv.iptvplayer"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -87,6 +89,10 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.androidx.browser)
     implementation(libs.androidx.biometric)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
 
     testImplementation(libs.junit)
 }

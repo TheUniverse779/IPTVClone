@@ -18,7 +18,7 @@
 ## Giai đoạn 1: Thông tin bạn cần gửi
 
 - [ ] **Bạn**: Tên app hiển thị (hiện là `IPTV Player`).
-- [ ] **Bạn**: applicationId / package name (hiện là `com.iptvplayer.app`, quá chung). Lên Play rồi thì **không đổi được nữa**.
+- [x] **Bạn**: applicationId: **`com.cp.livetv.iptvplayer`**. Lên Play rồi thì không đổi được nữa. *(07/10/2026)*
 - [ ] **Bạn**: Icon app: file PNG 512×512, hoặc để Claude vẽ icon vector.
 - [ ] **Bạn**: Link Privacy policy (bắt buộc, phải là trang web công khai).
 - [ ] **Bạn**: Link Terms of use (có thể chung trang với Privacy).
@@ -29,7 +29,10 @@
 
 ## Giai đoạn 2: Sửa code trước khi build release
 
-- [ ] **Claude**: Đổi tên app, applicationId, icon theo Giai đoạn 1.
+- [x] **Claude**: Đổi applicationId thành `com.cp.livetv.iptvplayer` (giữ `namespace = com.iptvplayer.app` cho code, không ảnh hưởng gì tới Play). *(07/10/2026)*
+- [ ] **Claude**: Đổi tên app và icon theo Giai đoạn 1.
+- [x] **Claude**: Tích hợp **Firebase Analytics + Crashlytics** (BOM 34.19.0, `app/google-services.json`, file đã nằm trong `.gitignore`). Gỡ quyền Advertising ID do Analytics tự thêm (`AD_ID`, `ACCESS_ADSERVICES_*`) và tắt thu thập ad ID, vì app không có quảng cáo. Đã kiểm tra trên LDPlayer 9: Crashlytics khởi tạo và tải settings từ Firebase; Analytics ghi `first_open`, `session_start`, `screen_view` cho đúng app. *(07/10/2026)*
+- [ ] **Bạn**: Mở Firebase Console › Crashlytics, đợi app báo lần đầu (vài phút sau khi mở app) để xác nhận Crashlytics đã nhận dữ liệu.
 - [ ] **Claude**: Thay `PRIVACY_URL`, `TERMS_URL`, `SUPPORT_EMAIL` trong `ui/settings/Settings.kt`.
 - [x] **Claude**: Nâng `targetSdk` / `compileSdk` lên **36**, AGP 8.7.2 → 8.11.1. Build debug + release và unit test đều qua; thư viện native đã căn trang 16 KB. *(06/10/2026)*
 - [ ] **Claude + Bạn**: Test lại trên máy **Android 16** (Pixel). API 36 bắt buộc edge-to-edge, có predictive back, và trên màn hình lớn bỏ qua khoá xoay. Hiện mới test trên emulator Android 9.
@@ -66,7 +69,8 @@
 - [ ] **Bạn**: Điền link Privacy policy.
 - [ ] **Bạn**: App access: "Cần hướng dẫn đặc biệt" → dán link M3U test + cách thêm (bấm + › Playlist URL › dán › Add playlist).
 - [ ] **Bạn**: Ads: chọn **No ads**.
-- [ ] **Bạn**: Data safety: app không thu thập hay chia sẻ dữ liệu (không analytics, không tài khoản; dữ liệu chỉ lưu trên máy).
+- [ ] **Bạn**: Data safety: app **có thu thập** qua Firebase (xem [hướng dẫn](#data-safety-với-firebase) bên dưới). Không chia sẻ cho bên thứ ba, có mã hoá khi truyền, không có tài khoản.
+- [ ] **Bạn**: Advertising ID: chọn **No** (app không dùng ad ID, đã gỡ quyền `AD_ID`).
 - [ ] **Bạn**: Content rating (bảng câu hỏi IARC).
 - [ ] **Bạn**: Target audience: 18+ hoặc 13+, **không** chọn trẻ em.
 - [x] ~~**Bạn**: Khai báo Foreground service `mediaPlayback` + video quay màn hình.~~ **Không cần cho bản đầu**: đã tạm ẩn nghe nền, app không còn foreground service. *(06/10/2026)*
@@ -84,7 +88,7 @@
 ### Đang tạm ẩn, để sau (không cần cho lần lên đầu)
 
 - Tab Sport: `Features.SPORT`
-- Community: `Features.COMMUNITY` (cần `google-services.json`)
+- Community: `Features.COMMUNITY` (cần bật Realtime Database trong Firebase)
 - Phát tiếp khi tắt màn hình: `Features.BACKGROUND_AUDIO`. Bật lại thì phải: (1) bỏ comment 2 quyền `FOREGROUND_SERVICE*` và `<service PlaybackService>` trong `AndroidManifest.xml`, (2) xoá 2 dòng `tools:node="remove"` (quyền `FOREGROUND_SERVICE` và `SystemForegroundService`), (3) khai báo foreground service `mediaPlayback` + video trong Play Console.
 - Cast lên TV: `Features.CAST` (mở cài đặt cast / màn hình không dây của Android). Bật lại thì test với TV thật.
 - Sao lưu / khôi phục: `Features.BACKUP`. Bật lại thì **phải sửa trước**: khôi phục hiện chỉ lấy profile Xtream đầu tiên.
@@ -92,3 +96,19 @@
 - Chọn ngôn ngữ trong Settings: `Features.LANGUAGE_SETTING`. Bật lại khi có thêm ngôn ngữ, hoặc thay bằng màn Language bạn tự code.
 - Cài đặt Decoder: `Features.DECODER_SETTING`. Chỉ nên bật lại khi đã thêm decoder phần mềm (ví dụ media3 FFmpeg).
 - Hướng dẫn chỗ lấy nguồn: `Features.GUIDE_SITES`. **Không bật lại bằng Remote Config sau khi đã duyệt**, Google coi đó là lách kiểm duyệt.
+
+### Data safety với Firebase
+
+Firebase Analytics + Crashlytics tự động thu thập một số dữ liệu. Trong Play Console › Data safety khai báo:
+
+| Mục | Loại dữ liệu | Thu thập | Chia sẻ | Mục đích |
+|---|---|---|---|---|
+| App activity | App interactions (màn hình đã mở, sự kiện) | Có | Không | Analytics |
+| App info and performance | Crash logs | Có | Không | App functionality / Analytics |
+| App info and performance | Diagnostics | Có | Không | App functionality / Analytics |
+| Device or other IDs | Device or other IDs (Firebase installation ID) | Có | Không | Analytics |
+
+- Data is encrypted in transit: **Yes**.
+- Users can request data deletion: tuỳ chính sách của bạn; thường chọn **No** vì không có tài khoản.
+- Thu thập là **bắt buộc** (không có tuỳ chọn tắt trong app).
+- Privacy policy phải nhắc tới việc dùng Firebase Analytics và Crashlytics.
