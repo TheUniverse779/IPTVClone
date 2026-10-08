@@ -13,8 +13,8 @@
 const OBD = [
   { art: 'img/onb_iptv1.png', title: 'Thêm nguồn của bạn', body: 'Dán link playlist M3U, nhập tài khoản từ nhà cung cấp hoặc mở một link stream.', ad: 'bottom', unit: 'NATIVE_OBD1' },
   { art: 'img/onb_iptv2.png', title: 'Phim và series theo thể loại', body: 'Poster theo từng thể loại, xem tiếp đúng chỗ đang dở, tìm kiếm trong mọi nguồn.', ad: 'none', unit: null },
-  { art: null, title: '', body: '', ad: 'full', unit: 'NATIVE_OBD_FULL' },
   { art: 'img/onb_iptv3.png', title: 'Kênh Live và danh sách kênh', body: 'Xem kênh toàn màn hình, danh sách kênh ngay bên dưới để đổi kênh thật nhanh.', ad: 'bottom', unit: 'NATIVE_OBD3' },
+  { art: null, title: '', body: '', ad: 'full', unit: 'NATIVE_OBD_FULL' },
 ];
 
 state.adsOn = true;
