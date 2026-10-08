@@ -167,7 +167,7 @@ function onbPage(i) {
         ${adNativeFull(page.unit, { label: 'Native toàn màn hình', noClose: true })}
         <button class="onb-next float" onclick="${next}">${last ? 'BẮT ĐẦU' : 'NEXT'}</button>
       </div>` : `<div class="onb">
-      <img class="onb-art" src="${page.art}" alt="">
+      <div class="onb-art"><img src="${page.art}" alt=""></div>
       <h2 class="onb-title">${esc(page.title)}</h2>
       <p class="onb-sub">${esc(page.body)}</p>
       <div class="spacer"></div>
