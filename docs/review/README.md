@@ -29,7 +29,7 @@ When you edit the playlist, update both copies (this file and the GitHub repo).
 Play Console › App content › App access › **All or some functionality is restricted** › **Add new instructions**.
 
 Only the Xtream login needs credentials; the playlist and single stream are not logins, so they go in the
-**"Any other instructions"** box of the same entry (500-character limit — the text below is 487).
+**"Any other instructions"** box of the same entry (500-character limit — the text below is 416).
 
 **Name** (max 60)
 ```
@@ -46,15 +46,13 @@ reviewer
 review2026
 ```
 
-**Any other instructions** (max 500)
+**Any other instructions** (max 500). The Server URL has no field of its own in this form, so it must appear here.
 ```
-Server URL: https://iptv-review-xtream.xtream-review-demo.workers.dev
-Xtream: tap + > Xtream Codes, enter server, username and password above, then Log in & sync. All tabs have playable items.
-The rest needs no login:
-- Playlist URL: tap + > Playlist URL, paste https://github.com/iptvstore779/iptv_review/raw/main/test-playlist.m3u
-- Single stream: tap + > Single stream, paste https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
-Content: public test streams and Blender open movies only.
-```
+Server URL: https://iptv-review-xtream.xtream-review-demo.workers.dev (enter it at + > Xtream Codes, then tap Log in & sync)
+No login needed for the rest:
+- Playlist URL: + > Playlist URL, paste https://github.com/iptvstore779/iptv_review/raw/main/test-playlist.m3u
+- Single stream: + > Single stream, paste https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+Content: public test streams and Blender open movies only.```
 
 The first release (1.0.0) was rejected with "we could not find the information you entered" because the Xtream
 screen had no test credentials. Server source: [`xtream-demo/`](xtream-demo/).
