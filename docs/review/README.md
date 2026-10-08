@@ -26,37 +26,60 @@ When you edit the playlist, update both copies (this file and the GitHub repo).
 
 ## Text for Play Console › App access
 
-Play Console › App content › App access › **All or some functionality is restricted** › **Add new instructions**.
+Play Console › App content › App access › **All or some functionality is restricted** › **Add new instructions** (up to 5 entries).
+Use **three** entries: one for the Xtream login (the only part that needs credentials) and one each for the
+playlist and the single stream (no login). Only **Name** is mandatory; leave Username and Password empty for 2 and 3.
+The first release (1.0.0) was rejected with "we could not find the information you entered" because the Xtream screen
+had no test credentials. Server source: [`xtream-demo/`](xtream-demo/).
 
-Only the Xtream login needs credentials; the playlist and single stream are not logins, so they go in the
-**"Any other instructions"** box of the same entry (500-character limit — the text below is 416).
+### 1. Xtream login (487 chars in the last box)
 
-**Name** (max 60)
-```
-Xtream demo account
-```
+| Field | Value |
+|---|---|
+| Name | `Xtream demo account` |
+| Username | `reviewer` |
+| Password | `review2026` |
 
-**Username**
+**Any other instructions**
 ```
-reviewer
-```
+Server URL: https://iptv-review-xtream.xtream-review-demo.workers.dev
 
-**Password**
-```
-review2026
-```
+Open the app, tap + (bottom centre) and choose Xtream Codes. Enter the Server URL, then the username and password above, and tap "Log in & sync". Tap "Watch now" when it finishes.
 
-**Any other instructions** (max 500). The Server URL has no field of its own in this form, so it must appear here.
-```
-Server URL: https://iptv-review-xtream.xtream-review-demo.workers.dev (enter it at + > Xtream Codes, then tap Log in & sync)
-No login needed for the rest:
-- Playlist URL: + > Playlist URL, paste https://github.com/iptvstore779/iptv_review/raw/main/test-playlist.m3u
-- Single stream: + > Single stream, paste https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
-Content: public test streams and Blender open movies only.
+The Movies, Series and Live tabs all contain playable items (HLS, DASH and MP4). The app is a media player and contains no content; this demo server only serves public test streams and open movies by the Blender Foundation (CC BY 3.0).
 ```
 
-The first release (1.0.0) was rejected with "we could not find the information you entered" because the Xtream
-screen had no test credentials. Server source: [`xtream-demo/`](xtream-demo/).
+### 2. Playlist URL — no login (344 chars)
+
+| Field | Value |
+|---|---|
+| Name | `Playlist URL (no login)` |
+| Username / Password | leave empty |
+
+**Any other instructions**
+```
+Open the app, tap + (bottom centre) > Playlist URL. Paste this link and tap "Add playlist":
+
+https://github.com/iptvstore779/iptv_review/raw/main/test-playlist.m3u
+
+Then tap "View channels" and pick any channel. The playlist has live test streams and open movies in HLS, DASH and MP4. No login is needed, and it contains no copyrighted content.
+```
+
+### 3. Single stream — no login (247 chars)
+
+| Field | Value |
+|---|---|
+| Name | `Single stream (no login)` |
+| Username / Password | leave empty |
+
+**Any other instructions**
+```
+Open the app, tap + (bottom centre) > Single stream. Paste this link and tap "Play now":
+
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+
+No login is needed. This is a public test stream published by Mux for player developers, not a TV channel.
+```
 
 ## Before each release
 
