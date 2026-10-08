@@ -39,12 +39,12 @@ function startFirstRun() {
  * Native dạng thẻ (ab_ad_unified_language.xml): CTA 48dp, rồi icon 36dp + headline + "Ad" + nhà quảng cáo,
  * rồi mô tả, rồi ảnh media 112dp. Trong app đây là 1 thẻ do AdMob trả về; nội dung dưới chỉ là mẫu.
  */
-function adNativeInline(unit) {
+function adNativeInline(unit, ctaStyle) {
   if (!state.adsOn) return '';
   return `<div class="adn-wrap">
     <div class="adn-tag">Quảng cáo · ${unit}</div>
     <div class="adn">
-    <button class="adn-cta">Mở</button>
+    <button class="adn-cta ${ctaStyle === 'grey' ? 'off' : ''}">Mở</button>
     <div class="adn-row">
       <div class="adn-icon">${ic('tv')}</div>
       <div class="adn-head">
@@ -124,7 +124,7 @@ def('adSplashInter', {
 
 def('langapp', {
   cls: 'LanguageAppActivity', layout: 'activity_language_app', group: 'Khởi động & Quảng cáo',
-  desc: 'Màn chọn ngôn ngữ: danh sách cuộn ở trên, khối quảng cáo native neo ở ĐÁY màn hình. Không có nút Continue — nút sang màn sau là dấu tick trên thanh tiêu đề, ẩn cho tới khi bạn chọn một ngôn ngữ. Bên Translate, chọn xong thì ad unit thứ hai (NATIVE_LANGUAGES2) thay chỗ ad unit đầu.',
+  desc: 'Màn chọn ngôn ngữ: danh sách cuộn ở trên, khối quảng cáo native neo ở ĐÁY màn hình. Không có nút Continue — nút sang màn sau là dấu tick trên thanh tiêu đề, ẩn cho tới khi bạn chọn một ngôn ngữ. Hai ad unit: NATIVE_LANGUAGES1 (layout ab_ad_unified_language1.xml, nút CTA xám #E4E7EC) hiện khi chưa chọn; chọn xong thì NATIVE_LANGUAGES2 (layout ab_ad_unified_language.xml, nút CTA xanh #017DFF) đè lên trên.',
   render: (p) => {
     const picked = p.pick || null;
     return `<div class="lang">
@@ -137,7 +137,8 @@ def('langapp', {
           <span class="flag flag-${f}"></span><span class="lang-name">${name}</span>
           <span class="radio"></span></button>`).join('')}
     </div>
-    ${adNativeInline(picked ? 'NATIVE_LANGUAGES2' : 'NATIVE_LANGUAGES1')}
+    <!-- Chưa chọn: ad unit 1 với nút CTA xám. Chọn rồi: ad unit 2 đè lên, nút CTA xanh. -->
+    ${picked ? adNativeInline('NATIVE_LANGUAGES2', 'blue') : adNativeInline('NATIVE_LANGUAGES1', 'grey')}
   </div>`;
   },
 });
