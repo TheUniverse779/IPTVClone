@@ -319,14 +319,21 @@
    nền --bg, chữ --text, nút/giá trị nhấn --accent. */
 
 /* --- trang onboarding: ảnh tràn viền trên, tiêu đề + mô tả, dots + NEXT, native ở đáy --- */
-.onb { flex: 1; display: flex; flex-direction: column; background: var(--bg); }
-/* Ảnh co giãn theo phần còn lại để khối native ở đáy luôn hiện đủ, kể cả media 112dp.
-   Khung dùng flex-basis 0 nên không bao giờ đẩy các phần tử dưới ra ngoài màn hình. */
-.onb-art { flex: 1 1 0; min-height: 150px; overflow: hidden; }
+/* min-height 0: cho khung đúng bằng màn hình, để ảnh co lại thay vì đẩy nội dung xuống dưới. */
+.onb { flex: 1; min-height: 0; display: flex; flex-direction: column; background: var(--bg); }
+.onb .spacer { flex: 1 1 0; min-height: 0; }
+/* Ảnh rộng đúng bằng màn hình, cao theo đúng tỉ lệ ảnh (360x500).
+   Hai dòng giới thiệu nằm liền dưới ảnh; khối native pin ở đáy màn hình;
+   hàng indicator + NEXT ăn theo mép trên của khối native. */
+/* Ảnh rộng đúng bằng màn hình; chiều cao lấy theo tỉ lệ ảnh nhưng bị cắt bớt khi
+   không đủ chỗ, để hai dòng giới thiệu + hàng NEXT + khối native vẫn nằm trọn.
+   (Ảnh 360x500 + chữ + NEXT + native = 908dp, màn chỉ có 800dp.) */
+.onb-art { flex: 0 1 auto; aspect-ratio: 360 / 500; min-height: 0; width: 100%; overflow: hidden; }
 .onb-art img { width: 100%; height: 100%; object-fit: cover; object-position: center 42%; display: block; }
-.onb-title { font-family: var(--font-cond); font-size: 21px; font-weight: 700; color: var(--text); text-align: center; padding: 14px 20px 0; }
+.onb-text { flex: none; }
+.onb-title { font-family: var(--font-cond); font-size: 21px; font-weight: 700; color: var(--text); text-align: center; padding: 12px 20px 0; }
 .onb-sub { color: var(--text-2); text-align: center; padding: 5px 24px 0; line-height: 1.4; font-size: 13px; }
-.onb-foot { display: flex; align-items: center; justify-content: space-between; padding: 4px 16px 8px; }
+.onb-foot { flex: none; display: flex; align-items: center; justify-content: space-between; padding: 4px 16px 8px; }
 .dots-sm { display: flex; gap: 8px; align-items: center; }
 .dots-sm i { width: 8px; height: 8px; border-radius: 50%; background: var(--surface-3); }
 .dots-sm i.on { width: 22px; border-radius: 5px; background: var(--accent); }
@@ -348,7 +355,7 @@
 .adn-media { height: 112px; background: var(--surface-2); border-radius: 8px; display: grid; place-items: center; color: var(--text-3); }
 
 /* --- native toàn trang: ad_unified_full_obd.xml (media → icon+headline+body → CTA 52dp) --- */
-.onb-full { flex: 1; display: flex; flex-direction: column; position: relative; background: var(--bg); }
+.onb-full { flex: 1; min-height: 0; display: flex; flex-direction: column; position: relative; background: var(--bg); }
 .onb-next.float { position: absolute; top: 16px; right: 16px; z-index: 3; }
 .adf { flex: 1; display: flex; flex-direction: column; background: var(--bg); padding: 10px 12px 12px; }
 .adf-bar { display: flex; align-items: center; justify-content: space-between; min-height: 30px; }

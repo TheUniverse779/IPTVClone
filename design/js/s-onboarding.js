@@ -168,8 +168,10 @@ function onbPage(i) {
         <button class="onb-next float" onclick="${next}">${last ? 'BẮT ĐẦU' : 'NEXT'}</button>
       </div>` : `<div class="onb">
       <div class="onb-art"><img src="${page.art}" alt=""></div>
-      <h2 class="onb-title">${esc(page.title)}</h2>
-      <p class="onb-sub">${esc(page.body)}</p>
+      <div class="onb-text">
+        <h2 class="onb-title">${esc(page.title)}</h2>
+        <p class="onb-sub">${esc(page.body)}</p>
+      </div>
       <div class="spacer"></div>
       <div class="onb-foot">
         <div class="dots-sm">${OBD.map((_, k) => `<i class="${k === i ? 'on' : ''}"></i>`).join('')}</div>
