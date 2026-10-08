@@ -11,10 +11,10 @@
    · quay lại app (APP_OPEN) · banner ở đáy mọi màn. Nút "Quảng cáo" ở thanh dưới để bật/tắt. */
 
 const OBD = [
-  { art: 'img/img_obd1_ab.webp', title: 'Xem mọi kênh của bạn', body: 'Thêm playlist M3U hoặc tài khoản từ nhà cung cấp, rồi xem ngay trên điện thoại.', ad: 'bottom', unit: 'NATIVE_OBD1' },
-  { art: 'img/img_obd2_ab.webp', title: 'Kênh gọn gàng theo nhóm', body: 'Chia nhóm, đánh dấu yêu thích và tìm kiếm trong mọi playlist của bạn.', ad: 'none', unit: null },
-  { art: 'img/img_obd3_ab.webp', title: 'Giao diện xem phim đẹp mắt', body: 'Poster theo thể loại, xem tiếp đúng chỗ đang dở, phụ đề và nhiều tuỳ chọn cho trình phát.', ad: 'full', unit: 'NATIVE_OBD_FULL' },
-  { art: 'img/img_obd4_ab.webp', title: 'Sẵn sàng xem', body: 'Thêm nguồn đầu tiên của bạn và bắt đầu.', ad: 'bottom', unit: 'NATIVE_OBD3' },
+  { art: 'img/onb_iptv1.png', title: 'Thêm nguồn của bạn', body: 'Dán link playlist M3U, nhập tài khoản từ nhà cung cấp hoặc mở một link stream.', ad: 'bottom', unit: 'NATIVE_OBD1' },
+  { art: 'img/onb_iptv2.png', title: 'Phim và series theo thể loại', body: 'Poster theo từng thể loại, xem tiếp đúng chỗ đang dở, tìm kiếm trong mọi nguồn.', ad: 'none', unit: null },
+  { art: null, title: '', body: '', ad: 'full', unit: 'NATIVE_OBD_FULL' },
+  { art: 'img/onb_iptv3.png', title: 'Kênh Live và danh sách kênh', body: 'Xem kênh toàn màn hình, danh sách kênh ngay bên dưới để đổi kênh thật nhanh.', ad: 'bottom', unit: 'NATIVE_OBD3' },
 ];
 
 state.adsOn = true;
