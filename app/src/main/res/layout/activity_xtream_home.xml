@@ -27,12 +27,6 @@
 
     <FrameLayout android:id="@+id/fragmentContainer" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
 
-    <!-- Google AdMob banner (placement main_banner). Collapses to 0 height when no ad is shown. -->
-    <FrameLayout
-        android:id="@+id/adBanner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bnav"
         android:layout_width="match_parent"

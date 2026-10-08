@@ -62,13 +62,15 @@ abstract class BaseActivity<VB : ViewBinding>(private val inflate: (LayoutInflat
         } else {
             setContentView(binding.root); binding.root
         }
-        if (applyInsets) {
-            ViewCompat.setOnApplyWindowInsetsListener(insetsTarget) { v, insets ->
-                val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-                val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
-                v.updatePadding(left = bars.left, top = bars.top, right = bars.right, bottom = maxOf(bars.bottom, ime.bottom))
-                insets
-            }
+        ViewCompat.setOnApplyWindowInsetsListener(insetsTarget) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val bottom = maxOf(bars.bottom, ime.bottom)
+            // Activities that draw edge-to-edge themselves keep their own top handling, but the banner
+            // strip must still clear the gesture/navigation bar.
+            if (applyInsets) v.updatePadding(left = bars.left, top = bars.top, right = bars.right, bottom = bottom)
+            else if (showAdBanner) v.updatePadding(bottom = bottom)
+            insets
         }
         setup(savedInstanceState)
         // After setup: the ad runtime may not be ready yet, AppAds waits for it.

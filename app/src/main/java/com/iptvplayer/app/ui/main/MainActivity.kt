@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commitNow
 import com.iptvplayer.app.Features
 import com.iptvplayer.app.R
-import com.iptvplayer.app.ads.AppAds
 import com.iptvplayer.app.base.BaseActivity
 import com.iptvplayer.app.databinding.ActivityMainBinding
 import com.iptvplayer.app.ui.sport.SportFragment
@@ -30,7 +29,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     /** The 4th tab is Sport or Settings depending on [Features.SPORT]. */
     enum class Tab { HOME, CHANNELS, XTREAM, SPORT }
 
-    override val applyInsets = false
     private var current = Tab.HOME
 
     /** Pixels hidden behind the bottom bar (incl. gesture-nav inset). Tab fragments pad their lists by this. */
@@ -39,23 +37,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     private val notifPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
 
-    /** Banner lives in the layout, directly above the tab bar. */
-    override val showAdBanner = false
-
     override fun setup(savedInstanceState: Bundle?) {
-        AppAds.showBanner(this, binding.adBanner)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
-            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            binding.fragmentContainer.updatePadding(top = bars.top)
-            // Bar grows by the gesture-nav inset; the raised "+" keeps its 24dp overhang above it.
-            val barH = resources.getDimensionPixelSize(com.iptvplayer.app.R.dimen.h_bottombar) + bars.bottom
-            binding.bottomBar.bar.updatePadding(bottom = bars.bottom)
-            binding.bottomBar.bar.layoutParams.height = barH
-            binding.bottomBar.root.layoutParams.height = barH + (24 * resources.displayMetrics.density).toInt()
-            binding.bottomBar.root.requestLayout()
-            bottomCover.value = barH
-            insets
-        }
+        // BaseActivity pads the column for the system bars, so the bar itself no longer carries the
+        // nav-bar inset: it sits above the ad banner, and the banner above the nav bar.
+        val barH = resources.getDimensionPixelSize(com.iptvplayer.app.R.dimen.h_bottombar)
+        binding.bottomBar.bar.layoutParams.height = barH
+        // The raised "+" keeps its 24dp overhang above the bar.
+        binding.bottomBar.root.layoutParams.height = barH + (24 * resources.displayMetrics.density).toInt()
+        binding.bottomBar.root.requestLayout()
+        bottomCover.value = barH
 
         current = savedInstanceState?.getString(STATE_TAB)?.let { Tab.valueOf(it) }
             ?: intent.getStringExtra(EXTRA_TAB)?.let { Tab.valueOf(it) } ?: Tab.HOME

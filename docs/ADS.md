@@ -27,14 +27,14 @@ The SDK is package-restricted: it only serves ads when the applicationId is `com
 ### Where the banner sits
 
 `BaseActivity` wraps every screen in a vertical column — the screen's own layout on top (weight 1) and
-`layout_ad_banner` at the bottom — so the banner is pinned to the bottom of the content and never covers
-the UI. Two cases override `showAdBanner = false`:
+`layout_ad_banner` at the very bottom — so the banner sits at the bottom edge of the activity and the
+content is pushed up rather than covered. On the two tab screens the order is content › tab bar › banner.
+`PlayerActivity` overrides `showAdBanner = false`: no ads while watching, they would cover the controls.
+The player is the only screen without a banner.
 
-- `MainActivity` and `XtreamHomeActivity`: they have a bottom tab bar, so their layouts carry the banner
-  themselves and it sits *above* the bar.
-- `PlayerActivity`: no ads while watching; a banner there would cover the controls.
-
-The player is therefore the only screen without a banner.
+Insets: the column takes the system-bar padding, so the banner clears the gesture/navigation bar. Screens
+that draw edge-to-edge themselves (`MovieDetailActivity`, `SeriesDetailActivity`, `applyInsets = false`)
+keep their own top handling and the column only gets the bottom padding.
 5. `AppAds.showInterstitial()` is called from `SourceActions.launchSource` before opening a playlist, Xtream profile or single stream; navigation runs in its callback. The SDK applies its own cooldown (`fullscreenIntervalMs`, 60 s here).
 
 ## Configuration
