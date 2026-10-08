@@ -1,8 +1,12 @@
 /* ===== Review sidebar: scenarios + screen index ===== */
 
 const SCENARIOS = [
-  { id: 'first', name: 'Mở app lần đầu', setup: () => { state.firstRun = true; DATA.playlists = []; DATA.profiles = []; state.tab = 'home'; resetTo('splash'); },
-    steps: ['Splash', 'Chỗ nối Language/Onboarding (bạn tự code)', 'Disclaimer: tích ô → Accept', 'Home trống: hướng dẫn thêm nguồn'], match: ['splash', 'firstrun', 'disclaimer', 'main'] },
+  { id: 'first', name: 'Mở app lần đầu (có quảng cáo)', setup: () => { state.firstRun = true; state.adsOn = true; DATA.playlists = []; DATA.profiles = []; state.tab = 'home'; resetTo('splash'); },
+    steps: ['Splash → xin consent → interstitial splash', 'Chọn ngôn ngữ (native ở đáy)', 'Onboarding 1: native ở đáy trang', 'Onboarding 2: không quảng cáo', 'Onboarding 3: native phủ toàn trang', 'Onboarding 4: native ở đáy trang', 'Native toàn màn trước khi vào Main', 'Disclaimer: tích ô → Accept', 'Home trống'],
+    match: ['splash', 'adSplashInter', 'langapp', 'onb1', 'onb2', 'onb3', 'onb4', 'adNativeInter', 'disclaimer', 'main'] },
+  { id: 'ads', name: 'Quảng cáo ở các điểm chuyển màn', setup: () => { restoreData(); state.adsOn = true; state.tab = 'home'; resetTo('main'); },
+    steps: ['Bật/tắt bằng nút "Quảng cáo" dưới khung điện thoại', 'Banner nằm ở đáy mọi màn', 'Mở 1 nguồn (playlist / profile) → native toàn màn', 'Rời app rồi quay lại → App Open'],
+    extra: `<button onclick="go('adNativeInter',{next:'main'})">Xem native toàn màn (đổi màn)</button><button onclick="go('adAppOpen')">Xem App Open (quay lại app)</button><button onclick="go('adSplashInter',{next:'main'})">Xem interstitial lúc mở app</button>` },
   { id: 'find', name: 'Tìm link → thêm playlist → xem', setup: () => { restoreData(); DATA.playlists = []; state.tab = 'home'; resetTo('main'); },
     steps: ['Home trống: bấm "Xem cách tìm playlist"', 'Hướng dẫn: mở 1 trang gợi ý', 'Trang web: chạm 1 link .m3u → "Dùng link này"', 'Form đã điền link → Thêm playlist', 'Import xong → Xem kênh', 'Chọn 1 kênh → Player'], match: ['main', 'howto', 'webGuide', 'import', 'importProgress', 'player'] },
   { id: 'watch', name: 'Xem kênh & điều khiển player', setup: () => { restoreData(); state.tab = 'home'; resetTo('main'); },

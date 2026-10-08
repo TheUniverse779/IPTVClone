@@ -14,14 +14,14 @@ def('splash', {
     const t = setInterval(() => {
       w += 12; if (b) b.style.width = Math.min(w, 100) + '%';
       if (w >= 110) { clearInterval(t); if (state.stack[state.stack.length - 1].id !== 'splash') return;
-        if (state.firstRun) replace('firstrun'); else resetTo('main'); }
+        if (state.firstRun) startFirstRun(); else resetTo('main'); }
     }, 110);
   },
 });
 
 def('firstrun', {
   kind: 'Mock', cls: '[Language + Onboarding của bạn]', group: 'Khởi động',
-  desc: 'Chỗ nối luồng bạn tự code. SplashActivity gọi openFirstRunFlow() khi isFirstOpen; xong thì mở DisclaimerActivity.',
+  desc: 'Bản cũ khi luồng lần đầu còn là chỗ nối bạn tự code. Giờ thay bằng luồng thật ở nhóm "Khởi động & Quảng cáo".',
   render: () => `<div class="empty" style="flex:1;justify-content:center">
       <div class="art">${ic('lang', 's32')}</div>
       <b>Luồng Language + Onboarding</b>
@@ -74,7 +74,8 @@ def('main', {
     return `<div class="content" id="tabc">${TAB_RENDER[state.tab]()}</div>
       ${state.tab === 'home' ? `<button class="bot-fab" onclick="go('chatbot')" aria-label="Chatbot">${ic('chat')}</button>` : ''}
       <nav class="bottombar">${tabBtn(tabs[0])}${tabBtn(tabs[1])}<span></span>${tabBtn(tabs[2])}${tabBtn(tabs[3])}
-        <button class="fab" onclick="openOverlay('addSource')" aria-label="Thêm nguồn">${ic('plus')}</button></nav>`;
+        <button class="fab" onclick="openOverlay('addSource')" aria-label="Thêm nguồn">${ic('plus')}</button></nav>
+      ${adBannerStrip()}`;
   },
   mount: (el) => { const f = TAB_MOUNT[state.tab]; if (f) f(el); },
 });

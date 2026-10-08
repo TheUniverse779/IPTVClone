@@ -296,7 +296,8 @@ def('xtreamHome', {
         <button class="icon-btn" onclick="openXtMenu(this)" aria-label="Tùy chọn">${ic('more')}</button></div>
       ${expired ? `<div class="warn-bar">${ic('alert', 's20')}<span>Tài khoản đã hết hạn. Kênh và phim có thể không phát được.</span><button onclick="go('profileEdit',{id:'${pr.id}'})">Sửa</button></div>` : ''}
       <div class="content" style="display:flex;flex-direction:column">${XT_RENDER[state.xtTab](pr)}</div>
-      <nav class="bnav">${XT_TABS.map(t => `<button class="${state.xtTab === t.id ? 'on' : ''}" onclick="state.xtTab='${t.id}'; refresh()">${ic(t.icon)}${t.label}</button>`).join('')}</nav>`;
+      <nav class="bnav">${XT_TABS.map(t => `<button class="${state.xtTab === t.id ? 'on' : ''}" onclick="state.xtTab='${t.id}'; refresh()">${ic(t.icon)}${t.label}</button>`).join('')}</nav>
+      ${adBannerStrip()}`;
   },
 });
 
