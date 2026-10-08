@@ -4,17 +4,17 @@
      • ab_fragment_on_boarding_1..4  – ảnh trên, tiêu đề, mô tả, dots + NEXT, native ở đáy
      • ab_ad_unified_language.xml    – CTA 48dp → icon 36dp + headline + "Ad" → body → media 112dp
      • ad_unified_full_obd.xml       – media → icon 50dp + headline + body → CTA 52dp (phủ toàn trang)
-   Ảnh onboarding lấy tạm của app Translate (design/img/img_obd*_ab.webp).
+   Ảnh onboarding: design/img/img1.png → trang 1, img2.png → trang 2, img3.png → trang cuối.
 
    Quảng cáo: Language (NATIVE_LANGUAGES1) · Onboarding 1 (NATIVE_OBD1) · Onboarding 3 phủ toàn trang
    (NATIVE_OBD_FULL) · Onboarding 4 (NATIVE_OBD3) · trước Main (NATIVE_INTER) · Splash (INTER_SPLASH)
    · quay lại app (APP_OPEN) · banner ở đáy mọi màn. Nút "Quảng cáo" ở thanh dưới để bật/tắt. */
 
 const OBD = [
-  { art: 'img/onb_iptv1.png', title: 'Thêm nguồn của bạn', body: 'Dán link playlist M3U, nhập tài khoản từ nhà cung cấp hoặc mở một link stream.', ad: 'bottom', unit: 'NATIVE_OBD1' },
-  { art: 'img/onb_iptv2.png', title: 'Phim và series theo thể loại', body: 'Poster theo từng thể loại, xem tiếp đúng chỗ đang dở, tìm kiếm trong mọi nguồn.', ad: 'none', unit: null },
+  { art: 'img/img1.png', title: 'Thêm nguồn của bạn', body: 'Dán link playlist M3U, nhập tài khoản từ nhà cung cấp hoặc mở một link stream.', ad: 'bottom', unit: 'NATIVE_OBD1' },
+  { art: 'img/img2.png', title: 'Phim và series theo thể loại', body: 'Poster theo từng thể loại, xem tiếp đúng chỗ đang dở, tìm kiếm trong mọi nguồn.', ad: 'none', unit: null },
   { art: null, title: '', body: '', ad: 'full', unit: 'NATIVE_OBD_FULL' },
-  { art: 'img/onb_iptv3.png', title: 'Kênh Live và danh sách kênh', body: 'Xem kênh toàn màn hình, danh sách kênh ngay bên dưới để đổi kênh thật nhanh.', ad: 'bottom', unit: 'NATIVE_OBD3' },
+  { art: 'img/img3.png', title: 'Kênh Live và danh sách kênh', body: 'Xem kênh toàn màn hình, danh sách kênh ngay bên dưới để đổi kênh thật nhanh.', ad: 'bottom', unit: 'NATIVE_OBD3' },
 ];
 
 state.adsOn = true;
