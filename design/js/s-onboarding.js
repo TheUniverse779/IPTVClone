@@ -124,21 +124,22 @@ def('adSplashInter', {
 
 def('langapp', {
   cls: 'LanguageAppActivity', layout: 'activity_language_app', group: 'Khởi động & Quảng cáo',
-  desc: 'Màn chọn ngôn ngữ lần mở đầu: tiêu đề Language, danh sách có cờ và nút chọn, nút Continue ở đáy, dưới cùng là 1 thẻ quảng cáo native. Bên Translate nút bị làm mờ trong lúc chờ quảng cáo tải xong (bấm nút "Quảng cáo" rồi xem lại để thấy trạng thái có/không quảng cáo).',
-  render: (p) => `<div class="lang">
-    <div class="lang-bar"><span></span><b>Language</b><span class="lang-ok">${ic('check', 's24')}</span></div>
+  desc: 'Màn chọn ngôn ngữ: danh sách cuộn ở trên, khối quảng cáo native neo ở ĐÁY màn hình. Không có nút Continue — nút sang màn sau là dấu tick trên thanh tiêu đề, ẩn cho tới khi bạn chọn một ngôn ngữ. Bên Translate, chọn xong thì ad unit thứ hai (NATIVE_LANGUAGES2) thay chỗ ad unit đầu.',
+  render: (p) => {
+    const picked = p.pick || null;
+    return `<div class="lang">
+    <div class="lang-bar"><span></span><b>Language</b>
+      <button class="lang-ok ${picked ? 'show' : ''}"
+        onclick="${picked ? `adGo('adNativeInter', {next:'onb1'})` : `toast('Chọn 1 ngôn ngữ')`}">${ic('check', 's24')}</button></div>
     <div class="lang-list">
       ${[['gb', 'English'], ['vn', 'Tiếng Việt']].map(([f, name]) => `
-        <button class="lang-row ${(p.pick || 'gb') === f ? 'on' : ''}" onclick="setParams({pick:'${f}'})">
+        <button class="lang-row ${picked === f ? 'on' : ''}" onclick="setParams({pick:'${f}'})">
           <span class="flag flag-${f}"></span><span class="lang-name">${name}</span>
           <span class="radio"></span></button>`).join('')}
     </div>
-    <div class="spacer"></div>
-    <div class="lang-foot">
-      <button class="lang-cta" onclick="adGo('adNativeInter', {next:'onb1'})">Continue</button>
-      ${adNativeInline('NATIVE_LANGUAGES1')}
-    </div>
-  </div>`,
+    ${adNativeInline(picked ? 'NATIVE_LANGUAGES2' : 'NATIVE_LANGUAGES1')}
+  </div>`;
+  },
 });
 
 def('onb1', onbPage(0));
