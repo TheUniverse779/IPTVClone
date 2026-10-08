@@ -29,8 +29,6 @@ When you edit the playlist, update both copies (this file and the GitHub repo).
 Choose "All or some functionality is restricted", then add **two** instructions. The first release was
 rejected because the Xtream login had no credentials; the second entry fixes that (server: `https://iptv-review-xtream.xtream-review-demo.workers.dev`, source in [`xtream-demo/`](xtream-demo/)).
 
-Replace `https://iptv-review-xtream.xtream-review-demo.workers.dev` with the deployed Cloudflare Worker address (see [`xtream-demo/README.md`](xtream-demo/README.md)).
-
 **Instruction 1**
 > **Name:** Xtream login (demo server)
 >

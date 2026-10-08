@@ -29,3 +29,6 @@ decompiled_*.log
 *.jks
 *.keystore
 keystore.properties
+
+# Wrangler (Cloudflare) local state
+.wrangler/
