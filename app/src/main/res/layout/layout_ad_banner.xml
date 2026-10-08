@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- AdMob banner strip pinned to the bottom of an activity's content (BaseActivity wraps every
+     screen in a column with this at the end; height wraps to 0 while no ad is shown). -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/adBanner"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg" />

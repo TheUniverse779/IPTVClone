@@ -10,7 +10,8 @@ Integrated 2026-10-08 from `eztech-ads-com.cp.livetv.iptvplayer-1.0.8.zip` (see 
 | Host config (app ID, events, revenue) | `App.kt` → `configureAds()` |
 | One `AdsKit` for the app + consent + banner/interstitial helpers | `app/src/main/java/com/iptvplayer/app/ads/AppAds.kt` |
 | Placement keys | `app/src/main/assets/ads/placements.json` (release), `app/src/debug/assets/ads/app-placements.json` (debug) |
-| Banner containers | `activity_main.xml`, `activity_xtream_home.xml` (`@id/adBanner`) |
+| Banner strip | `res/layout/layout_ad_banner.xml` |
+| Where the banner is attached | `BaseActivity` (see below), plus `activity_main.xml` / `activity_xtream_home.xml`, which keep their own copy above the tab bar |
 | Call sites | `MainActivity`, `XtreamHomeActivity` (banner), `ui/common/SourceActions.kt` (interstitial before opening a source) |
 | Kill switch | `Features.ADS` in `Features.kt` |
 
@@ -22,6 +23,18 @@ The SDK is package-restricted: it only serves ads when the applicationId is `com
 2. `SplashActivity` → `AppAds.initializeFromSplash()` loads and applies the placements JSON (Firebase Remote Config → cache → bundled asset), then `AppAds.requestConsent()` runs the UMP consent form and initialises Google Ads.
 3. Consent finishes → `AppAds.ready` turns true. The consent form belongs to the Splash window, so the splash waits (up to 10 s) before navigating.
 4. `AppAds.showBanner()` waits for `ready` (up to 10 s) and then shows `main_banner`. Requesting earlier fails: the Google Ads runtime finishes its own init a few seconds after consent and rejects requests until then.
+
+### Where the banner sits
+
+`BaseActivity` wraps every screen in a vertical column — the screen's own layout on top (weight 1) and
+`layout_ad_banner` at the bottom — so the banner is pinned to the bottom of the content and never covers
+the UI. Two cases override `showAdBanner = false`:
+
+- `MainActivity` and `XtreamHomeActivity`: they have a bottom tab bar, so their layouts carry the banner
+  themselves and it sits *above* the bar.
+- `PlayerActivity`: no ads while watching; a banner there would cover the controls.
+
+The player is therefore the only screen without a banner.
 5. `AppAds.showInterstitial()` is called from `SourceActions.launchSource` before opening a playlist, Xtream profile or single stream; navigation runs in its callback. The SDK applies its own cooldown (`fullscreenIntervalMs`, 60 s here).
 
 ## Configuration

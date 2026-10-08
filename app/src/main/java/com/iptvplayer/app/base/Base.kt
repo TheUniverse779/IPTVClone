@@ -21,7 +21,9 @@ import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.iptvplayer.app.Features
 import com.iptvplayer.app.R
+import com.iptvplayer.app.ads.AppAds
 import com.iptvplayer.app.util.wireSwitchRows
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -36,13 +38,32 @@ abstract class BaseActivity<VB : ViewBinding>(private val inflate: (LayoutInflat
     /** Pads the root for system bars (edge-to-edge). Player overrides this. */
     protected open val applyInsets = true
 
+    /**
+     * The banner sits below the screen's own content (see [layout_ad_banner]). Activities that place the
+     * banner themselves — the two with a bottom tab bar, where it goes above that bar — override this to false.
+     */
+    protected open val showAdBanner: Boolean get() = Features.ADS
+
+    private var adBannerView: android.view.ViewGroup? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         binding = inflate(layoutInflater)
-        setContentView(binding.root)
+        // Content on top, banner strip at the bottom, so the banner never covers the screen's own UI.
+        val insetsTarget: View = if (showAdBanner) {
+            val column = android.widget.LinearLayout(this).apply { orientation = android.widget.LinearLayout.VERTICAL }
+            column.addView(binding.root, android.widget.LinearLayout.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
+            val banner = com.iptvplayer.app.databinding.LayoutAdBannerBinding.inflate(layoutInflater, column, true)
+            adBannerView = banner.adBanner
+            setContentView(column)
+            column
+        } else {
+            setContentView(binding.root); binding.root
+        }
         if (applyInsets) {
-            ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            ViewCompat.setOnApplyWindowInsetsListener(insetsTarget) { v, insets ->
                 val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
                 val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
                 v.updatePadding(left = bars.left, top = bars.top, right = bars.right, bottom = maxOf(bars.bottom, ime.bottom))
@@ -50,6 +71,8 @@ abstract class BaseActivity<VB : ViewBinding>(private val inflate: (LayoutInflat
             }
         }
         setup(savedInstanceState)
+        // After setup: the ad runtime may not be ready yet, AppAds waits for it.
+        adBannerView?.let { AppAds.showBanner(this, it) }
         binding.root.wireSwitchRows()
     }
 

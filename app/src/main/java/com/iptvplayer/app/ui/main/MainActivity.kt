@@ -39,8 +39,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     private val notifPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
 
+    /** Banner lives in the layout, directly above the tab bar. */
+    override val showAdBanner = false
+
     override fun setup(savedInstanceState: Bundle?) {
-        // Banner sits above the bottom bar; the SDK keeps it hidden until an ad is ready.
         AppAds.showBanner(this, binding.adBanner)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

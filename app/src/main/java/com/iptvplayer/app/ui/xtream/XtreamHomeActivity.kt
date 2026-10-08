@@ -96,6 +96,9 @@ class XtreamHomeActivity : BaseActivity<ActivityXtreamHomeBinding>(ActivityXtrea
     private var current = R.id.nav_movie
     private lateinit var actions: SourceActions
 
+    /** Banner lives in the layout, directly above the tab bar. */
+    override val showAdBanner = false
+
     override fun setup(savedInstanceState: Bundle?) {
         AppAds.showBanner(this, binding.adBanner)
         actions = SourceActions(this) {}.register()

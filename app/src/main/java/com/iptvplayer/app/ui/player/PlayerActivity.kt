@@ -70,6 +70,9 @@ import kotlin.math.abs
 @OptIn(UnstableApi::class)
 @AndroidEntryPoint
 class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding::inflate) {
+    /** No ads in the player: it would cover the controls and annoy during playback. */
+    override val showAdBanner = false
+
     @Inject lateinit var settings: SettingsStore
     private val vm: PlayerViewModel by viewModels()
     override val applyInsets = false
