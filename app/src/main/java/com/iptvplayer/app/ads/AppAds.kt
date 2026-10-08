@@ -12,6 +12,7 @@ import com.ezt.v2.ezt.admobdemo.ads.placement.AdsConfiguration
 import com.ezt.v2.ezt.admobdemo.ads.placement.AdsKit
 import com.ezt.v2.ezt.admobdemo.ads.placement.AssetAdsConfigSource
 import com.ezt.v2.ezt.admobdemo.ads.placement.BannerAdOptions
+import com.ezt.v2.ezt.admobdemo.ads.placement.BannerSize
 import com.ezt.v2.ezt.admobdemo.ads.core.AdsSdk
 import com.ezt.v2.ezt.admobdemo.ads.placement.InlineAdBinding
 import com.ezt.v2.ezt.admobdemo.ads.placement.PlacementFormat
@@ -81,6 +82,9 @@ object AppAds {
 
     /** How long a screen waits for [ready] before giving up (then it shows no ad). */
     private const val READY_TIMEOUT_MS = 10_000L
+
+    /** Adaptive banner: full width, height chosen by AdMob for the screen. */
+    private val BANNER_OPTIONS = BannerAdOptions(bannerSize = BannerSize.ADAPTIVE)
 
     @MainThread
     suspend fun initializeFromSplash(context: Context): AdsKit {
@@ -176,7 +180,7 @@ object AppAds {
             if (!_ready.value) withTimeoutOrNull(READY_TIMEOUT_MS) { _ready.first { it } }
             if (!_ready.value) { Log.w(TAG, "showBanner skipped: ads never became ready"); return@launch }
             if (activity.isFinishing || activity.isDestroyed) return@launch
-            kit.showBanner(activity, BANNER, container, BannerAdOptions()) { state -> Log.d(TAG, "banner $state"); onState(state) }
+            kit.showBanner(activity, BANNER, container, BANNER_OPTIONS) { state -> Log.d(TAG, "banner $state"); onState(state) }
         }
     }
 
