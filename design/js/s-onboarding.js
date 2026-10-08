@@ -1,22 +1,20 @@
 /* ===== Luồng lần đầu: Language → Onboarding ×4 → Main, kèm các vị trí quảng cáo =====
-   Mô phỏng theo TranslateApp nhưng dùng giao diện của app IPTV (nền tối, cam).
-   Ảnh onboarding là ảnh của app Translate, dùng tạm cho tới khi có ảnh riêng.
+   Dựng theo đúng layout của TranslateApp:
+     • ab_activity_language_app.xml  – danh sách ngôn ngữ + nút + native ở đáy
+     • ab_fragment_on_boarding_1..4  – ảnh trên, tiêu đề, mô tả, dots + NEXT, native ở đáy
+     • ab_ad_unified_language.xml    – CTA 48dp → icon 36dp + headline + "Ad" → body → media 112dp
+     • ad_unified_full_obd.xml       – media → icon 50dp + headline + body → CTA 52dp (phủ toàn trang)
+   Ảnh onboarding lấy tạm của app Translate (design/img/img_obd*_ab.webp).
 
-   Quảng cáo trong luồng này:
-     • Language    → 1 native (2 ad unit trong app: NATIVE_LANGUAGES1/2)
-     • Onboarding 1→ native ở đáy trang   (NATIVE_OBD1)
-     • Onboarding 2→ không có
-     • Onboarding 3→ native toàn trang   (NATIVE_OBD_FULL)
-     • Onboarding 4→ native ở đáy trang   (NATIVE_OBD3)
-     • Trước Main  → native "interstitial" toàn màn (NativeInterActivity)
-     • Quay lại app→ App Open (chỉ khi app đã ở Main rồi)
-   Bật/tắt nhanh bằng nút "Ads" ở thanh dưới khung điện thoại. */
+   Quảng cáo: Language (NATIVE_LANGUAGES1) · Onboarding 1 (NATIVE_OBD1) · Onboarding 3 phủ toàn trang
+   (NATIVE_OBD_FULL) · Onboarding 4 (NATIVE_OBD3) · trước Main (NATIVE_INTER) · Splash (INTER_SPLASH)
+   · quay lại app (APP_OPEN) · banner ở đáy mọi màn. Nút "Quảng cáo" ở thanh dưới để bật/tắt. */
 
 const OBD = [
   { art: 'img/img_obd1_ab.webp', title: 'Xem mọi kênh của bạn', body: 'Thêm playlist M3U hoặc tài khoản từ nhà cung cấp, rồi xem ngay trên điện thoại.', ad: 'bottom', unit: 'NATIVE_OBD1' },
-  { art: 'img/img_obd2_ab.webp', title: 'Gọn gàng theo nhóm kênh', body: 'Kênh được chia theo nhóm, đánh dấu yêu thích và tìm kiếm trong mọi playlist.', ad: 'none', unit: null },
+  { art: 'img/img_obd2_ab.webp', title: 'Kênh gọn gàng theo nhóm', body: 'Chia nhóm, đánh dấu yêu thích và tìm kiếm trong mọi playlist của bạn.', ad: 'none', unit: null },
   { art: 'img/img_obd3_ab.webp', title: 'Giao diện xem phim đẹp mắt', body: 'Poster theo thể loại, xem tiếp đúng chỗ đang dở, phụ đề và nhiều tuỳ chọn cho trình phát.', ad: 'full', unit: 'NATIVE_OBD_FULL' },
-  { art: 'img/img_obd4_ab.webp', title: 'Sẵn sàng xem', body: 'Chọn ngôn ngữ, thêm nguồn đầu tiên của bạn và bắt đầu.', ad: 'bottom', unit: 'NATIVE_OBD3' },
+  { art: 'img/img_obd4_ab.webp', title: 'Sẵn sàng xem', body: 'Thêm nguồn đầu tiên của bạn và bắt đầu.', ad: 'bottom', unit: 'NATIVE_OBD3' },
 ];
 
 state.adsOn = true;
@@ -35,18 +33,76 @@ function startFirstRun() {
   else replace('langapp');
 }
 
-/** Thẻ quảng cáo native giả lập (trong app là 1 thẻ do AdMob trả về). */
-function adNativeCard(unit, compact) {
+/* ---------- quảng cáo ---------- */
+
+/**
+ * Native dạng thẻ (ab_ad_unified_language.xml): CTA 48dp, rồi icon 36dp + headline + "Ad" + nhà quảng cáo,
+ * rồi mô tả, rồi ảnh media 112dp. Trong app đây là 1 thẻ do AdMob trả về; nội dung dưới chỉ là mẫu.
+ */
+function adNativeInline(unit) {
   if (!state.adsOn) return '';
-  return `<div class="ad-slot ${compact ? 'compact' : ''}">
-    <div class="ad-tag">Quảng cáo · ${unit}</div>
-    <div class="ad-card">
-      <div class="ad-top"><div class="ad-icon">${ic('tv')}</div>
-        <div class="ad-text"><b>IPTV Smart Player</b><span>Tải app, xem thử miễn phí</span></div></div>
-      <div class="ad-body">Nội dung quảng cáo do Google AdMob trả về. App không kiểm soát nội dung này.</div>
-      <button class="ad-cta">Tải ngay</button>
+  return `<div class="adn-wrap">
+    <div class="adn-tag">Quảng cáo · ${unit}</div>
+    <div class="adn">
+    <button class="adn-cta">Mở</button>
+    <div class="adn-row">
+      <div class="adn-icon">${ic('tv')}</div>
+      <div class="adn-head">
+        <b>Ứng dụng xem truyền hình</b>
+        <div class="adn-meta"><span class="adn-badge">Ad</span><span>Nhà quảng cáo</span></div>
+      </div>
+    </div>
+    <p class="adn-body">Nội dung do Google AdMob trả về. App không kiểm soát nội dung này.</p>
+    <div class="adn-media">${ic('movie', 's32')}</div>
     </div>
   </div>`;
+}
+
+/**
+ * Native phủ toàn trang (ad_unified_full_obd.xml): media trên, icon 50dp + headline + body, CTA 52dp ở đáy.
+ * Dùng cho trang onboarding 3 và cho "interstitial native" giữa các màn.
+ */
+function adNativeFull(unit, opts = {}) {
+  return `<div class="adf">
+    <div class="adf-bar"><span class="ad-tag">${opts.label || 'Native toàn màn hình'} · ${unit}</span>
+      ${opts.noClose ? '' : `<button class="adf-x" onclick="adNext()">✕</button>`}</div>
+    <div class="adf-media">${ic('tv', 's48')}</div>
+    <div class="adf-row">
+      <div class="adf-icon">${ic('tv')}</div>
+      <div class="adf-head"><b>Ứng dụng xem truyền hình</b>
+        <div class="adn-meta"><span class="adn-badge">Ad</span><span>Nhà quảng cáo</span></div></div>
+    </div>
+    <p class="adf-body">Quảng cáo toàn màn hình do Google AdMob trả về, kèm ảnh và nút hành động của nhà quảng cáo.</p>
+    <div class="spacer"></div>
+    <button class="adf-cta">Xem chi tiết</button>
+  </div>`;
+}
+
+/** Interstitial / App Open: quảng cáo toàn màn hình, không có nội dung native phía sau. */
+function adInterstitial(unit, label) {
+  return `<div class="adi">
+    <div class="adf-bar"><span class="ad-tag">${label} · ${unit}</span>
+      <button class="adf-x" onclick="adNext()">✕</button></div>
+    <div class="spacer"></div>
+    <div class="adi-logo">${ic('tv', 's48')}</div>
+    <b class="adi-name">IPTV Smart Player</b>
+    <p class="adi-sub">${label === 'App Open' ? 'Quảng cáo hiện khi bạn quay lại app.' : 'Quảng cáo toàn màn hình khi mở app.'}</p>
+    <div class="spacer"></div>
+    <button class="adf-cta">Tải ngay</button>
+    <div class="adi-foot">Tự đóng sau 5 giây</div>
+  </div>`;
+}
+
+/** Sau khi quảng cáo đóng: đi tiếp tới màn kế của luồng. */
+function adNext() {
+  const p = topParams();
+  replace(p.next || 'main', p.nextParams || {});
+}
+
+/** Vào màn quảng cáo chỉ khi đang bật; tắt thì đi thẳng tới màn kế. */
+function adGo(id, params) {
+  if (!state.adsOn) { const p = params || {}; replace(p.next || 'main', p.nextParams || {}); return; }
+  replace(id, params);
 }
 
 /** Dải banner AdMob ở đáy activity — nằm dưới cả thanh tab. */
@@ -58,51 +114,32 @@ function adBannerStrip() {
     <button class="ad-banner-cta">OPEN</button></div>`;
 }
 
-/** Quảng cáo toàn màn: interstitial AdMob hoặc native dạng toàn trang. */
-function adFullScreen(kind, unit, title, noClose) {
-  const label = kind === 'inter' ? 'Interstitial (AdMob)' : kind === 'open' ? 'App Open (AdMob)' : 'Native toàn màn hình';
-  return `<div class="ad-full">
-    <div class="ad-full-bar"><span class="ad-tag">${label} · ${unit}</span>
-      ${noClose ? '' : `<button class="ad-close" onclick="adNext()">✕</button>`}</div>
-    <div class="ad-full-art">${ic('tv', 's32')}</div>
-    <h3>IPTV Smart Player</h3>
-    <p>${title || 'Quảng cáo toàn màn hình do Google AdMob trả về.'}</p>
-    <button class="btn primary block">Tải ngay</button>
-    <div class="ad-full-foot">Đóng sau 5 giây · nút ✕ ở góc trên</div>
-  </div>`;
-}
-
-/** Sau khi quảng cáo đóng: đi tiếp tới màn kế của luồng. */
-function adNext() {
-  const p = topParams();
-  replace(p.next || 'main', p.nextParams || {});
-}
+/* ---------- màn hình ---------- */
 
 def('adSplashInter', {
   kind: 'Mock', cls: 'InterstitialAd (splash)', group: 'Khởi động & Quảng cáo',
-  desc: 'Splash: xin consent UMP → nạp interstitial → hiện quảng cáo này → xong mới đi tiếp. Nếu tải lỗi, chưa đủ thời gian chờ hoặc mạng yếu thì bỏ qua và đi thẳng.',
-  render: () => adFullScreen('inter', 'INTER_SPLASH'),
+  desc: 'Splash: xin consent UMP → nạp interstitial → hiện quảng cáo này → xong mới đi tiếp. Tải lỗi, chưa đủ thời gian chờ hoặc mạng yếu thì bỏ qua và đi thẳng.',
+  render: () => adInterstitial('INTER_SPLASH', 'Interstitial'),
 });
 
 def('langapp', {
   cls: 'LanguageAppActivity', layout: 'activity_language_app', group: 'Khởi động & Quảng cáo',
-  desc: 'Màn chọn ngôn ngữ ở lần mở đầu. Nút Continue chạy quảng cáo native toàn màn rồi mới sang Onboarding.',
-  render: () => `<div class="onb">
-    <div class="onb-head"><h2>Choose your language</h2><p>Bạn có thể đổi lại trong Settings</p></div>
+  desc: 'Màn chọn ngôn ngữ lần mở đầu: tiêu đề Language, danh sách có cờ và nút chọn, nút Continue ở đáy, dưới cùng là 1 thẻ quảng cáo native. Bên Translate nút bị làm mờ trong lúc chờ quảng cáo tải xong (bấm nút "Quảng cáo" rồi xem lại để thấy trạng thái có/không quảng cáo).',
+  render: (p) => `<div class="lang">
+    <div class="lang-bar"><span></span><b>Language</b><span class="lang-ok">${ic('check', 's24')}</span></div>
     <div class="lang-list">
-      <button class="lang-item on"><span>English</span>${ic('check', 's16')}</button>
-      <button class="lang-item"><span>Tiếng Việt</span></button>
+      ${[['gb', 'English'], ['vn', 'Tiếng Việt']].map(([f, name]) => `
+        <button class="lang-row ${(p.pick || 'gb') === f ? 'on' : ''}" onclick="setParams({pick:'${f}'})">
+          <span class="flag flag-${f}"></span><span class="lang-name">${name}</span>
+          <span class="radio"></span></button>`).join('')}
     </div>
     <div class="spacer"></div>
-    ${adNativeCard('NATIVE_LANGUAGES1')}
-    <button class="btn primary block" onclick="adGo('adNativeInter', {next:'onb1'})">Continue</button>
+    <div class="lang-foot">
+      <button class="lang-cta" onclick="adGo('adNativeInter', {next:'onb1'})">Continue</button>
+      ${adNativeInline('NATIVE_LANGUAGES1')}
+    </div>
   </div>`,
 });
-
-function adGo(id, params) {
-  if (!state.adsOn) { const p = params || {}; replace(p.next || 'main', p.nextParams || {}); return; }
-  replace(id, params);
-}
 
 def('onb1', onbPage(0));
 def('onb2', onbPage(1));
@@ -117,35 +154,35 @@ function onbPage(i) {
   return {
     cls: `OnBoardingFragment${i + 1}`, layout: `ab_fragment_on_boarding_${i + 1}`, group: 'Khởi động & Quảng cáo',
     desc: full
-      ? 'Trang này lấy quảng cáo native phủ toàn trang; chấm trang và nút TIẾP bị ẩn, chỉ còn nút NEXT riêng của quảng cáo ở góc trên (giống app Translate).'
+      ? 'Trang lấy quảng cáo native phủ toàn trang (NATIVE_OBD_FULL): ảnh media ở trên, chữ ở giữa, nút hành động ở đáy. Chấm trang bị ẩn, chỉ còn nút NEXT ở góc trên.'
       : page.ad === 'bottom'
-        ? 'Ảnh + tiêu đề + mô tả, cuối trang là một thẻ quảng cáo native.'
+        ? 'Ảnh tràn viền ở trên, tiêu đề + mô tả, hàng chấm trang và NEXT, dưới cùng là thẻ quảng cáo native.'
         : 'Trang không có quảng cáo.',
-    // Quảng cáo tắt: trang 3 trở về dạng ảnh + chữ như các trang khác.
     render: () => (full && state.adsOn) ? `<div class="onb-full">
-        ${adFullScreen('native', page.unit, 'Quảng cáo native phủ toàn trang.', true)}
-        <button class="link-next float" onclick="${next}">${last ? 'BẮT ĐẦU' : 'TIẾP'}</button>
+        ${adNativeFull(page.unit, { label: 'Native toàn màn hình', noClose: true })}
+        <button class="onb-next float" onclick="${next}">${last ? 'BẮT ĐẦU' : 'NEXT'}</button>
       </div>` : `<div class="onb">
-      <div class="onb-art"><img src="${page.art}" alt=""></div>
-      <div class="onb-text"><h2>${esc(page.title)}</h2><p>${esc(page.body)}</p></div>
+      <img class="onb-art" src="${page.art}" alt="">
+      <h2 class="onb-title">${esc(page.title)}</h2>
+      <p class="onb-sub">${esc(page.body)}</p>
       <div class="spacer"></div>
-      ${page.ad === 'bottom' ? adNativeCard(page.unit) : ''}
       <div class="onb-foot">
         <div class="dots-sm">${OBD.map((_, k) => `<i class="${k === i ? 'on' : ''}"></i>`).join('')}</div>
-        <button class="link-next" onclick="${next}">${last ? 'BẮT ĐẦU' : 'TIẾP'}</button>
+        <button class="onb-next" onclick="${next}">${last ? 'BẮT ĐẦU' : 'NEXT'}</button>
       </div>
+      ${page.ad === 'bottom' ? adNativeInline(page.unit) : ''}
     </div>`,
   };
 }
 
 def('adNativeInter', {
   kind: 'Mock', cls: 'NativeInterActivity', layout: 'activity_native_inter', group: 'Khởi động & Quảng cáo',
-  desc: 'Thay cho interstitial ở các điểm chuyển màn. Thực tế đây là một Activity riêng hiển thị 1 quảng cáo native đã nạp sẵn; không có quảng cáo thì đi tiếp ngay.',
-  render: (p) => adFullScreen('native', 'NATIVE_INTER', 'Quảng cáo native toàn màn hình, tự động đóng sau vài giây.'),
+  desc: 'Thay cho interstitial ở các điểm chuyển màn. Là một Activity riêng hiển thị 1 quảng cáo native đã nạp sẵn; không có quảng cáo thì đi tiếp ngay.',
+  render: () => adNativeFull('NATIVE_INTER', { label: 'Native toàn màn hình' }),
 });
 
 def('adAppOpen', {
   kind: 'Mock', cls: 'AppOpenAd', group: 'Khởi động & Quảng cáo',
-  desc: 'Hiện khi người dùng quay lại app từ nền (không hiện ở lần mở đầu tiên, không hiện khi vừa từ màn quảng cáo trở về, tối đa 1 lần mỗi 60 giây).',
-  render: () => adFullScreen('open', 'APP_OPEN', 'Quảng cáo App Open — xuất hiện khi quay lại app.'),
+  desc: 'Hiện khi người dùng quay lại app từ nền. Không hiện ở lần mở đầu, không hiện khi vừa từ màn quảng cáo trở về, và cách nhau ít nhất 60 giây.',
+  render: () => adInterstitial('APP_OPEN', 'App Open'),
 });
