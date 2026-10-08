@@ -5,6 +5,7 @@
      • ab_ad_unified_language.xml    – CTA 48dp → icon 36dp + headline + "Ad" → body → media 112dp
      • ad_unified_full_obd.xml       – media → icon 50dp + headline + body → CTA 52dp (phủ toàn trang)
    Ảnh onboarding: design/img/img1.png → trang 1, img2.png → trang 2, img3.png → trang cuối.
+   Màn Language và 4 trang onboarding ẩn cả thanh trạng thái lẫn thanh điều hướng (immersive).
 
    Quảng cáo: Language (NATIVE_LANGUAGES1) · Onboarding 1 (NATIVE_OBD1) · Onboarding 3 phủ toàn trang
    (NATIVE_OBD_FULL) · Onboarding 4 (NATIVE_OBD3) · trước Main (NATIVE_INTER) · Splash (INTER_SPLASH)
@@ -124,7 +125,8 @@ def('adSplashInter', {
 
 def('langapp', {
   cls: 'LanguageAppActivity', layout: 'activity_language_app', group: 'Khởi động & Quảng cáo',
-  desc: 'Màn chọn ngôn ngữ: danh sách cuộn ở trên, khối quảng cáo native neo ở ĐÁY màn hình. Không có nút Continue — nút sang màn sau là dấu tick trên thanh tiêu đề, ẩn cho tới khi bạn chọn một ngôn ngữ. Hai ad unit: NATIVE_LANGUAGES1 (layout ab_ad_unified_language1.xml, nút CTA xám #E4E7EC) hiện khi chưa chọn; chọn xong thì NATIVE_LANGUAGES2 (layout ab_ad_unified_language.xml, nút CTA xanh #017DFF) đè lên trên.',
+  immersive: () => true,
+  desc: 'Màn chọn ngôn ngữ: danh sách cuộn ở trên, khối quảng cáo native neo ở ĐÁY màn hình. Không có nút Continue — nút sang màn sau là dấu tick trên thanh tiêu đề, ẩn cho tới khi bạn chọn một ngôn ngữ. Màn này ẩn cả thanh trạng thái và thanh điều hướng. Hai ad unit: NATIVE_LANGUAGES1 (layout ab_ad_unified_language1.xml, nút CTA xám #E4E7EC) hiện khi chưa chọn; chọn xong thì NATIVE_LANGUAGES2 (layout ab_ad_unified_language.xml, nút CTA xanh #017DFF) đè lên trên.',
   render: (p) => {
     const picked = p.pick || null;
     return `<div class="lang">
@@ -155,11 +157,12 @@ function onbPage(i) {
   const full = page.ad === 'full';
   return {
     cls: `OnBoardingFragment${i + 1}`, layout: `ab_fragment_on_boarding_${i + 1}`, group: 'Khởi động & Quảng cáo',
+    immersive: () => true,
     desc: full
       ? 'Trang lấy quảng cáo native phủ toàn trang (NATIVE_OBD_FULL): ảnh media ở trên, chữ ở giữa, nút hành động ở đáy. Chấm trang bị ẩn, chỉ còn nút NEXT ở góc trên.'
       : page.ad === 'bottom'
         ? 'Ảnh tràn viền ở trên, tiêu đề + mô tả, hàng chấm trang và NEXT, dưới cùng là thẻ quảng cáo native.'
-        : 'Trang không có quảng cáo.',
+        : 'Trang không có quảng cáo. Ẩn cả hai thanh hệ thống.',
     render: () => (full && state.adsOn) ? `<div class="onb-full">
         ${adNativeFull(page.unit, { label: 'Native toàn màn hình', noClose: true })}
         <button class="onb-next float" onclick="${next}">${last ? 'BẮT ĐẦU' : 'NEXT'}</button>
