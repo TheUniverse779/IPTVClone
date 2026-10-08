@@ -52,7 +52,8 @@ Server URL: https://iptv-review-xtream.xtream-review-demo.workers.dev (enter it 
 No login needed for the rest:
 - Playlist URL: + > Playlist URL, paste https://github.com/iptvstore779/iptv_review/raw/main/test-playlist.m3u
 - Single stream: + > Single stream, paste https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
-Content: public test streams and Blender open movies only.```
+Content: public test streams and Blender open movies only.
+```
 
 The first release (1.0.0) was rejected with "we could not find the information you entered" because the Xtream
 screen had no test credentials. Server source: [`xtream-demo/`](xtream-demo/).
