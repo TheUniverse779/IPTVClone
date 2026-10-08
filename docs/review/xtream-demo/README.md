@@ -11,7 +11,20 @@ Google rejected the first release because the **Xtream login screen had no test 
 - Tested 2026-10-07 in the app (Android 15 emulator, run locally): login + sync OK, and an HLS movie, a DASH movie,
   an MP4, a series episode and a live channel all played.
 
-## Deploy (dashboard, no install) — about 10 minutes
+## Deployed
+
+Live at **<https://iptv-review-xtream.xtream-review-demo.workers.dev>** (Cloudflare account `xtream-review-demo`, subdomain `xtream-review-demo`),
+deployed 2026-10-08. Verified from the app on that URL: login + sync (5 live / 7 movies / 2 series), and an HLS movie,
+a DASH movie, an MP4, a series episode and a live channel all played.
+
+Re-deploy after editing `worker.js`:
+
+```bash
+cd docs/review/xtream-demo
+npx wrangler deploy
+```
+
+## Deploy from scratch (dashboard, no install) — about 10 minutes
 
 1. Sign up / log in at <https://dash.cloudflare.com> (free).
 2. Left menu **Compute (Workers)** › **Workers & Pages** › **Create** › **Create Worker** (template "Hello World").

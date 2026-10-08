@@ -27,9 +27,9 @@ When you edit the playlist, update both copies (this file and the GitHub repo).
 ## Text for Play Console › App access
 
 Choose "All or some functionality is restricted", then add **two** instructions. The first release was
-rejected because the Xtream login had no credentials; the second entry fixes that (server: [`xtream-demo/`](xtream-demo/)).
+rejected because the Xtream login had no credentials; the second entry fixes that (server: `https://iptv-review-xtream.xtream-review-demo.workers.dev`, source in [`xtream-demo/`](xtream-demo/)).
 
-Replace `<WORKER-URL>` with the deployed Cloudflare Worker address (see [`xtream-demo/README.md`](xtream-demo/README.md)).
+Replace `https://iptv-review-xtream.xtream-review-demo.workers.dev` with the deployed Cloudflare Worker address (see [`xtream-demo/README.md`](xtream-demo/README.md)).
 
 **Instruction 1**
 > **Name:** Xtream login (demo server)
@@ -38,7 +38,7 @@ Replace `<WORKER-URL>` with the deployed Cloudflare Worker address (see [`xtream
 >
 > **Any other information:** The app is a media player and contains no content. This demo server only serves public test streams and open movies (Blender Foundation, CC BY 3.0).
 > 1. Open the app and tap **+** (bottom centre) › **Xtream Codes**.
-> 2. Server URL: `<WORKER-URL>`  Username: `reviewer`  Password: `review2026`
+> 2. Server URL: `https://iptv-review-xtream.xtream-review-demo.workers.dev`  Username: `reviewer`  Password: `review2026`
 > 3. Tap **Log in & sync**, then **Watch now**. Movies, Series and Live tabs all have playable items.
 
 **Instruction 2**

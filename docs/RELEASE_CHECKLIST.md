@@ -56,8 +56,8 @@
 - [x] **Claude**: Single stream cho reviewer: đoạn App access trong [docs/review/README.md](review/README.md) đã có link Mux Big Buck Bunny (đã test phát được). *(06/10/2026)*
 - [x] ~~**Bạn**: Chọn phương án B cho Xtream (không cấp tài khoản).~~ **Bị Google từ chối** ở bản 1 (1.0.0): thiếu thông tin đăng nhập cho màn Xtream. *(07/10/2026)*
 - [x] **Claude**: Viết server Xtream demo cho reviewer ([docs/review/xtream-demo/](review/xtream-demo/)): Cloudflare Worker, chỉ chứa stream test hợp pháp, login `reviewer` / `review2026`. Đã test trên app (chạy local): đăng nhập + sync, phát phim HLS, DASH, MP4, tập series và kênh live đều chạy. Đã viết lại đoạn App access thành 2 mục (Xtream + playlist). *(07/10/2026)*
-- [ ] **Bạn**: Deploy server lên Cloudflare Workers theo [hướng dẫn](review/xtream-demo/README.md), gửi Claude link Worker.
-- [ ] **Claude**: Test app với link Worker thật, điền link vào đoạn App access.
+- [x] **Bạn**: Deploy server lên Cloudflare Workers: `https://iptv-review-xtream.xtream-review-demo.workers.dev` (đăng nhập OAuth qua Chrome). *(08/10/2026)*
+- [x] **Claude**: Test app với link Worker thật: đăng nhập + sync ra 5 live / 7 phim / 2 series; đã phát phim HLS, DASH, MP4, tập series và kênh live, không lỗi. Link đã điền vào đoạn App access trong [docs/review/README.md](review/README.md). *(08/10/2026)*
 - [x] **Claude**: Tăng `versionCode` 1 → 2, `versionName` 1.0.0 → 1.0.1 để nộp lại. *(07/10/2026)*
 - [ ] **Bạn**: Build AAB mới, cập nhật App access trong Play Console (2 mục), nộp lại.
 - [ ] **Claude + Bạn**: Cài bản release lên máy thật, chạy lại toàn bộ luồng: Home, Import URL/Xtream/Single, Player (PiP, hẹn giờ, phụ đề, âm thanh), Xtream (Movies, Live, Search, Favorite), Settings.
