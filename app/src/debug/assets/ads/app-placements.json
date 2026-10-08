@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "revision": "iptv-1",
+  "enabled": true,
+  "fullscreenIntervalMs": 60000,
+  "formats": { "banner": true, "inter": true },
+  "placements": [
+    {
+      "key": "main_banner",
+      "format": "banner",
+      "enabled": true,
+      "loadTimeoutMs": 15000,
+      "adUnitId": "ca-app-pub-3940256099942544/9214589741",
+      "backfill": { "enabled": false },
+      "refreshIntervalMs": 60000
+    },
+    {
+      "key": "next_screen",
+      "format": "inter",
+      "enabled": true,
+      "loadTimeoutMs": 15000,
+      "adUnitId": "ca-app-pub-3940256099942544/1033173712",
+      "backfill": { "enabled": false }
+    }
+  ]
+}

@@ -61,4 +61,11 @@ object Features {
 
     /** Settings › Legal group: Privacy policy, Terms of use, License agreement (needs real privacy/terms URLs). */
     const val LEGAL = false
+
+    /**
+     * Google AdMob ads (EZTech Ads SDK): the banner on the home screens and the interstitial before a
+     * source opens. Turn off to ship a build with no ads at all (the SDK is still configured in App,
+     * but nothing is requested or shown). The debug build uses Google's test ad units.
+     */
+    const val ADS = true
 }

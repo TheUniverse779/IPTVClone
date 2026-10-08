@@ -29,6 +29,8 @@ swiperefresh = "1.1.0"
 firebaseBom = "34.19.0"
 googleServices = "4.5.0"
 crashlyticsPlugin = "3.0.8"
+eztechAds = "1.0.8"
+desugar = "2.1.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -72,6 +74,9 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+firebase-config = { group = "com.google.firebase", name = "firebase-config" }
+eztech-ads = { group = "com.ezt.ads", name = "eztech-ads-com-cp-livetv-iptvplayer", version.ref = "eztechAds" }
+desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar" }
 
 [plugins]
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }

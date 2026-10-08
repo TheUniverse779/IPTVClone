@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commitNow
 import com.iptvplayer.app.Features
 import com.iptvplayer.app.R
+import com.iptvplayer.app.ads.AppAds
 import com.iptvplayer.app.base.BaseActivity
 import com.iptvplayer.app.databinding.ActivityMainBinding
 import com.iptvplayer.app.ui.sport.SportFragment
@@ -39,6 +40,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     private val notifPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
 
     override fun setup(savedInstanceState: Bundle?) {
+        // Banner sits above the bottom bar; the SDK keeps it hidden until an ad is ready.
+        AppAds.showBanner(this, binding.adBanner)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             binding.fragmentContainer.updatePadding(top = bars.top)

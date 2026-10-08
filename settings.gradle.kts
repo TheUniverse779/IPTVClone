@@ -16,6 +16,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // EZTech Ads SDK: local Maven repo shipped with the integration package (see libs/maven).
+        maven { url = uri("libs/maven") }
     }
 }
 

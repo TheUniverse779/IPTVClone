@@ -74,7 +74,11 @@
 - [ ] **Bạn**: Ảnh chụp màn hình (ít nhất 2 ảnh điện thoại) + feature graphic 1024×500. **Không** để lộ poster/logo Netflix, HBO hay kênh có thương hiệu: dùng profile Demo của mock server hoặc file M3U test.
 - [ ] **Bạn**: Điền link Privacy policy.
 - [ ] **Bạn**: App access: "Cần hướng dẫn đặc biệt" → dán link M3U test + cách thêm (bấm + › Playlist URL › dán › Add playlist).
-- [ ] **Bạn**: Ads: chọn **No ads**.
+- [x] **Claude**: Tích hợp quảng cáo AdMob qua EZTech Ads SDK (banner trên 2 màn home + interstitial khi mở nguồn). Chi tiết + việc cần làm trước khi phát hành: [docs/ADS.md](ADS.md). Đã test trên LDPlayer: banner READY và hiện, interstitial hiện rồi mới vào màn nguồn. *(08/10/2026)*
+- [ ] **Bạn**: Ads trong Play Console: đổi từ **No ads** sang **Yes, contains ads** (Play Console › App content › Ads).
+- [ ] **Bạn**: Advertising ID: đổi từ **No** sang **Yes** (app đã xin lại quyền AD_ID cho quảng cáo).
+- [ ] **Bạn**: Data safety: bổ sung mục quảng cáo (Advertising ID + dữ liệu dùng cho quảng cáo, có chia sẻ cho AdMob).
+- [ ] **Bạn**: Thay App ID + ad unit ID thật của AdMob (xem [docs/ADS.md](ADS.md)); hiện đang dùng ID test của Google nên **không phát sinh doanh thu**.
 - [ ] **Bạn**: Data safety: app **có thu thập** qua Firebase (xem [hướng dẫn](#data-safety-với-firebase) bên dưới). Không chia sẻ cho bên thứ ba, có mã hoá khi truyền, không có tài khoản.
 - [ ] **Bạn**: Advertising ID: chọn **No** (app không dùng ad ID, đã gỡ quyền `AD_ID`).
 - [ ] **Bạn**: Content rating (bảng câu hỏi IARC).

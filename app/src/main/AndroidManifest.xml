@@ -19,11 +19,6 @@
          service at all. Delete both tools:node="remove" lines when background audio comes back. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" tools:node="remove" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!-- Firebase Analytics adds the advertising ID permissions. No ads in this app, so strip them
-         (Play Console › Advertising ID: "No"). Remove these lines if ads are added later. -->
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove" />
-    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_AD_ID" tools:node="remove" />
-    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_ATTRIBUTION" tools:node="remove" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
 
     <uses-feature android:name="android.software.picture_in_picture" android:required="false" />
@@ -42,9 +37,9 @@
         android:theme="@style/Theme.IPTV"
         tools:targetApi="33">
 
-        <!-- Firebase Analytics + Crashlytics start automatically (google-services.json). No ads, so no ad ID / ad personalisation. -->
-        <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
-        <meta-data android:name="google_analytics_default_allow_ad_personalization_signals" android:value="false" />
+        <!-- Google Mobile Ads (Next Gen) app ID. TEST id for now — replace @string/admob_app_id with
+             the real one from AdMob before the production release (same for assets/ads/placements.json). -->
+        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="@string/admob_app_id" />
 
         <activity
             android:name=".ui.splash.SplashActivity"

@@ -1,13 +1,16 @@
 package com.iptvplayer.app.ui.splash
 
 import com.iptvplayer.app.App
+import com.iptvplayer.app.Features
 import androidx.core.os.LocaleListCompat
 import androidx.appcompat.app.AppCompatDelegate
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.lifecycleScope
+import com.iptvplayer.app.ads.AppAds
 import com.iptvplayer.app.base.BaseActivity
 import com.iptvplayer.app.data.datastore.SettingsStore
 import com.iptvplayer.app.databinding.ActivitySplashBinding
@@ -16,6 +19,7 @@ import com.iptvplayer.app.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import javax.inject.Inject
 
 @SuppressLint("CustomSplashScreen")
@@ -40,6 +44,15 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
             start()
         }
         lifecycleScope.launch {
+            // Ads: load the placements JSON, then ask for consent (UMP) before any ad can load.
+            // Both are best-effort — the app opens regardless of what the ad SDK does.
+            if (Features.ADS) runCatching {
+                AppAds.initializeFromSplash(applicationContext)
+                // Waits for the consent callback (a form in regions that require one), capped so a
+                // stalled ad request can never hold the splash. Ads only start after this returns.
+                withTimeoutOrNull(CONSENT_TIMEOUT_MS) { AppAds.requestConsent(this@SplashActivity) }
+            }.onFailure { Log.w(TAG, "Ads initialisation failed", it) }
+
             val s = settings.current()
             delay(MIN_SPLASH_MS)
             when {
@@ -65,5 +78,9 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
         finish()
     }
 
-    companion object { private const val MIN_SPLASH_MS = 900L }
+    companion object {
+        private const val MIN_SPLASH_MS = 900L
+        private const val CONSENT_TIMEOUT_MS = 10_000L
+        private const val TAG = "SplashAds"
+    }
 }

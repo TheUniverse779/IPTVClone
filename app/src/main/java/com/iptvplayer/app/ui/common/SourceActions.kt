@@ -15,6 +15,7 @@ import com.iptvplayer.app.R
 import com.iptvplayer.app.data.database.PlaylistEntity
 import com.iptvplayer.app.data.database.SourceType
 import com.iptvplayer.app.data.database.XtreamProfileEntity
+import com.iptvplayer.app.ads.AppAds
 import com.iptvplayer.app.ui.Nav
 import com.iptvplayer.app.ui.community.ShareDialog
 import com.iptvplayer.app.ui.importer.ImportProgressDialog
@@ -34,17 +35,19 @@ class SourceActions private constructor(
     private val fm: FragmentManager,
     private val owner: LifecycleOwner,
     private val context: () -> Context,
+    /** Needed for ads (banner/consent); null when the caller is not a FragmentActivity. */
+    private val activity: () -> FragmentActivity?,
     private val onDeletePlaylist: (Long) -> Unit,
 ) {
-    constructor(f: Fragment, onDeletePlaylist: (Long) -> Unit) : this(f.childFragmentManager, f, { f.requireContext() }, onDeletePlaylist)
-    constructor(a: FragmentActivity, onDeletePlaylist: (Long) -> Unit) : this(a.supportFragmentManager, a, { a }, onDeletePlaylist)
+    constructor(f: Fragment, onDeletePlaylist: (Long) -> Unit) : this(f.childFragmentManager, f, { f.requireContext() }, { f.activity as? FragmentActivity }, onDeletePlaylist)
+    constructor(a: FragmentActivity, onDeletePlaylist: (Long) -> Unit) : this(a.supportFragmentManager, a, { a }, { a }, onDeletePlaylist)
 
     /** Resolves a profile by id for ProfileActionsSheet's "Watch". */
     var profileLookup: suspend (String) -> XtreamProfileEntity? = { null }
 
     fun register(): SourceActions {
         fm.setFragmentResultListener(KEY_OPEN_PL, owner) { _, b ->
-            if (b.getBoolean(PasscodeDialog.KEY_OK)) Nav.playlist(context(), b.getBundle(PasscodeDialog.KEY_PAYLOAD)!!.getLong("id"))
+            if (b.getBoolean(PasscodeDialog.KEY_OK)) launchSource { Nav.playlist(context(), b.getBundle(PasscodeDialog.KEY_PAYLOAD)!!.getLong("id")) }
         }
         fm.setFragmentResultListener(KEY_DELETE_PL, owner) { _, b ->
             if (b.getInt(ConfirmDialog.KEY_WHICH) == 0) {
@@ -64,7 +67,7 @@ class SourceActions private constructor(
 
     fun openPlaylist(p: PlaylistEntity) {
         if (p.isLocked) PasscodeDialog.show(fm, KEY_OPEN_PL, PasscodeDialog.MODE_ENTER, p.name, bundleOf("id" to p.id))
-        else Nav.playlist(context(), p.id)
+        else launchSource { Nav.playlist(context(), p.id) }
     }
 
     fun playlistMenu(anchor: View, p: PlaylistEntity) {
@@ -99,7 +102,16 @@ class SourceActions private constructor(
     private fun afterUnlock(b: Bundle) {
         val id = b.getString("id")!!
         if (b.getBoolean("expired")) ExpiredDialog.show(fm, id, b.getString("name")!!, b.getLong("exp"))
-        else { Nav.xtreamHome(context(), id); onOpened() }
+        else launchSource { Nav.xtreamHome(context(), id); onOpened() }
+    }
+
+    /**
+     * Opening a source is a natural break in the app: show the interstitial first (the SDK applies its
+     * own cooldown), then navigate. Falls through immediately when ads are off or have no fill.
+     */
+    private fun launchSource(navigate: () -> Unit) {
+        val act = activity()
+        if (act == null || act.isFinishing || act.isDestroyed) navigate() else act.runOnUiThread { AppAds.showInterstitial(act, navigate) }
     }
 
     /** Called after Xtream home is launched (XtreamHomeActivity finishes itself when switching). */

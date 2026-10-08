@@ -15,6 +15,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.iptvplayer.app.R
+import com.iptvplayer.app.ads.AppAds
 import com.iptvplayer.app.base.BaseActivity
 import com.iptvplayer.app.base.BaseBottomSheet
 import com.iptvplayer.app.base.collect
@@ -96,6 +97,7 @@ class XtreamHomeActivity : BaseActivity<ActivityXtreamHomeBinding>(ActivityXtrea
     private lateinit var actions: SourceActions
 
     override fun setup(savedInstanceState: Bundle?) {
+        AppAds.showBanner(this, binding.adBanner)
         actions = SourceActions(this) {}.register()
         actions.profileLookup = { vm.repo.profile(it) }
         actions.onOpened = { finish() }

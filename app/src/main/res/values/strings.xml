@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Google's public test app ID (matches the test ad units in assets/ads/*.json). Replace both. -->
+    <string name="admob_app_id" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
     <string name="app_name">IPTV Smart Player - Live TV</string>
     <string name="brand_1">IPTV Smart</string>
     <string name="brand_2">Player</string>

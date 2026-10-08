@@ -33,6 +33,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        // Required by the EZTech Ads SDK (uses java.time and friends on minSdk 24).
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "17"
@@ -93,6 +95,11 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.config)
+
+    // EZTech Ads SDK (package-restricted to com.cp.livetv.iptvplayer; vendored in libs/maven).
+    implementation(libs.eztech.ads)
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     testImplementation(libs.junit)
 }
