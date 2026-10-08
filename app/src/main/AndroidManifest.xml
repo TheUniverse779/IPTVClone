@@ -52,6 +52,18 @@
         </activity>
 
         <activity android:name=".ui.disclaimer.DisclaimerActivity" />
+        <!-- configChanges: the ads SDK opens its own window for a full-page ad; without this the
+             first-run screen would be recreated behind it and lose the callback that continues the flow. -->
+        <activity
+            android:name=".ui.firstrun.LanguageActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboardHidden|uiMode"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.firstrun.OnboardingActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboardHidden|uiMode"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTask"

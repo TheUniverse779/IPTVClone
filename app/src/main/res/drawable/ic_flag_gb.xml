@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Simplified Union Jack in a circle, used as the language marker. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="30dp" android:height="30dp"
+    android:viewportWidth="30" android:viewportHeight="30">
+    <path android:pathData="M15,0a15,15 0 1,0 0,30a15,15 0 1,0 0,-30z" android:fillColor="#0A3D91" />
+    <path android:pathData="M4,5l22,20M26,5l-22,20" android:strokeColor="#FFFFFF" android:strokeWidth="5" />
+    <path android:pathData="M0,13h30v4h-30z" android:fillColor="#FFFFFF" />
+    <path android:pathData="M13,0h4v30h-4z" android:fillColor="#FFFFFF" />
+    <path android:pathData="M0,14h30v2h-30z" android:fillColor="#CF142B" />
+    <path android:pathData="M14,0h2v30h-2z" android:fillColor="#CF142B" />
+</vector>

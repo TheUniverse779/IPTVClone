@@ -578,4 +578,15 @@
     <string name="import_is_stream_title">This link is a single stream</string>
     <string name="import_is_stream">It plays one channel rather than listing channels, so it can\'t be added as a playlist. You can play it now (or add it via + › Single stream).</string>
     <string name="play_as_stream">Play now</string>
+    <string name="onb_next">Next</string>
+    <string name="onb_start">Start</string>
+    <string name="ad_badge">Ad</string>
+    <string name="continue_label">Continue</string>
+    <string name="pick_language_first">Pick a language first</string>
+    <string name="onb1_title">Add your own sources</string>
+    <string name="onb1_body">Paste an M3U playlist link, sign in with an account from your provider, or open a single stream.</string>
+    <string name="onb2_title">Movies and series by genre</string>
+    <string name="onb2_body">Posters grouped by genre, resume where you left off, search across every source.</string>
+    <string name="onb3_title">Live channels and the channel list</string>
+    <string name="onb3_body">Watch full screen with the channel list right underneath, so switching is one tap.</string>
 </resources>

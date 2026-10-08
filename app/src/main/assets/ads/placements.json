@@ -1,9 +1,15 @@
 {
   "schemaVersion": 1,
-  "revision": "iptv-1",
+  "revision": "iptv-2",
   "enabled": true,
   "fullscreenIntervalMs": 60000,
-  "formats": { "banner": true, "inter": true },
+  "formats": {
+    "banner": true,
+    "inter": true,
+    "native": true,
+    "native_full": true,
+    "open": true
+  },
   "placements": [
     {
       "key": "main_banner",
@@ -11,7 +17,9 @@
       "enabled": true,
       "loadTimeoutMs": 15000,
       "adUnitId": "ca-app-pub-3940256099942544/9214589741",
-      "backfill": { "enabled": false },
+      "backfill": {
+        "enabled": false
+      },
       "refreshIntervalMs": 60000
     },
     {
@@ -20,7 +28,92 @@
       "enabled": true,
       "loadTimeoutMs": 15000,
       "adUnitId": "ca-app-pub-3940256099942544/1033173712",
-      "backfill": { "enabled": false }
+      "backfill": {
+        "enabled": false
+      }
+    },
+    {
+      "key": "splash",
+      "format": "inter",
+      "enabled": true,
+      "loadTimeoutMs": 15000,
+      "adUnitId": "ca-app-pub-3940256099942544/1033173712",
+      "backfill": {
+        "enabled": false
+      }
+    },
+    {
+      "key": "language",
+      "format": "native",
+      "enabled": true,
+      "loadTimeoutMs": 15000,
+      "adUnitId": "ca-app-pub-3940256099942544/2247696110",
+      "backfill": {
+        "enabled": false
+      }
+    },
+    {
+      "key": "obd1",
+      "format": "native",
+      "enabled": true,
+      "loadTimeoutMs": 15000,
+      "adUnitId": "ca-app-pub-3940256099942544/2247696110",
+      "backfill": {
+        "enabled": false
+      }
+    },
+    {
+      "key": "obd3",
+      "format": "native",
+      "enabled": true,
+      "loadTimeoutMs": 15000,
+      "adUnitId": "ca-app-pub-3940256099942544/2247696110",
+      "backfill": {
+        "enabled": false
+      }
+    },
+    {
+      "key": "obd_full",
+      "format": "native_full",
+      "enabled": true,
+      "loadTimeoutMs": 15000,
+      "backfill": {
+        "enabled": false
+      },
+      "native": {
+        "count": 1,
+        "adUnitIds": [
+          "ca-app-pub-3940256099942544/2247696110"
+        ],
+        "closeDelayMs": 3000
+      }
+    },
+    {
+      "key": "obd_done",
+      "format": "native_full",
+      "enabled": true,
+      "loadTimeoutMs": 15000,
+      "backfill": {
+        "enabled": false
+      },
+      "native": {
+        "count": 1,
+        "adUnitIds": [
+          "ca-app-pub-3940256099942544/2247696110"
+        ],
+        "closeDelayMs": 3000
+      }
+    },
+    {
+      "key": "return_to_app",
+      "format": "open",
+      "enabled": true,
+      "loadTimeoutMs": 15000,
+      "adUnitId": "ca-app-pub-3940256099942544/9257395921",
+      "appOpenContext": "return_app",
+      "backfill": {
+        "enabled": false
+      }
     }
   ]
 }

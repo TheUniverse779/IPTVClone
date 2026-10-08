@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Vietnamese flag in a circle: red field with a yellow star. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="30dp" android:height="30dp"
+    android:viewportWidth="30" android:viewportHeight="30">
+    <path android:pathData="M15,0a15,15 0 1,0 0,30a15,15 0 1,0 0,-30z" android:fillColor="#DA251D" />
+    <path android:pathData="M15,8.5l2.0,4.1l4.5,0.6l-3.3,3.2l0.8,4.5l-4.0,-2.1l-4.0,2.1l0.8,-4.5l-3.3,-3.2l4.5,-0.6z" android:fillColor="#FFCD00" />
+</vector>

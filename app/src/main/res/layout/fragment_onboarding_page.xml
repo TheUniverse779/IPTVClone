@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One onboarding page. The artwork fills the width and keeps the image's own aspect ratio
+     (dimensionRatio); the two text lines sit right underneath, and whatever height is left over
+     stays empty so the pager's bottom edge lands on the native card's top edge. -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg">
+
+    <ImageView
+        android:id="@+id/art"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:importantForAccessibility="no"
+        android:scaleType="centerCrop"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toTopOf="@id/texts"
+        app:layout_constraintDimensionRatio="H,360:500"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/onb_1" />
+
+    <LinearLayout
+        android:id="@+id/texts"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingTop="14dp"
+        android:paddingEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            style="@style/Text.Cond.Section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="21sp"
+            tools:text="Thêm nguồn của bạn" />
+
+        <TextView
+            android:id="@+id/tvBody"
+            style="@style/Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:textColor="@color/text_2"
+            android:textSize="13sp"
+            tools:text="Dán link playlist M3U hoặc mở một link stream." />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

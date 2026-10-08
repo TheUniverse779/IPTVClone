@@ -15,6 +15,7 @@ import com.iptvplayer.app.base.BaseActivity
 import com.iptvplayer.app.data.datastore.SettingsStore
 import com.iptvplayer.app.databinding.ActivitySplashBinding
 import com.iptvplayer.app.ui.disclaimer.DisclaimerActivity
+import com.iptvplayer.app.ui.firstrun.LanguageActivity
 import com.iptvplayer.app.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -70,7 +71,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
      */
     private suspend fun openFirstRunFlow() {
         settings.setFirstRunDone()
-        start(DisclaimerActivity::class.java)
+        start(LanguageActivity::class.java)
     }
 
     private fun start(cls: Class<*>) {

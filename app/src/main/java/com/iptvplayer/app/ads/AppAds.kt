@@ -36,6 +36,7 @@ import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import com.iptvplayer.app.BuildConfig
+import com.iptvplayer.app.R
 import com.iptvplayer.app.Features
 
 /**
@@ -54,6 +55,21 @@ object AppAds {
 
     /** Interstitial shown before opening a source (playlist, Xtream profile, single stream). */
     const val INTERSTITIAL = "next_screen"
+
+    /** First-screen interstitial, shown once the splash has finished its setup. */
+    const val SPLASH = "splash"
+
+    /** Native cards on the first-run flow: the language screen and onboarding pages 1, 3 and 4. */
+    const val NATIVE_LANGUAGE = "language"
+    const val NATIVE_OBD1 = "obd1"
+    const val NATIVE_OBD3 = "obd3"
+
+    /** Full-page native ads: the middle onboarding page and the break before the main screen. */
+    const val NATIVE_FULL = "obd_full"
+    const val NATIVE_DONE = "obd_done"
+
+    /** App-open placement: shown when the user comes back to the app, not on a cold start. */
+    const val APP_OPEN = "return_to_app"
 
     private const val CACHE_KEY = "validated_json"
     private const val FETCH_TIMEOUT_MS = 2_500L
@@ -203,6 +219,73 @@ object AppAds {
             Log.d(TAG, "next_screen: $result (${(result as? AdFullScreenResult)?.outcome})")
             if (activity.lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) onDone()
         }
+    }
+
+    /**
+     * Native card inside [container], used by the first-run screens (language and onboarding).
+     * Same readiness gate as the banner: nothing is requested until the ads runtime can serve.
+     */
+    @MainThread
+    fun showNative(
+        activity: FragmentActivity,
+        key: String,
+        container: android.widget.FrameLayout,
+        layoutResId: Int = R.layout.layout_native_ad,
+        onState: (AdPreloadState) -> Unit = {},
+    ) {
+        if (!Features.ADS) return
+        if (!isInitialized) { Log.w(TAG, "showNative skipped: ads not initialised"); return }
+        activity.lifecycleScope.launch {
+            if (!_ready.value) withTimeoutOrNull(READY_TIMEOUT_MS) { _ready.first { it } }
+            if (!_ready.value) { Log.w(TAG, "showNative skipped: ads never became ready"); return@launch }
+            if (activity.isFinishing || activity.isDestroyed) return@launch
+            runCatching { kit.showNative(activity, key, container, layoutResId) { state -> Log.d(TAG, "$key $state"); onState(state) } }
+                .onFailure { Log.w(TAG, "showNative($key) failed", it) }
+        }
+    }
+
+    /** Starts loading [key] ahead of the screen that shows it, e.g. the next onboarding page. */
+    fun preloadNative(key: String) {
+        if (!Features.ADS || !isInitialized) return
+        runCatching { kit.preloadNativeInline(key) }.onFailure { Log.w(TAG, "preloadNative($key) failed", it) }
+    }
+
+    /** Starts loading a full-screen placement ([SPLASH], [INTERSTITIAL], a combo, …) ahead of time. */
+    fun preloadFullScreen(key: String) {
+        if (!Features.ADS || !isInitialized) return
+        scope.launch { runCatching { kit.preloadAdFullScreen(key) }.onFailure { Log.w(TAG, "preloadFullScreen($key) failed", it) } }
+    }
+
+    /**
+     * Shows the full-screen placement [key] (interstitial, native full page, or a combo) and runs
+     * [onDone] once it is dismissed. Like [showInterstitial], navigation belongs in [onDone].
+     * When there is nothing to show — ads off, no fill, still loading, frequency cap — [onDone] runs at once.
+     */
+    @MainThread
+    fun showFullScreen(activity: FragmentActivity, key: String, onDone: () -> Unit) {
+        if (!Features.ADS) return onDone()
+        if (!isInitialized || !_ready.value) {
+            Log.d(TAG, "$key skipped: initialised=$isInitialized ready=${_ready.value}")
+            return onDone()
+        }
+        activity.lifecycleScope.launch {
+            val result = runCatching { kit.showAdFullScreen(activity, key) }
+                .onFailure { Log.w(TAG, "$key failed", it) }
+                .getOrNull()
+            Log.d(TAG, "$key: $result (${(result as? AdFullScreenResult)?.outcome})")
+            if (activity.lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) onDone()
+        }
+    }
+
+    /**
+     * App Open: the SDK watches the app's lifecycle and shows [APP_OPEN] when the user returns from
+     * the background. Only the main screen registers, so the ad never interrupts the first-run flow —
+     * the SDK also skips it while a full-screen ad is on screen or the frequency cap is active.
+     */
+    fun enableAppOpenOnForeground(activityClass: Class<out FragmentActivity>) {
+        if (!Features.ADS || !isInitialized) return
+        runCatching { kit.enableAppOpenOnForeground(activityClass, APP_OPEN) }
+            .onFailure { Log.w(TAG, "enableAppOpenOnForeground failed", it) }
     }
 
     private const val TAG = "AppAds"

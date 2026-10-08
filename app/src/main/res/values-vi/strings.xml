@@ -506,4 +506,15 @@
     <string name="import_is_stream_title">Đây là link 1 kênh</string>
     <string name="import_is_stream">Link này phát trực tiếp 1 kênh chứ không phải danh sách kênh, nên không thêm làm playlist được. Bạn có thể phát ngay (hoặc thêm ở + › Single stream).</string>
     <string name="play_as_stream">Phát ngay</string>
+    <string name="onb_next">Tiếp</string>
+    <string name="onb_start">Bắt đầu</string>
+    <string name="ad_badge">Ad</string>
+    <string name="continue_label">Tiếp tục</string>
+    <string name="pick_language_first">Chọn một ngôn ngữ trước</string>
+    <string name="onb1_title">Thêm nguồn của bạn</string>
+    <string name="onb1_body">Dán link playlist M3U, nhập tài khoản từ nhà cung cấp hoặc mở một link stream.</string>
+    <string name="onb2_title">Phim và series theo thể loại</string>
+    <string name="onb2_body">Poster theo từng thể loại, xem tiếp đúng chỗ đang dở, tìm kiếm trong mọi nguồn.</string>
+    <string name="onb3_title">Kênh Live và danh sách kênh</string>
+    <string name="onb3_body">Xem toàn màn hình, danh sách kênh ngay bên dưới để đổi kênh thật nhanh.</string>
 </resources>

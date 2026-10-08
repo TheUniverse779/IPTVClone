@@ -15,6 +15,7 @@
     <color name="accent_press">#D95E08</color>
     <color name="accent_soft">#24F56F10</color>
     <color name="gold">#FFC446</color>
+    <color name="gold_soft">#33FFC446</color>
     <color name="live">#FF3B3B</color>
     <color name="ok">#3CCF7A</color>
     <color name="ok_soft">#243CCF7A</color>
