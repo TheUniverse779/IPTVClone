@@ -65,14 +65,11 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
     }
 
     /**
-     * Hook for your own first-run flow (language picker + onboarding). When it finishes, call
-     * `settings.setFirstRunDone()` and open [DisclaimerActivity]. Until that flow exists we go
-     * straight to the disclaimer.
+     * Language picker + onboarding. Nothing is saved here: the flow only counts as done once the
+     * user taps the start button on the last onboarding page ([OnboardingActivity.finishFlow]),
+     * so leaving part-way through brings it back on the next launch.
      */
-    private suspend fun openFirstRunFlow() {
-        settings.setFirstRunDone()
-        start(LanguageActivity::class.java)
-    }
+    private fun openFirstRunFlow() = start(LanguageActivity::class.java)
 
     private fun start(cls: Class<*>) {
         startActivity(Intent(this, cls))

@@ -10,10 +10,14 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.iptvplayer.app.R
 import com.iptvplayer.app.ads.AppAds
+import androidx.lifecycle.lifecycleScope
 import com.iptvplayer.app.base.BaseActivity
+import com.iptvplayer.app.data.datastore.SettingsStore
 import com.iptvplayer.app.databinding.ActivityOnboardingBinding
 import com.iptvplayer.app.ui.disclaimer.DisclaimerActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /** What each onboarding page shows. Shared with [OnboardingPageFragment]. */
 enum class OnboardingPageKind { Artwork, FullAd }
@@ -48,6 +52,8 @@ class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>(ActivityOnboa
     override val showAdBanner = false
     override val applyInsets = false
 
+    @Inject lateinit var settings: SettingsStore
+
     private var position = 0
 
     override fun setup(savedInstanceState: Bundle?) {
@@ -72,10 +78,18 @@ class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>(ActivityOnboa
         binding.pager.currentItem = index
     }
 
+    /**
+     * The start button on the last page. This tap is the only thing that marks the first-run flow
+     * as done; quitting anywhere earlier (language screen included) shows the whole flow again on
+     * the next launch. Saved before the ad so closing the app during the ad still counts.
+     */
     fun finishFlow() {
-        AppAds.showFullScreen(this, AppAds.NATIVE_DONE) {
-            startActivity(Intent(this, DisclaimerActivity::class.java))
-            finish()
+        lifecycleScope.launch {
+            settings.setFirstRunDone()
+            AppAds.showFullScreen(this@OnboardingActivity, AppAds.NATIVE_DONE) {
+                startActivity(Intent(this@OnboardingActivity, DisclaimerActivity::class.java))
+                finish()
+            }
         }
     }
 
