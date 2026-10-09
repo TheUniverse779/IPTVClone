@@ -19,6 +19,7 @@ import com.iptvplayer.app.ui.firstrun.LanguageActivity
 import com.iptvplayer.app.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import javax.inject.Inject
@@ -56,20 +57,17 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
 
             val s = settings.current()
             delay(MIN_SPLASH_MS)
-            when {
-                !s.firstRunDone -> openFirstRunFlow()
-                !s.disclaimerAccepted -> start(DisclaimerActivity::class.java)
-                else -> start(MainActivity::class.java)
+            val next = when {
+                !s.firstRunDone -> LanguageActivity::class.java
+                !s.disclaimerAccepted -> DisclaimerActivity::class.java
+                else -> MainActivity::class.java
             }
+            // Splash interstitial, then the next screen. The ads runtime finishes initialising a
+            // moment after consent, so give it a short wait; without it the ad is simply skipped.
+            if (Features.ADS) withTimeoutOrNull(READY_TIMEOUT_MS) { AppAds.ready.first { it } }
+            AppAds.showFullScreen(this@SplashActivity, AppAds.SPLASH) { start(next) }
         }
     }
-
-    /**
-     * Language picker + onboarding. Nothing is saved here: the flow only counts as done once the
-     * user taps the start button on the last onboarding page ([OnboardingActivity.finishFlow]),
-     * so leaving part-way through brings it back on the next launch.
-     */
-    private fun openFirstRunFlow() = start(LanguageActivity::class.java)
 
     private fun start(cls: Class<*>) {
         startActivity(Intent(this, cls))
@@ -78,6 +76,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
 
     companion object {
         private const val MIN_SPLASH_MS = 900L
+        /** Longest the splash waits for the ads runtime before skipping its interstitial. */
+        private const val READY_TIMEOUT_MS = 4_000L
         private const val CONSENT_TIMEOUT_MS = 10_000L
         private const val TAG = "SplashAds"
     }
