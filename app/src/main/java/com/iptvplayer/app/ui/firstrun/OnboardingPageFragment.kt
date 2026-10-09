@@ -37,8 +37,18 @@ class OnboardingPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val page = page
         if (page.kind == OnboardingPageKind.FullAd) {
+            val adPage = adBinding!!.adPage
             adBinding?.btnNext?.setOnClickListener { next() }
-            page.nativeKey?.let { AppAds.showNative(requireActivity(), it, adBinding!!.adPage, R.layout.layout_native_full_ad) }
+            // The SDK wraps the native layout in its own wrap_content FrameLayout, so match_parent in
+            // layout_native_full_ad.xml only fills that wrapper and the page ends ~200px short of the
+            // bottom. Stretch whatever the SDK adds to the full height of the page.
+            adPage.setOnHierarchyChangeListener(object : ViewGroup.OnHierarchyChangeListener {
+                override fun onChildViewAdded(parent: View, child: View) {
+                    child.layoutParams = child.layoutParams.apply { height = ViewGroup.LayoutParams.MATCH_PARENT }
+                }
+                override fun onChildViewRemoved(parent: View, child: View) = Unit
+            })
+            page.nativeKey?.let { AppAds.showNative(requireActivity(), it, adPage, R.layout.layout_native_full_ad) }
             return
         }
 
