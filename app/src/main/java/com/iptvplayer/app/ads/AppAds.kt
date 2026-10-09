@@ -64,8 +64,11 @@ object AppAds {
     const val NATIVE_OBD1 = "obd1"
     const val NATIVE_OBD3 = "obd3"
 
-    /** Full-page native ads: the middle onboarding page and the break before the main screen. */
+    /** Full-page native shown inline as the middle onboarding page. */
     const val NATIVE_FULL = "obd_full"
+
+    /** Full-screen native breaks: after the language pick, and after the last onboarding page. */
+    const val NATIVE_LANGUAGE_DONE = "lang_done"
     const val NATIVE_DONE = "obd_done"
 
     /** App-open placement: shown when the user comes back to the app, not on a cold start. */

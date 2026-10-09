@@ -83,6 +83,22 @@
       "adUnitId": "ca-app-pub-3940256099942544/2247696110"
     },
     {
+      "key": "lang_done",
+      "format": "native_full",
+      "enabled": true,
+      "loadTimeoutMs": 15000,
+      "backfill": {
+        "enabled": false
+      },
+      "native": {
+        "count": 1,
+        "adUnitIds": [
+          "ca-app-pub-3940256099942544/2247696110"
+        ],
+        "closeDelayMs": 3000
+      }
+    },
+    {
       "key": "obd_done",
       "format": "native_full",
       "enabled": true,

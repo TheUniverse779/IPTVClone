@@ -126,7 +126,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageAppBinding>(ActivityLangua
             pendingContinue = false
             // Posted, not called straight away: the ads SDK reports HostNotResumed until the
             // activity has actually finished resuming.
-            binding.root.post { AppAds.showFullScreen(this, AppAds.NATIVE_DONE) { openOnboarding() } }
+            binding.root.post { AppAds.showFullScreen(this, AppAds.NATIVE_LANGUAGE_DONE) { openOnboarding() } }
         }
     }
 
