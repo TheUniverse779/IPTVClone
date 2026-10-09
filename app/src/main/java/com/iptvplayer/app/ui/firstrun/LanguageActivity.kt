@@ -69,11 +69,16 @@ class LanguageActivity : BaseActivity<ActivityLanguageAppBinding>(ActivityLangua
 
         binding.btnDone.setOnClickListener {
             val tag = picked
-            if (tag == null) toast(R.string.pick_language_first)
-            else {
-                // Saving the language recreates this screen; setup() picks the flow up from here.
-                pendingContinue = true
-                AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(tag))
+            when {
+                tag == null -> toast(R.string.pick_language_first)
+                // Already the app's language (English on a first run): applying it again changes
+                // nothing, so the screen is not recreated and onResume would never continue.
+                currentLanguage() == tag -> continueToOnboarding()
+                else -> {
+                    // Saving a different language recreates this screen; onResume continues.
+                    pendingContinue = true
+                    AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(tag))
+                }
             }
         }
         render()
@@ -119,14 +124,28 @@ class LanguageActivity : BaseActivity<ActivityLanguageAppBinding>(ActivityLangua
         finish()
     }
 
-    /** The full-page break needs a resumed host (the SDK reports HostNotResumed otherwise). */
+    /** Language the app is showing now: the per-app choice if set, else what the resources resolved to. */
+    private fun currentLanguage(): String =
+        AppCompatDelegate.getApplicationLocales()[0]?.language
+            ?: resources.configuration.locales[0].language
+
+    /** The full-page break, then onboarding. Tapping the check twice must not stack two ads. */
+    private var continuing = false
+
+    private fun continueToOnboarding() {
+        if (continuing) return
+        continuing = true
+        // Posted, not called straight away: the ads SDK reports HostNotResumed until the
+        // activity has actually finished resuming.
+        binding.root.post { AppAds.showFullScreen(this, AppAds.NATIVE_LANGUAGE_DONE) { openOnboarding() } }
+    }
+
+    /** After a language change recreated the screen, carry on (the ad needs a resumed host). */
     override fun onResume() {
         super.onResume()
         if (pendingContinue) {
             pendingContinue = false
-            // Posted, not called straight away: the ads SDK reports HostNotResumed until the
-            // activity has actually finished resuming.
-            binding.root.post { AppAds.showFullScreen(this, AppAds.NATIVE_LANGUAGE_DONE) { openOnboarding() } }
+            continueToOnboarding()
         }
     }
 
