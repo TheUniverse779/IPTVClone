@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- One onboarding page. The artwork fills the width and keeps the image's own aspect ratio
-     (dimensionRatio); the two text lines sit right underneath, and whatever height is left over
-     stays empty so the pager's bottom edge lands on the native card's top edge. -->
+<!-- One onboarding page, self-contained: artwork at the image's own ratio with the two text lines
+     right underneath, the dots + NEXT row, and the native card pinned to the bottom of the page.
+     The activity only hosts the pager. -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -31,7 +31,7 @@
         android:paddingStart="24dp"
         android:paddingTop="14dp"
         android:paddingEnd="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/foot"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -55,4 +55,49 @@
             android:textSize="13sp"
             tools:text="Dán link playlist M3U hoặc mở một link stream." />
     </LinearLayout>
+
+    <!-- Rides on the top edge of the native card below. -->
+    <LinearLayout
+        android:id="@+id/foot"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@id/adNative"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:id="@+id/dots"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" />
+
+        <TextView
+            android:id="@+id/btnNext"
+            style="@style/Text.Semibold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:padding="6dp"
+            android:text="@string/onb_next"
+            android:textColor="@color/accent"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/adNative"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/surface"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:minHeight="260dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

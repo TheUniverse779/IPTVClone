@@ -1,58 +1,86 @@
 package com.iptvplayer.app.ui.firstrun
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import com.iptvplayer.app.R
 import com.iptvplayer.app.ads.AppAds
-import com.iptvplayer.app.databinding.FragmentOnboardingPageBinding
 import com.iptvplayer.app.databinding.FragmentOnboardingAdPageBinding
+import com.iptvplayer.app.databinding.FragmentOnboardingPageBinding
+import com.iptvplayer.app.util.dp
 
 /**
- * One page of [OnboardingActivity].
+ * One page of [OnboardingActivity]. Every page owns its whole layout, so the activity is only the
+ * pager: artwork at the image's own ratio with the text right underneath, the dots + NEXT row, and
+ * the page's native card pinned to the bottom.
  *
- * Artwork pages show the image (full width, its own aspect ratio, with the text right underneath)
- * and load their native card into the activity's bottom container. The full-ad page has no artwork
- * and instead fills itself with a native ad, with NEXT overlaid in the top corner.
+ * The full-ad page has no artwork: it fills itself with a native ad and floats NEXT in the corner.
  */
 class OnboardingPageFragment : Fragment() {
 
     private var binding: FragmentOnboardingPageBinding? = null
     private var adBinding: FragmentOnboardingAdPageBinding? = null
-    private var adContainer: FrameLayout? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val page = ONBOARDING_PAGES[requireArguments().getInt(ARG_POSITION)]
-        return if (page.kind == OnboardingPageKind.FullAd) {
-            FragmentOnboardingAdPageBinding.inflate(inflater, container, false)
-                .also { adBinding = it; adContainer = it.adPage }.root
+    private val position get() = requireArguments().getInt(ARG_POSITION)
+    private val page get() = ONBOARDING_PAGES[position]
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        if (page.kind == OnboardingPageKind.FullAd) {
+            FragmentOnboardingAdPageBinding.inflate(inflater, container, false).also { adBinding = it }.root
         } else {
             FragmentOnboardingPageBinding.inflate(inflater, container, false).also { binding = it }.root
         }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val page = ONBOARDING_PAGES[requireArguments().getInt(ARG_POSITION)]
+        val page = page
         if (page.kind == OnboardingPageKind.FullAd) {
-            adBinding?.btnNext?.setOnClickListener { (activity as? OnboardingActivity)?.nextPage() }
-            val container = adContainer
-            if (container != null && page.nativeKey != null) {
-                AppAds.showNative(requireActivity(), page.nativeKey, container, R.layout.layout_native_full_ad)
+            adBinding?.btnNext?.setOnClickListener { next() }
+            page.nativeKey?.let { AppAds.showNative(requireActivity(), it, adBinding!!.adPage, R.layout.layout_native_full_ad) }
+            return
+        }
+
+        val b = binding ?: return
+        b.art.setImageResource(page.art)
+        b.tvTitle.setText(page.title)
+        b.tvBody.setText(page.body)
+        b.btnNext.setText(if (position == ONBOARDING_PAGES.lastIndex) R.string.onb_start else R.string.onb_next)
+        b.btnNext.setOnClickListener { next() }
+        buildDots(b, position)
+        // The card of the page the user is about to reach, so it is ready on arrival.
+        ONBOARDING_PAGES.getOrNull(position + 1)?.nativeKey?.let { AppAds.preloadNative(it) }
+        page.nativeKey?.let { AppAds.showNative(requireActivity(), it, b.adNative) }
+    }
+
+    /** Advances the pager, or hands over to the activity on the last page. */
+    private fun next() {
+        val host = activity as? OnboardingActivity ?: return
+        if (position < ONBOARDING_PAGES.lastIndex) host.goTo(position + 1) else host.finishFlow()
+    }
+
+    /** Four dots, the current one a stretched pill. */
+    private fun buildDots(b: FragmentOnboardingPageBinding, selected: Int) {
+        b.dots.removeAllViews()
+        repeat(ONBOARDING_PAGES.size) { i ->
+            val on = i == selected
+            val dot = View(requireContext()).apply {
+                background = GradientDrawable().apply {
+                    shape = GradientDrawable.RECTANGLE
+                    cornerRadius = if (on) 5f * resources.displayMetrics.density else 99f
+                    setColor(requireContext().getColor(if (on) R.color.accent else R.color.surface_3))
+                }
             }
-        } else {
-            binding?.art?.setImageResource(page.art)
-            binding?.tvTitle?.setText(page.title)
-            binding?.tvBody?.setText(page.body)
+            b.dots.addView(dot, android.widget.LinearLayout.LayoutParams(if (on) 22.dp else 8.dp, 8.dp).apply {
+                marginEnd = 8.dp
+            })
         }
     }
 
     override fun onDestroyView() {
         binding = null
         adBinding = null
-        adContainer = null
         super.onDestroyView()
     }
 

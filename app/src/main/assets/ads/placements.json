@@ -74,19 +74,13 @@
     },
     {
       "key": "obd_full",
-      "format": "native_full",
+      "format": "native",
       "enabled": true,
       "loadTimeoutMs": 15000,
       "backfill": {
         "enabled": false
       },
-      "native": {
-        "count": 1,
-        "adUnitIds": [
-          "ca-app-pub-3940256099942544/2247696110"
-        ],
-        "closeDelayMs": 3000
-      }
+      "adUnitId": "ca-app-pub-3940256099942544/2247696110"
     },
     {
       "key": "obd_done",

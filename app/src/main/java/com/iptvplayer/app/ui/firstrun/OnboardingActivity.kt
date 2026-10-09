@@ -1,9 +1,7 @@
 package com.iptvplayer.app.ui.firstrun
 
 import android.content.Intent
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.view.View
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -15,8 +13,6 @@ import com.iptvplayer.app.ads.AppAds
 import com.iptvplayer.app.base.BaseActivity
 import com.iptvplayer.app.databinding.ActivityOnboardingBinding
 import com.iptvplayer.app.ui.disclaimer.DisclaimerActivity
-import com.iptvplayer.app.util.dp
-import com.iptvplayer.app.util.visible
 import dagger.hilt.android.AndroidEntryPoint
 
 /** What each onboarding page shows. Shared with [OnboardingPageFragment]. */
@@ -61,55 +57,22 @@ class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>(ActivityOnboa
             override fun createFragment(position: Int) = OnboardingPageFragment.newInstance(position)
         }
         binding.pager.offscreenPageLimit = 1
-        binding.pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(p: Int) { position = p; render() }
-        })
-
-        binding.btnNext.setOnClickListener {
-            if (position < ONBOARDING_PAGES.lastIndex) binding.pager.currentItem = position + 1 else finishFlow()
-        }
-        render()
+        position = savedInstanceState?.getInt(STATE_POSITION) ?: 0
+        binding.pager.setCurrentItem(position, false)
     }
 
-    /** Dots (current one is a stretched pill), the NEXT/start label, and the card for this page. */
-    private fun render() {
-        val page = ONBOARDING_PAGES[position]
-        val showsCard = page.kind == OnboardingPageKind.Artwork
-        binding.adNative.visible(showsCard)
-        binding.foot.visible(showsCard)
-        binding.btnNext.setText(if (position == ONBOARDING_PAGES.lastIndex) R.string.onb_start else R.string.onb_next)
-        buildDots(position)
-        // The card for this page, pinned to the bottom of the screen.
-        page.nativeKey?.let {
-            if (showsCard) AppAds.showNative(this, it, binding.adNative)
-            else AppAds.preloadNative(it)
-        }
-        // Load the card of the page the user is about to reach so it is ready on arrival.
-        ONBOARDING_PAGES.getOrNull(position + 1)?.nativeKey?.let { AppAds.preloadNative(it) }
-        android.util.Log.d("Onboarding", "page=$position dots=${binding.dots.childCount} card=${binding.adNative.childCount}")
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(STATE_POSITION, position)
     }
 
-    private fun buildDots(selected: Int) {
-        binding.dots.removeAllViews()
-        repeat(ONBOARDING_PAGES.size) { i ->
-            val on = i == selected
-            val dot = View(this).apply {
-                background = GradientDrawable().apply {
-                    shape = GradientDrawable.RECTANGLE
-                    cornerRadius = if (on) 5f * resources.displayMetrics.density else 99f
-                    setColor(getColor(if (on) R.color.accent else R.color.surface_3))
-                }
-            }
-            binding.dots.addView(dot, android.widget.LinearLayout.LayoutParams(if (on) 22.dp else 8.dp, 8.dp).apply { marginEnd = 8.dp })
-        }
+    /** Called by a page's NEXT (or its own button on the full-ad page). */
+    fun goTo(index: Int) {
+        position = index
+        binding.pager.currentItem = index
     }
 
-    /** Used by the full-ad page's own NEXT button. */
-    fun nextPage() {
-        if (position < ONBOARDING_PAGES.lastIndex) binding.pager.currentItem = position + 1 else finishFlow()
-    }
-
-    private fun finishFlow() {
+    fun finishFlow() {
         AppAds.showFullScreen(this, AppAds.NATIVE_DONE) {
             startActivity(Intent(this, DisclaimerActivity::class.java))
             finish()
@@ -128,4 +91,6 @@ class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>(ActivityOnboa
             hide(WindowInsetsCompat.Type.systemBars())
         }
     }
+
+    companion object { private const val STATE_POSITION = "position" }
 }
