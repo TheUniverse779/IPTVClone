@@ -35,12 +35,14 @@ class LanguageActivity : BaseActivity<ActivityLanguageAppBinding>(ActivityLangua
 
     private var picked: String? = null
 
-    /**
-     * Applying a per-app locale recreates this Activity, so the ad + navigation cannot run in the
-     * click handler's coroutine (it is cancelled on recreation). The flag carries the intent across
-     * that recreation and [setup] continues the flow.
-     */
-    private var pendingContinue = false
+    // Language switching is off for now: the app always shows its default language (English) and
+    // the pick on this screen is not applied. Uncomment the blocks marked "language switching" to
+    // bring it back.
+    //
+    // language switching: applying a per-app locale recreates this Activity, so the ad + navigation
+    // cannot run in the click handler's coroutine (it is cancelled on recreation). The flag carries
+    // the intent across that recreation and onResume continues the flow.
+    // private var pendingContinue = false
     private val options = listOf(
         LangOption("en", "English", R.drawable.ic_flag_gb),
         LangOption("vi", "Tiếng Việt", R.drawable.ic_flag_vn),
@@ -51,7 +53,8 @@ class LanguageActivity : BaseActivity<ActivityLanguageAppBinding>(ActivityLangua
     override fun setup(savedInstanceState: Bundle?) {
         hideSystemBars()
         picked = savedInstanceState?.getString(STATE_PICK)
-        pendingContinue = savedInstanceState?.getBoolean(STATE_PENDING) ?: false
+        // language switching
+        // pendingContinue = savedInstanceState?.getBoolean(STATE_PENDING) ?: false
 
         adapter = SimpleAdapter(
             ItemLanguageBinding::inflate,
@@ -68,18 +71,22 @@ class LanguageActivity : BaseActivity<ActivityLanguageAppBinding>(ActivityLangua
         adapter.submitList(options)
 
         binding.btnDone.setOnClickListener {
-            val tag = picked
-            when {
-                tag == null -> toast(R.string.pick_language_first)
-                // Already the app's language (English on a first run): applying it again changes
-                // nothing, so the screen is not recreated and onResume would never continue.
-                currentLanguage() == tag -> continueToOnboarding()
-                else -> {
-                    // Saving a different language recreates this screen; onResume continues.
-                    pendingContinue = true
-                    AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(tag))
-                }
-            }
+            // Whatever is picked, the app stays in its default language and moves straight on.
+            if (picked == null) toast(R.string.pick_language_first) else continueToOnboarding()
+
+            // language switching
+            // val tag = picked
+            // when {
+            //     tag == null -> toast(R.string.pick_language_first)
+            //     // Already the app's language (English on a first run): applying it again changes
+            //     // nothing, so the screen is not recreated and onResume would never continue.
+            //     currentLanguage() == tag -> continueToOnboarding()
+            //     else -> {
+            //         // Saving a different language recreates this screen; onResume continues.
+            //         pendingContinue = true
+            //         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(tag))
+            //     }
+            // }
         }
         render()
         // The card is pinned to the bottom of the screen; it loads once the ads runtime is ready.
@@ -104,7 +111,8 @@ class LanguageActivity : BaseActivity<ActivityLanguageAppBinding>(ActivityLangua
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(STATE_PICK, picked)
-        outState.putBoolean(STATE_PENDING, pendingContinue)
+        // language switching
+        // outState.putBoolean(STATE_PENDING, pendingContinue)
     }
 
     private fun pick(tag: String) {
@@ -124,10 +132,11 @@ class LanguageActivity : BaseActivity<ActivityLanguageAppBinding>(ActivityLangua
         finish()
     }
 
-    /** Language the app is showing now: the per-app choice if set, else what the resources resolved to. */
-    private fun currentLanguage(): String =
-        AppCompatDelegate.getApplicationLocales()[0]?.language
-            ?: resources.configuration.locales[0].language
+    // language switching: the language the app is showing now (the per-app choice if set, else what
+    // the resources resolved to).
+    // private fun currentLanguage(): String =
+    //     AppCompatDelegate.getApplicationLocales()[0]?.language
+    //         ?: resources.configuration.locales[0].language
 
     /** The full-page break, then onboarding. Tapping the check twice must not stack two ads. */
     private var continuing = false
@@ -140,14 +149,15 @@ class LanguageActivity : BaseActivity<ActivityLanguageAppBinding>(ActivityLangua
         binding.root.post { AppAds.showFullScreen(this, AppAds.NATIVE_LANGUAGE_DONE) { openOnboarding() } }
     }
 
-    /** After a language change recreated the screen, carry on (the ad needs a resumed host). */
-    override fun onResume() {
-        super.onResume()
-        if (pendingContinue) {
-            pendingContinue = false
-            continueToOnboarding()
-        }
-    }
+    // language switching: after a language change recreated the screen, carry on (the ad needs a
+    // resumed host).
+    // override fun onResume() {
+    //     super.onResume()
+    //     if (pendingContinue) {
+    //         pendingContinue = false
+    //         continueToOnboarding()
+    //     }
+    // }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
@@ -164,6 +174,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageAppBinding>(ActivityLangua
 
     companion object {
         private const val STATE_PICK = "pick"
-        private const val STATE_PENDING = "pending"
+        // language switching
+        // private const val STATE_PENDING = "pending"
     }
 }
