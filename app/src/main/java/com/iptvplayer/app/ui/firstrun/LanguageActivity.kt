@@ -78,7 +78,22 @@ class LanguageActivity : BaseActivity<ActivityLanguageAppBinding>(ActivityLangua
         }
         render()
         // The card is pinned to the bottom of the screen; it loads once the ads runtime is ready.
-        AppAds.showNative(this, AppAds.NATIVE_LANGUAGE, binding.adNative)
+        // Restyle on every state change too, since the card can arrive after the user has picked.
+        AppAds.showNative(this, AppAds.NATIVE_LANGUAGE, binding.adNative) { styleAdCta() }
+    }
+
+    /**
+     * Same as the reference app: the ad's call to action is grey until a language is picked, then
+     * takes the accent colour.
+     */
+    private fun styleAdCta() {
+        val cta = binding.adNative.findViewById<android.widget.TextView>(R.id.tvActionBtnTitle) ?: return
+        val on = picked != null
+        // The Material theme inflates this Button as a MaterialButton, whose colorPrimary tint is
+        // painted over any background; clear it so the drawable's own colour shows.
+        cta.backgroundTintList = null
+        cta.setBackgroundResource(if (on) R.drawable.bg_native_cta else R.drawable.bg_native_cta_off)
+        cta.setTextColor(getColor(if (on) R.color.white else R.color.text_3))
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -96,6 +111,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageAppBinding>(ActivityLangua
         adapter.notifyDataSetChanged()
         binding.btnDone.animate().alpha(if (picked == null) 0f else 1f).setDuration(300).start()
         binding.btnDone.isEnabled = picked != null
+        styleAdCta()
     }
 
     private fun openOnboarding() {
