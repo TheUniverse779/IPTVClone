@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commitNow
 import com.iptvplayer.app.Features
 import com.iptvplayer.app.R
-import com.iptvplayer.app.ads.AppAds
 import com.iptvplayer.app.base.BaseActivity
 import com.iptvplayer.app.databinding.ActivityMainBinding
 import com.iptvplayer.app.ui.sport.SportFragment
@@ -39,9 +38,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     private val notifPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
 
     override fun setup(savedInstanceState: Bundle?) {
-        // Returning to the app can show the App Open ad; the SDK skips it on a cold start and while
-        // another full-screen ad is up, and spaces repeats by the placement's cooldown.
-        AppAds.enableAppOpenOnForeground(MainActivity::class.java)
         // BaseActivity pads the column for the system bars, so the bar itself no longer carries the
         // nav-bar inset: it sits above the ad banner, and the banner above the nav bar.
         val barH = resources.getDimensionPixelSize(com.iptvplayer.app.R.dimen.h_bottombar)

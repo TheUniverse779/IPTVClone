@@ -74,6 +74,36 @@ object AppAds {
     /** App-open placement: shown when the user comes back to the app, not on a cold start. */
     const val APP_OPEN = "return_to_app"
 
+    /**
+     * Screens where coming back to the app may show [APP_OPEN]: every screen except the splash
+     * (which has its own interstitial) and the first-run language/onboarding screens (which already
+     * carry their own ads). Add new activities here, or App Open will not appear on them.
+     */
+    private val APP_OPEN_SCREENS: Set<Class<out FragmentActivity>> = setOf(
+        com.iptvplayer.app.ui.disclaimer.DisclaimerActivity::class.java,
+        com.iptvplayer.app.ui.main.MainActivity::class.java,
+        com.iptvplayer.app.ui.importer.ImportActivity::class.java,
+        com.iptvplayer.app.ui.playlist.PlaylistDetailActivity::class.java,
+        com.iptvplayer.app.ui.search.SearchActivity::class.java,
+        com.iptvplayer.app.ui.xtream.AddEditProfileActivity::class.java,
+        com.iptvplayer.app.ui.xtream.XtreamHomeActivity::class.java,
+        com.iptvplayer.app.ui.xtream.XtreamCategoryActivity::class.java,
+        com.iptvplayer.app.ui.xtream.MovieDetailActivity::class.java,
+        com.iptvplayer.app.ui.xtream.SeriesDetailActivity::class.java,
+        com.iptvplayer.app.ui.xtream.XtreamRecentActivity::class.java,
+        com.iptvplayer.app.ui.sport.SportMatchesActivity::class.java,
+        com.iptvplayer.app.ui.sport.MyMatchActivity::class.java,
+        com.iptvplayer.app.ui.sport.MatchDetailActivity::class.java,
+        com.iptvplayer.app.ui.community.CommunityActivity::class.java,
+        com.iptvplayer.app.ui.community.MyShareActivity::class.java,
+        com.iptvplayer.app.ui.guide.HowToAddActivity::class.java,
+        com.iptvplayer.app.ui.guide.FaqActivity::class.java,
+        com.iptvplayer.app.ui.guide.ChatbotActivity::class.java,
+        com.iptvplayer.app.ui.settings.SettingsActivity::class.java,
+        com.iptvplayer.app.ui.settings.FeedbackActivity::class.java,
+        com.iptvplayer.app.ui.player.PlayerActivity::class.java,
+    )
+
     private const val CACHE_KEY = "validated_json"
     private const val FETCH_TIMEOUT_MS = 2_500L
 
@@ -138,6 +168,11 @@ object AppAds {
                 )
                 configuration = withContext(Dispatchers.IO) { startup.initialize() }
                 isInitialized = true
+                // App Open on return to the app. Registered here, right after the config is applied,
+                // as the SDK guide asks; the SDK matches exact classes (a base class does not cover
+                // its subclasses), so every screen that may show it is listed.
+                runCatching { kit.enableAppOpenOnForeground(APP_OPEN_SCREENS, APP_OPEN) }
+                    .onFailure { Log.w(TAG, "enableAppOpenOnForeground failed", it) }
                 Log.d(TAG, "Configuration ready: revision=${configuration.revision}")
             }
         }
@@ -171,7 +206,7 @@ object AppAds {
     suspend fun requestConsent(activity: FragmentActivity): Boolean = suspendCancellableCoroutine { cont ->
         AdsSdk.initializeWithConsent(activity) { enabled, error ->
             error?.let { Log.w(TAG, "Consent: ${it.errorCode} ${it.message}") }
-            if (enabled) _ready.value = true
+            if (enabled) markReady()
             Log.d(TAG, "consent done: enabled=$enabled")
             if (cont.isActive) cont.resume(enabled)
         }
@@ -181,9 +216,19 @@ object AppAds {
             repeat(24) {
                 delay(250)
                 if (_ready.value) return@launch
-                if (AdsSdk.canLoadAds(PlacementFormat.BANNER)) { _ready.value = true; return@launch }
+                if (AdsSdk.canLoadAds(PlacementFormat.BANNER)) { markReady(); return@launch }
             }
         }
+    }
+
+    /**
+     * Ads can be requested from here on. Also starts loading App Open: the SDK only shows it from a
+     * READY cache, so without this the first return to the app would show nothing.
+     */
+    private fun markReady() {
+        if (_ready.value) return
+        _ready.value = true
+        preloadFullScreen(APP_OPEN)
     }
 
     /** Banner inside [container]. Shown as soon as the ads runtime is ready; skipped if it never is. */
@@ -278,17 +323,6 @@ object AppAds {
             Log.d(TAG, "$key: $result (${(result as? AdFullScreenResult)?.outcome})")
             if (activity.lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) onDone()
         }
-    }
-
-    /**
-     * App Open: the SDK watches the app's lifecycle and shows [APP_OPEN] when the user returns from
-     * the background. Only the main screen registers, so the ad never interrupts the first-run flow —
-     * the SDK also skips it while a full-screen ad is on screen or the frequency cap is active.
-     */
-    fun enableAppOpenOnForeground(activityClass: Class<out FragmentActivity>) {
-        if (!Features.ADS || !isInitialized) return
-        runCatching { kit.enableAppOpenOnForeground(activityClass, APP_OPEN) }
-            .onFailure { Log.w(TAG, "enableAppOpenOnForeground failed", it) }
     }
 
     private const val TAG = "AppAds"

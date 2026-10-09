@@ -30,6 +30,13 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
     @Inject lateinit var settings: SettingsStore
 
     override fun setup(savedInstanceState: Bundle?) {
+        // Tapping the launcher icon while the app is already running can start a second Splash on
+        // top of the existing screens. Close it straight away so the user lands back where they were
+        // (and gets the App Open ad there) instead of the splash interstitial and a fresh flow.
+        if (!isTaskRoot && intent.action == Intent.ACTION_MAIN && intent.hasCategory(Intent.CATEGORY_LAUNCHER)) {
+            finish()
+            return
+        }
         // First launch: English by default (not the phone's language). Done once; after that the user's
         // choice in Settings › Language or Android's per-app language screen always wins.
         lifecycleScope.launch {
